@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM CRITICAL - DO NOT POWER OFF</title>
+    <style>
+        /* General Body Styles */
+        body {
+            margin: 0;
+            overflow: hidden; /* Full screen, no scrollbars */
+            font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace;
+            background-color: #000;
+            color: #00ff00; /* Default matrix green */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            line-height: 1.2;
+            padding: 20px;
+            box-sizing: border-box;
+            cursor: none; /* Hide default cursor */
+            position: relative; /* For custom cursor */
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: #00ffff; /* Cyan cursor */
+            border-radius: 50%;
+            pointer-events: none; /* Allow clicks through */
+            z-index: 9999; /* Always on top */
+            mix-blend-mode: difference; /* Blends with background for cool effect */
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out; /* Smooth follow */
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        /* Glitch Effect for entire body */
+        body.glitch-active {
+            animation: full-body-glitch 0.05s infinite alternate;
+        }
+
+        @keyframes full-body-glitch {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-1px, 1px); }
+            50% { transform: translate(1px, -1px); }
+            75% { transform: translate(-1px, -1px); }
+            100% { transform: translate(1px, 1px); }
+        }
+
+
+        /* Terminal Header */
+        .terminal-header {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            animation: type 2s steps(40, end), blink-caret .75s step-end infinite;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid orange;
+            width: 0;
+            animation-fill-mode: forwards;
+        }
+        @keyframes type { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #00ffff; } }
+
+        /* Section Containers */
+        .section-container {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.9);
+            border-radius: 5px;
+        }
+
+        h1, h2 {
+            font-size: 2em;
+            color: #00ff00;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        h2 {
+            font-size: 1.6em;
+            margin-top: 30px;
+        }
+
+        /* --- System Loading (Matrix Style) Overlay --- */
+        .system-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #00ff00;
+            font-size: 1.5em;
+            z-index: 2000;
+            overflow: hidden;
+            text-align: left;
+            white-space: pre;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .loading-text {
+            height: 100%;
+            width: 100%;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            background-color: rgba(0, 255, 0, 0.05);
+            border-radius: 5px;
+        }
+        .loading-text::-webkit-scrollbar { display: none; }
+
+        /* --- System Update Section --- */
+        .update-container .progress-bar-container {
+            width: 90%;
+            height: 25px;
+            background-color: #333;
+            border: 1px solid #00ff00;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+        .update-container .progress-bar {
+            background-color: #00ff00;
+            transition: width 0.1s linear; /* Very fast transition */
+        }
+        .update-container .message {
+            font-size: 1.1em;
+            margin-top: 15px;
+            min-height: 40px;
+            color: #00ff00;
+        }
+        .update-container .warning {
+            font-size: 1.2em;
+            color: #ff0000;
+            font-weight: bold;
+            margin-top: 30px;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+            animation: blink 0.5s infinite alternate; /* Faster blink */
+        }
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.5; } }
+        .update-container .prank-reveal {
+            font-size: 1.3em;
+            color: #00ffff;
+            margin-top: 40px;
+            display: none;
+            font-weight: bold;
+            animation: pulse-reveal 1s infinite alternate;
+        }
+        @keyframes pulse-reveal { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.05); opacity: 1; } }
+
+        /* --- Image & Audio Section --- */
+        .image-audio-container .image-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .image-audio-container .image-grid img {
+            max-width: 180px;
+            height: auto;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        .image-audio-container audio {
+            display: none; /* Hide default audio controls */
+        }
+
+        /* --- Full-screen Prank Overlays --- */
+        .full-screen-prank-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff0000;
+            font-family: 'monospace', sans-serif;
+            font-size: 3.5em;
+            font-weight: bold;
+            text-shadow: 0 0 25px rgba(255, 0, 0, 0.9);
+            z-index: 3000;
+            cursor: none; /* Hide cursor for these overlays */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .full-screen-prank-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            display: flex;
+        }
+
+        /* Specific styles for Destroy Prank */
+        #destroyOverlay .glitch-text {
+            animation: glitch-intense 0.1s infinite alternate; /* Even more intense glitch */
+        }
+        @keyframes glitch-intense {
+            0% { transform: translate(0); text-shadow: 0.15em 0 0 #ff0000, -0.15em 0 0 #00ffff; }
+            25% { transform: translate(-5px, 5px); text-shadow: -0.15em 0 0 #ff0000, 0.15em 0 0 #00ffff; }
+            50% { transform: translate(5px, -5px); text-shadow: 0.15em 0 0 #ff0000, -0.15em 0 0 #00ffff; }
+            75% { transform: translate(-5px, 5px); text-shadow: -0.15em 0 0 #ff0000, 0.15em 0 0 #00ffff; }
+            100% { transform: translate(0); text-shadow: 0.15em 0 0 #ff0000, -0.15em 0 0 #00ffff; }
+        }
+
+        /* Specific styles for Overload Prank */
+        #overloadOverlay .overload-output {
+            white-space: pre-wrap;
+            height: 100%;
+            width: 100%;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            text-align: left;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 0.6em;
+            color: #ff0000; /* Overload text is red */
+        }
+        #overloadOverlay .overload-output::-webkit-scrollbar { display: none; }
+
+        /* Prank Reveal Message inside overlays */
+        .full-screen-prank-overlay .prank-message-reveal {
+            font-size: 0.4em;
+            color: #00ffff;
+            margin-top: 20px;
+            animation: fadeIn 2s forwards;
+            animation-delay: 1s;
+            display: none;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Final Prank Reveal */
+        #finalPrankReveal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #00ffff;
+            font-size: 4em;
+            font-weight: bold;
+            text-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
+            z-index: 4000; /* Even higher */
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out;
+            animation: pulse-reveal 1.5s infinite alternate;
+        }
+        #finalPrankReveal.active {
+            opacity: 1;
+            visibility: visible;
+            display: flex;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .terminal-header { font-size: 2em; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            .image-audio-container .image-grid img { width: calc(50% - 15px); }
+            .update-container .message { font-size: 0.9em; }
+            .warning { font-size: 1em; }
+            .prank-reveal { font-size: 1.1em; }
+            .full-screen-prank-overlay { font-size: 2.5em; }
+            #overloadOverlay .overload-output { font-size: 0.5em; }
+            #finalPrankReveal { font-size: 3em; }
+        }
+
+        @media (max-width: 480px) {
+            .terminal-header { font-size: 1.8em; }
+            h1 { font-size: 1.5em; }
+            h2 { font-size: 1.2em; }
+            .image-audio-container .image-grid img { width: 100%; }
+            body { padding: 10px; }
+            .full-screen-prank-overlay { font-size: 1.8em; }
+            #overloadOverlay .overload-output { font-size: 0.4em; }
+            #finalPrankReveal { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Initial System Loading Overlay (Matrix Style) -->
+    <div id="initialLoadingOverlay" class="system-loading-overlay">
+        <div class="loading-text" id="loadingText"></div>
+    </div>
+
+    <!-- Browser Destroy Overlay -->
+    <div id="destroyOverlay" class="full-screen-prank-overlay">
+        <p class="glitch-text">CRITICAL SYSTEM FAILURE! ERROR 404: FUN NOT FOUND!</p>
+        <p class="prank-message-reveal" id="destroyPrankReveal">এমবি নিবা তুমি এমবি বলদ😂 Click to dismiss!</p>
+    </div>
+
+    <!-- System Overload Overlay -->
+    <div id="overloadOverlay" class="full-screen-prank-overlay">
+        <div class="overload-output" id="overloadOutput"></div>
+        <p class="prank-message-reveal" id="overloadPrankReveal">এমবি নিবা তুমি এমবি বলদ😂 Click to dismiss!</p>
+    </div>
+
+    <!-- Final Prank Reveal Overlay -->
+    <div id="finalPrankReveal" onclick="location.reload()">
+        <p>🎊 বলদ কে আর কি বলি 🎊</p>
+        <p style="font-size: 0.5em; margin-top: 20px;">এটা শুধু একটা মজার প্র্যাঙ্ক ছিল! আবার চেষ্টা করতে ক্লিক করুন।</p>
+    </div>
+
+    <!-- Main Content - Hidden initially, shown after loading -->
+    <div id="mainContent" style="display: none; width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <p class="terminal-header" id="mainHeader"></p>
+
+        <!-- System Update Section -->
+        <div class="section-container update-container" id="updateSection">
+            <h1>সিস্টেম আপগ্রেড চলছে... ⚙️</h1>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+            <p class="message" id="updateMessage">গুরুত্বপূর্ণ প্রোটোকল লোড হচ্ছে...</p>
+            <p class="warning">⚠️ সতর্কতা: কোনো ডেটা নষ্ট করবেন না! ⚠️</p>
+            <p class="prank-reveal" id="updatePrankReveal">আপডেট সফল! আপনি সফলভাবে এমবি 😂</p>
+        </div>
+
+        <!-- Image & Audio Section -->
+        <div class="section-container image-audio-container" id="imageAudioSection">
+            <h2>বোকাচোদা একটু থাম এমবি পেয়ে যাবি.. 🤣</h2>
+            <div class="image-grid">
+                <img src="https://i.postimg.cc/4dsxqRyh/download.gif" alt="Funny GIF 1">
+                <img src="https://i.postimg.cc/N0hM8HwD/3946993891ffef9579f431cf240decbc-w200.gif" alt="Funny GIF 2">
+                <img src="https://i.postimg.cc/hjstqZQZ/aef7ec60aaa377e3a6406adf730512a4.gif" alt="Funny GIF 3">
+            </div>
+
+            <p style="color: #00ffff;">শান ভালো করে! 🔊</p>
+            <audio id="funnyAudio" loop autoplay>
+                <source src="https://ia600309.us.archive.org/22/items/h_20250614_202506/H.mp3" type="audio/mp3">
+                আপনার ব্রাউজার অডিও উপাদান সমর্থন করে না। অনুগ্রহ করে অন্য একটি ব্রাউজার চেষ্টা করুন।
+            </audio>
+             <!-- No manual play button as per request -->
+        </div>
+
+        <!-- No separate buttons section as per request -->
+    </div>
+
+    <script>
+        // --- Global Variables and Setup ---
+        const initialLoadingOverlay = document.getElementById('initialLoadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const mainContent = document.getElementById('mainContent');
+        const mainHeader = document.getElementById('mainHeader');
+
+        const progressBar = document.getElementById('progressBar');
+        const updateMessage = document.getElementById('updateMessage');
+        const updatePrankReveal = document.getElementById('updatePrankReveal');
+        const updateSection = document.getElementById('updateSection'); // Get section by ID
+
+        const audio = document.getElementById('funnyAudio');
+
+        const destroyOverlay = document.getElementById('destroyOverlay');
+        const destroyPrankReveal = document.getElementById('destroyPrankReveal');
+        const overloadOverlay = document.getElementById('overloadOverlay');
+        const overloadOutput = document.getElementById('overloadOutput');
+        const overloadPrankReveal = document.getElementById('overloadPrankReveal');
+
+        const finalPrankReveal = document.getElementById('finalPrankReveal');
+
+        let updateProgressValue = 0;
+        let updateMessageIndex = 0;
+        const updateMessages = [
+            "Initializing core components...",
+            "Decrypting laughter algorithms...",
+            "Analyzing humor patterns...",
+            "Diverting attention modules...",
+            "Engaging prank protocols...",
+            "Compiling funny reactions...",
+            "Finalizing deception routines...",
+            "Almost ready for maximum hilarity!"
+        ];
+
+        let overloadInterval;
+        let updateProgressInterval;
+        let prankSequenceTimeout; // To manage the sequence of pranks
+
+        let isToneAudioContextStarted = false; // Flag for Tone.js context initialization
+
+        // --- Sound Effects (Using Tone.js for reliable and no external URLs) ---
+        // Load Tone.js from CDN
+        const script = document.createElement('script');
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js";
+        document.head.appendChild(script);
+
+        let synth, noiseSynth, distortion;
+
+        // Initialize audio context after Tone.js loads
+        script.onload = () => {
+            // Only initialize synths if Tone.js is ready
+            if (typeof Tone !== 'undefined') {
+                synth = new Tone.Synth({
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 }
+                }).toDestination();
+
+                noiseSynth = new Tone.NoiseSynth({
+                    noise: { type: "white" },
+                    envelope: { attack: 0.001, decay: 0.1, sustain: 0.0, release: 0.1 }
+                }).toDestination();
+
+                distortion = new Tone.Distortion(0.8).toDestination();
+            }
+        };
+
+        // --- Core Functions (moved to top for scope) ---
+        function generateRandomCodeLine() {
+            const chars = "0123456789ABCDEFabcdef-+*/%&^|~<>{}[];'\",. ";
+            let line = '';
+            for (let i = 0; i < 60; i++) {
+                line += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return line + '\n';
+        }
+
+        function playBootSound() {
+            if (synth && isToneAudioContextStarted) synth.triggerAttackRelease("C4", "8n");
+        }
+
+        function playGlitchSound() {
+            if (noiseSynth && isToneAudioContextStarted) noiseSynth.triggerAttackRelease("16n");
+        }
+
+        function playOverloadSound() {
+            if (synth && isToneAudioContextStarted) {
+                synth.triggerAttackRelease("C2", "32n"); // Low pitch quick beep
+                synth.frequency.rampTo("C1", 0.05); // Rapid pitch drop
+            }
+        }
+
+        // --- Custom Cursor Logic ---
+        const customCursor = document.querySelector('.custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+
+        // --- Initial System Loading (Matrix Style) Logic ---
+        function simulateInitialLoading() {
+            let lineCount = 0;
+            const maxLines = 100;
+
+            // Only play boot sound if Tone.js context is already started (from a click)
+            if (isToneAudioContextStarted) {
+                playBootSound();
+            }
+
+            const loadingInterval = setInterval(() => {
+                if (lineCount < maxLines) {
+                    loadingText.textContent += generateRandomCodeLine();
+                    loadingText.scrollTop = loadingText.scrollHeight;
+                    lineCount++;
+                    if (Math.random() < 0.1 && isToneAudioContextStarted) playGlitchSound(); // Play glitch sound if context is active
+                } else {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        initialLoadingOverlay.style.opacity = '0';
+                        initialLoadingOverlay.style.visibility = 'hidden';
+                        mainContent.style.display = 'flex';
+                        startMainPrankSequence();
+                    }, 500);
+                }
+            }, 30); // Faster loading text
+            simulateInitialLoading._intervalId = loadingInterval; // Store interval ID to clear on click
+        }
+
+        // --- Main Prank Sequence Manager ---
+        function startMainPrankSequence() {
+            // Type out header text
+            const headerText = "SYSTEM INITIATED. HUMOR MODULES ONLINE.";
+            let i = 0;
+            const typingInterval = setInterval(() => {
+                if (i < headerText.length) {
+                    mainHeader.textContent += headerText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingInterval);
+                    mainHeader.style.borderRight = 'none'; // Remove typing cursor
+                }
+            }, 50); // Faster typing
+
+            // Sequence of pranks with timed delays
+            prankSequenceTimeout = setTimeout(() => {
+                startSystemUpdate(); // 1. System Update
+            }, 2000); // 2 seconds after header is typed
+
+            prankSequenceTimeout = setTimeout(() => {
+                // Ensure update reveal is dismissed before starting next prank
+                updatePrankReveal.style.display = 'none';
+                updateSection.style.display = 'none'; // Hide update section after its done
+                startDestroyPrank(); // 2. Browser Destroy
+            }, 10000); // After system update duration + reveal (adjust as needed)
+
+            prankSequenceTimeout = setTimeout(() => {
+                hideDestroyPrank(); // Hide destroy overlay
+                startOverloadPrank(); // 3. System Overload
+            }, 18000); // After destroy prank duration + reveal
+
+             prankSequenceTimeout = setTimeout(() => {
+                hideOverloadPrank(); // Hide overload overlay
+                showFinalPrankReveal(); // 4. Final Prank Reveal
+            }, 25000); // After overload prank duration + reveal
+
+            // Attempt to autoplay main audio throughout the sequence
+            setTimeout(() => {
+                audio.play()
+                    .then(() => console.log("Main audio autoplay started!"))
+                    .catch(e => console.warn("Main audio autoplay was prevented:", e));
+            }, 1000); // Attempt audio play early on
+        }
+
+
+        // --- System Update Logic ---
+        function startSystemUpdate() {
+            updateSection.style.display = 'block'; // Ensure update section is visible
+            updateProgressValue = 0;
+            updateMessageIndex = 0;
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+            updateMessage.textContent = updateMessages[0];
+            updatePrankReveal.style.display = 'none';
+
+            updateProgressInterval = setInterval(() => {
+                if (updateProgressValue < 100) {
+                    updateProgressValue += Math.floor(Math.random() * 20) + 10; // Even faster increment
+                    if (updateProgressValue > 100) updateProgressValue = 100;
+
+                    progressBar.style.width = updateProgressValue + '%';
+                    progressBar.textContent = updateProgressValue + '%';
+
+                    if (updateProgressValue % 10 === 0 && updateMessageIndex < updateMessages.length -1 ) {
+                        updateMessageIndex++;
+                        updateMessage.textContent = updateMessages[updateMessageIndex];
+                    }
+                    if (Math.random() < 0.2 && isToneAudioContextStarted) synth.triggerAttackRelease("C5", "32n"); // Beep sounds
+                } else {
+                    clearInterval(updateProgressInterval);
+                    updateMessage.textContent = "আপডেট সম্পূর্ণ হয়েছে! 😎";
+                    updatePrankReveal.style.display = 'block'; // Show the prank reveal message
+                }
+            }, 100 + Math.random() * 100); // Very fast updates
+        }
+
+        // --- Browser Destroy Prank Logic ---
+        function startDestroyPrank() {
+            destroyPrankReveal.style.display = 'none';
+            destroyOverlay.classList.add('active');
+            document.body.classList.add('glitch-active'); // Activate body glitch
+            
+            // Play intense glitch sound for 3 seconds
+            if (isToneAudioContextStarted) noiseSynth.triggerAttackRelease("C3", "3s", Tone.now(), 0.5);
+
+            // Show reveal message after a delay
+            setTimeout(() => {
+                destroyPrankReveal.style.display = 'block';
+            }, 3000); // Show "It's a prank" after 3 seconds
+        }
+
+        function hideDestroyPrank() {
+            destroyOverlay.classList.remove('active');
+            destroyPrankReveal.style.display = 'none';
+            document.body.classList.remove('glitch-active'); // Deactivate body glitch
+            if (isToneAudioContextStarted) noiseSynth.triggerRelease(); // Stop noise
+        }
+
+        // --- System Overload Prank Logic ---
+        function generateOverloadText() {
+            const chars = "0123456789ABCDEFabcdef-+*/%&^|~<>{}[];'\",. ";
+            let line = 'ERROR '; // Start with error prefix
+            for (let i = 0; i < 70; i++) {
+                line += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return line + '\n';
+        }
+
+        function startOverloadPrank() {
+            overloadPrankReveal.style.display = 'none';
+            overloadOverlay.classList.add('active');
+            overloadOutput.textContent = '';
+            let currentOverloadLines = 0;
+            const maxOverloadLines = 300;
+
+            // Apply distortion effect for overload sound
+            if (isToneAudioContextStarted) {
+                audio.connect(distortion); // Connect main audio to distortion
+                synth.triggerAttackRelease("C1", "8n"); // Low beep to indicate start
+            }
+
+            overloadInterval = setInterval(() => {
+                if (currentOverloadLines < maxOverloadLines) {
+                    overloadOutput.textContent += generateOverloadText();
+                    overloadOutput.scrollTop = overloadOutput.scrollHeight;
+                    currentOverloadLines++;
+                    if (Math.random() < 0.1 && isToneAudioContextStarted) playOverloadSound(); // Play overload sound occasionally
+                } else {
+                    clearInterval(overloadInterval);
+                    overloadOutput.textContent += "\n\nSYSTEM HALTED! (Click to reset and continue the fun!)";
+                    overloadPrankReveal.style.display = 'block';
+                    if (isToneAudioContextStarted) audio.disconnect(distortion); // Disconnect distortion
+                }
+            }, 10); // Extremely fast output speed
+        }
+
+        function hideOverloadPrank() {
+            clearInterval(overloadInterval);
+            overloadOverlay.classList.remove('active');
+            overloadPrankReveal.style.display = 'none';
+            if (isToneAudioContextStarted) audio.disconnect(distortion); // Ensure distortion is off if already connected
+        }
+
+        // --- Final Prank Reveal Logic ---
+        function showFinalPrankReveal() {
+            finalPrankReveal.classList.add('active');
+            // Stop background audio here if it's still playing
+            if (!audio.paused) {
+                audio.pause();
+                audio.currentTime = 0; // Reset audio
+            }
+        }
+
+        // --- Global Interaction Listener (Crucial for starting AudioContext) ---
+        document.addEventListener('click', async function(event) {
+            // Start Tone.js audio context on the first user interaction
+            if (!isToneAudioContextStarted && typeof Tone !== 'undefined') {
+                try {
+                    await Tone.start();
+                    console.log("Tone.js audio context started!");
+                    isToneAudioContextStarted = true;
+
+                    // If initial loading is active, and Tone.js started due to this click,
+                    // also make sure the initial boot sound plays.
+                    if (initialLoadingOverlay.classList.contains('active')) {
+                        playBootSound();
+                    }
+
+                    // Attempt to play main audio if it was blocked initially
+                    if (audio.paused && audio.autoplay) {
+                        audio.play().catch(e => console.log("User click initiated main audio play (autoplay fallback): ", e));
+                    }
+
+                } catch (e) {
+                    console.error("Failed to start Tone.js audio context:", e);
+                }
+            }
+
+            // If initial loading overlay is active and user clicks, immediately transition to main content
+            if (initialLoadingOverlay.classList.contains('active')) {
+                initialLoadingOverlay.style.opacity = '0';
+                initialLoadingOverlay.style.visibility = 'hidden';
+                mainContent.style.display = 'flex';
+                // Clear the initial loading interval if it's still running
+                if (simulateInitialLoading._intervalId) {
+                    clearInterval(simulateInitialLoading._intervalId);
+                }
+                // Only start the main sequence if it hasn't already started
+                if (mainHeader.textContent === "") {
+                    startMainPrankSequence();
+                }
+            }
+            // Dismiss full-screen prank overlays on click
+            else if (destroyOverlay.classList.contains('active')) {
+                hideDestroyPrank();
+            } else if (overloadOverlay.classList.contains('active')) {
+                hideOverloadPrank();
+            } else if (finalPrankReveal.classList.contains('active')) {
+                location.reload(); // Reload page on click for final reveal
+            }
+        });
+
+        // Set custom cursor visibility
+        document.addEventListener('mouseenter', () => { customCursor.style.display = 'block'; });
+        document.addEventListener('mouseleave', () => { customCursor.style.display = 'none'; });
+
+        // Start initial loading when the page is fully loaded
+        window.addEventListener('load', simulateInitialLoading);
+    </script>
+</body>
+</html>
