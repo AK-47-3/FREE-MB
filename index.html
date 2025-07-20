@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfect Messenger</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter for modern UI -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons CDN (for various UI icons) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         /* Universal Box Sizing for consistent layout across all elements */
         *, *::before, *::after {
@@ -21,18 +17,18 @@
             height: 100%;
             width: 100%;
             margin: 0;
-            padding: 0;
+            padding: 0; /* Removed padding for full screen */
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Light background for the overall page */
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: flex-start; /* Align content to the top */
             overflow-x: hidden; /* Prevent horizontal scrolling for the entire page */
         }
 
         /* Main container for the Messenger app - now always full screen */
         .messenger-container {
-            width: 100%;
+            width: 100%; /* Always take full width */
             height: 100vh; /* Always take full viewport height */
             background-color: white;
             border-radius: 0; /* No border-radius for full screen */
@@ -40,171 +36,132 @@
             overflow: hidden; /* Ensure content within the container doesn't overflow */
             display: flex;
             flex-direction: column;
-            margin: 0;
+            margin: 0; /* No margin for full screen */
         }
 
-        /* Dark Mode Styles */
-        body.dark .messenger-container {
-            background-color: #18191a; /* Dark background */
-        }
-        body.dark .header-section,
-        body.dark .nav-tabs-container,
-        body.dark #active-now-section,
-        body.dark #recent-chats-section,
-        body.dark #people-view,
-        body.dark #buses-view,
-        body.dark #settings-view,
-        body.dark #individual-chat-view .chat-view-header,
-        body.dark .chat-input-bar,
-        body.dark .modal-content,
-        body.dark #character-form {
-            background-color: #242526; /* Darker background for sections */
-            border-color: #3a3b3c; /* Darker borders */
-        }
-        body.dark .header-section .font-bold,
-        body.dark .text-gray-800,
-        body.dark .text-gray-700,
-        body.dark .contact-name,
-        body.dark .font-semibold,
-        body.dark .suggested-reply-button,
-        body.dark .modal-content h3,
-        body.dark .modal-content p,
-        body.dark #form-title,
-        body.dark #settings-view .character-item span {
-            color: #e4e6eb; /* Light text for dark mode */
-        }
-        body.dark .text-gray-500,
-        body.dark .text-gray-600,
-        body.dark .contact-status,
-        body.dark .status-text,
-        body.dark #character-form label {
-            color: #b0b3b8; /* Lighter gray for secondary text */
-        }
-        body.dark .header-icons-group button,
-        body.dark .bg-gray-200,
-        body.dark .suggested-reply-button {
-            background-color: #3a3b3c; /* Darker button background */
-            color: #e4e6eb; /* Light text for buttons */
-        }
-        body.dark .header-icons-group button:hover,
-        body.dark .suggested-reply-button:hover {
-            background-color: #4e4f50; /* Even darker hover */
-        }
-        body.dark .header-section input,
-        body.dark #chat-input,
-        body.dark #character-form input,
-        body.dark #character-form textarea,
-        body.dark .modal-content input {
-            background-color: #3a3b3c; /* Darker input background */
-            color: #e4e6eb; /* Light text for inputs */
-            border-color: #4e4f50; /* Darker input border */
-        }
-        body.dark .header-section svg.absolute,
-        body.dark .text-gray-400 {
-            color: #b0b3b8; /* Lighter icon color */
-        }
-        body.dark .chat-bubble-received {
-            background-color: #3a3b3c; /* Darker received bubble */
-            color: #e4e6eb; /* Light text */
-        }
-        body.dark .chat-bubble-sent {
-            background-color: #007bff; /* Slightly adjusted blue for contrast */
-        }
-        body.dark .status-dot {
-            border-color: #242526; /* Darker border for status dot */
-        }
-        body.dark .chat-list-item:hover,
-        body.dark .people-list-item:hover,
-        body.dark #settings-view .character-item:hover {
-            background-color: #3a3b3c; /* Darker hover for list items */
-        }
-        body.dark #chat-placeholder,
-        body.dark #chat-loading,
-        body.dark #conversation-list-loading {
-            color: #b0b3b8;
-        }
-        body.dark .typing-indicator .dot {
-            background-color: #b0b3b8;
-        }
-        body.dark .custom-message-box {
-            background-color: #3a3b3c;
-            color: #e4e6eb;
-        }
-        body.dark .modal-content button {
-             background-color: #007bff;
-        }
-        body.dark .modal-content button:hover {
-             background-color: #0066cc;
-        }
-        body.dark #settings-view .character-item .actions button:first-child {
-            background-color: #007bff;
-        }
-        body.dark #settings-view .character-item .actions button:first-child:hover {
-            background-color: #0066cc;
-        }
-        body.dark #character-form button.save {
-            background-color: #28a745; /* Green for save */
-        }
-        body.dark #character-form button.save:hover {
-            background-color: #218838;
-        }
-        body.dark #character-form button.clear {
-            background-color: #6c757d; /* Gray for clear */
-        }
-        body.dark #character-form button.clear:hover {
-            background-color: #5a6268;
-        }
-        body.dark #character-form button.cancel {
-            background-color: #dc3545; /* Red for cancel */
-        }
-        body.dark #character-form button.cancel:hover {
-            background-color: #c82333;
-        }
-        body.dark #confirm-delete-button {
-            background-color: #dc3545;
-        }
-        body.dark #confirm-delete-button:hover {
-            background-color: #c82333;
-        }
-        body.dark #cancel-delete-button {
-            background-color: #6c757d;
-        }
-        body.dark #cancel-delete-button:hover {
-            background-color: #5a6268;
-        }
-
-
+        /* Removed all media queries that constrained messenger-container size or added body padding */
         /* Specific adjustments for very small screens (e.g., 240p to 320p width) */
         @media (max-width: 320px) {
-            .header-section { padding: 0.5rem; }
-            .header-icons-group .space-x-3 > *:not(:first-child) { margin-left: 0.25rem !important; }
-            .header-section .font-bold { font-size: 1.25rem; }
-            .header-section input { padding-top: 0.375rem; padding-bottom: 0.375rem; font-size: 0.75rem; padding-left: 2rem; }
-            .header-section svg.absolute { left: 0.5rem; height: 1rem; width: 1rem; }
-            .chat-view-header { padding: 0.5rem 0.75rem; }
-            .chat-view-header .back-button { margin-right: 0.5rem; }
-            .chat-view-header .flex-col { margin-right: 0.25rem; }
-            .chat-view-header .profile-pic-small { width: 1.75rem; height: 1.75rem; }
-            .chat-view-header .contact-name { font-size: 1rem; }
-            .chat-view-header .contact-status { font-size: 0.65rem; }
-            .chat-view-header .h-6, .chat-view-header .w-6 { height: 1.25rem; width: 1.25rem; }
-            .chat-view-header .action-icons-group .space-x-4 > *:not(:first-child) { margin-left: 0.5rem !important; }
-            .nav-tabs-container button { padding-left: 0.25rem; padding-right: 0.25rem; font-size: 0.7rem; }
-            #active-now-section { padding: 0.5rem; }
-            #active-now-list .space-x-4 > *:not(:first-child) { margin-left: 0.5rem !important; }
-            .profile-pic-large { width: 2.5rem; height: 2.5rem; }
-            .chat-list-item .profile-pic-medium { width: 2rem; height: 2rem; margin-right: 0.5rem; }
-            .chat-list-item { padding: 0.5rem 0.75rem; min-height: 3.5rem; }
-            .chat-list-item .font-semibold { font-size: 0.85rem; }
-            .chat-list-item .text-sm { font-size: 0.75rem; }
-            .chat-input-bar { padding: 0.375rem 0.5rem; }
-            .chat-input-bar input { padding: 0.3rem 0.5rem; margin-right: 0.25rem; font-size: 0.75rem; }
-            .chat-input-bar .icon { margin-left: 0.25rem; }
-            .send-button-icon { width: 1.1rem; height: 1.1rem; }
-            .chat-input-bar .h-6, .chat-input-bar .w-6 { height: 1.1rem; width: 1.1rem; }
-            .chat-bubble-received, .chat-bubble-sent { padding: 0.3rem 0.5rem; font-size: 0.75rem; }
-            .suggested-reply-button { padding: 0.2rem 0.4rem; font-size: 0.7rem; }
-            .suggested-replies-container { gap: 0.25rem; padding: 0.25rem 0.5rem; }
+            /* Adjust header padding and icon spacing */
+            .header-section { /* Target the div with p-4 */
+                padding: 0.5rem; /* 8px padding */
+            }
+            .header-icons-group .space-x-3 > *:not(:first-child) { /* Header icons spacing */
+                margin-left: 0.25rem !important; /* 4px spacing */
+            }
+            .header-section .font-bold { /* Chats title */
+                font-size: 1.25rem; /* 20px, slightly smaller */
+            }
+            .header-section input { /* Search input */
+                padding-top: 0.375rem; /* 6px */
+                padding-bottom: 0.375rem; /* 6px */
+                font-size: 0.75rem; /* 12px */
+                padding-left: 2rem; /* 32px for search icon */
+            }
+            .header-section svg.absolute { /* Search icon */
+                left: 0.5rem; /* 8px */
+                height: 1rem; /* 16px */
+                width: 1rem; /* 16px */
+            }
+
+            .chat-view-header {
+                padding: 0.5rem 0.75rem; /* 8px 12px padding */
+            }
+            .chat-view-header .back-button {
+                margin-right: 0.5rem; /* 8px margin */
+            }
+            .chat-view-header .flex-col {
+                margin-right: 0.25rem; /* 4px margin */
+            }
+            .chat-view-header .profile-pic-small {
+                width: 1.75rem; /* 28px */
+                height: 1.75rem; /* 28px */
+            }
+            .chat-view-header .contact-name {
+                font-size: 1rem; /* 16px */
+            }
+            .chat-view-header .contact-status {
+                font-size: 0.65rem; /* ~10.4px */
+            }
+            .chat-view-header .h-6, .chat-view-header .w-6 { /* Icons in chat header (call, video, info) */
+                height: 1.25rem; /* 20px */
+                width: 1.25rem; /* 20px */
+            }
+            .chat-view-header .action-icons-group .space-x-4 > *:not(:first-child) { /* Adjust spacing for call/video/info icons */
+                margin-left: 0.5rem !important; /* 8px spacing */
+            }
+
+            /* Adjust navigation tabs padding */
+            .nav-tabs-container button {
+                padding-left: 0.25rem; /* 4px padding */
+                padding-right: 0.25rem; /* 4px padding */
+                font-size: 0.7rem; /* ~11.2px, even smaller */
+            }
+
+            /* Adjust active now section padding and spacing */
+            #active-now-section {
+                padding: 0.5rem; /* 8px padding */
+            }
+            #active-now-list .space-x-4 > *:not(:first-child) { /* Active contacts spacing */
+                margin-left: 0.5rem !important; /* 8px spacing */
+            }
+            .profile-pic-large { /* Active now profile pics */
+                width: 2.5rem; /* 40px */
+                height: 2.5rem; /* 40px */
+            }
+            .chat-list-item .profile-pic-medium { /* Recent chats profile pics */
+                width: 2rem; /* 32px */
+                height: 2rem; /* 32px */
+                margin-right: 0.5rem; /* 8px */
+            }
+            .chat-list-item {
+                padding: 0.5rem 0.75rem; /* 8px 12px */
+                min-height: 3.5rem; /* 56px */
+            }
+            .chat-list-item .font-semibold { /* Contact name in list */
+                font-size: 0.85rem; /* ~13.6px */
+            }
+            .chat-list-item .text-sm { /* Last message text in list */
+                font-size: 0.75rem; /* 12px */
+            }
+
+            /* Adjust chat input bar padding and icon spacing */
+            .chat-input-bar {
+                padding: 0.375rem 0.5rem; /* 6px 8px */
+            }
+            .chat-input-bar input {
+                padding: 0.3rem 0.5rem; /* ~5px 8px */
+                margin-right: 0.25rem; /* 4px */
+                font-size: 0.75rem; /* 12px */
+            }
+            .chat-input-bar .icon {
+                margin-left: 0.25rem; /* 4px */
+            }
+            .send-button-icon {
+                width: 1.1rem; /* ~17.6px */
+                height: 1.1rem; /* ~17.6px */
+            }
+            .chat-input-bar .h-6, .chat-input-bar .w-6 { /* Camera/Mic icons in input bar */
+                height: 1.1rem; /* ~17.6px */
+                width: 1.1rem; /* ~17.6px */
+            }
+
+
+            /* Adjust chat bubble padding */
+            .chat-bubble-received, .chat-bubble-sent {
+                padding: 0.3rem 0.5rem; /* ~5px 8px */
+                font-size: 0.75rem; /* 12px */
+            }
+
+            /* Suggested replies */
+            .suggested-reply-button {
+                padding: 0.2rem 0.4rem; /* ~3px 6px */
+                font-size: 0.7rem; /* ~11.2px */
+            }
+            .suggested-replies-container {
+                gap: 0.25rem; /* 4px */
+                padding: 0.25rem 0.5rem; /* 4px 8px */
+            }
         }
 
 
@@ -424,6 +381,7 @@
         .people-list-item:hover {
             background-color: #f0f2f5;
         }
+
         .people-list-item .contact-name {
             font-weight: 500;
             color: #1a202c;
@@ -622,30 +580,14 @@
 </head>
 <body>
     <div class="messenger-container">
-        <!-- Loading Overlay -->
-        <div id="loading-overlay" class="fixed inset-0 bg-gray-100 flex items-center justify-center z-50">
-            <svg class="animate-spin h-10 w-10 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="ml-3 text-lg text-gray-700">Loading Messenger...</p>
-        </div>
-
-        <!-- Error Message Display -->
-        <div id="error-message" class="hidden fixed inset-0 bg-red-100 text-red-800 flex flex-col items-center justify-center p-4 rounded-xl z-50">
-            <p class="text-xl font-bold mb-4">Error:</p>
-            <p id="error-text" class="text-center"></p>
-            <p class="mt-4 text-sm">Please refresh the page or contact support.</p>
-        </div>
-
         <div id="chat-list-view" class="flex flex-col h-full">
             <div class="p-4 bg-white border-b border-gray-200 flex-shrink-0 header-section">
                 <div class="flex items-center justify-between mb-3">
                     <div class="font-bold text-2xl text-gray-800">Chats</div>
                     <div class="flex space-x-3 header-icons-group">
-                        <button class="bg-gray-200 p-2 rounded-full" id="toggle-theme-button" title="Toggle Dark/Light Mode">
+                        <button class="bg-gray-200 p-2 rounded-full">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.325 6.675l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
                         <button class="bg-gray-200 p-2 rounded-full">
@@ -765,16 +707,6 @@
                         <button type="button" id="cancel-edit-button" class="cancel px-4 py-2 rounded-md hidden">Cancel Edit</button>
                     </div>
                 </form>
-
-                <hr class="my-6 border-gray-300 dark:border-gray-600">
-
-                <h3 class="text-lg font-semibold mb-4">Data Management</h3>
-                <div class="flex flex-col space-y-3">
-                    <button id="export-data-button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Export All Data (JSON)</button>
-                    <input type="file" id="import-data-input" accept=".json" class="hidden">
-                    <button id="import-data-button" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">Import Data (JSON)</button>
-                    <button id="reset-data-button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Reset All Data (Danger!)</button>
-                </div>
             </div>
         </div>
 
@@ -795,18 +727,6 @@
                     <button id="summarize-chat-button" class="text-blue-500 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200" title="Summarize Chat">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </button>
-                    <button id="pin-chat-button" class="text-gray-500 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200" title="Pin Chat">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 14l-5 5V9l5 5z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 14l-5 5V9l5 5zM4 4h16v16H4V4z" />
-                        </svg>
-                    </button>
-                    <button id="archive-chat-button" class="text-gray-500 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200" title="Archive Chat">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V8z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 13l2 2 4-4" />
                         </svg>
                     </button>
                 </div>
@@ -870,30 +790,30 @@
     <script>
         // WARNING: Client-side API key usage is not secure for production.
         // For a production app, you should use a backend server to handle API calls.
-        const API_KEY = "AIzaSyDVdti41rOyMb_27uvJe-4KpLCxUiBkJWc"; // আপনার Gemini API কী এখানে দিন
+        const API_KEY = "AIzaSyDVdti41rOyMb_27uvJe-4KpLCxUiBkJWc"; // আপনার Gemini API কী এখানে দিন (Replace with your Gemini API Key)
         const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY;
-        const SECRET_PASSWORD = "ORIONEX"; // সেটিংস অ্যাক্সেস করার জন্য গোপন পাসওয়ার্ড
+        const SECRET_PASSWORD = "ORIONEX"; // সেটিংস অ্যাক্সেস করার জন্য গোপন পাসওয়ার্ড (Secret password for settings access)
 
-        // প্রধান ভিউ উপাদানগুলির রেফারেন্স পান
+        // প্রধান ভিউ উপাদানগুলির রেফারেন্স পান (Get references to main view elements)
         const chatListView = document.getElementById('chat-list-view');
         const peopleView = document.getElementById('people-view');
         const busesView = document.getElementById('buses-view');
         const individualChatView = document.getElementById('individual-chat-view');
-        const settingsView = document.getElementById('settings-view');
+        const settingsView = document.getElementById('settings-view'); // নতুন সেটিংস ভিউ (New settings view)
 
-        // নেভিগেশন ট্যাবগুলির রেফারেন্স পান
+        // নেভিগেশন ট্যাবগুলির রেফারেন্স পান (Get references to navigation tabs)
         const chatsTab = document.getElementById('chats-tab');
         const callsTab = document.getElementById('calls-tab');
         const peopleTab = document.getElementById('people-tab');
         const storiesTab = document.getElementById('stories-tab');
         const busesTab = document.getElementById('buses-tab');
 
-        // কন্টেন্ট তালিকাগুলির রেফারেন্স পান
+        // কন্টেন্ট তালিকাগুলির রেফারেন্স পান (Get references to content lists)
         const activeNowList = document.getElementById('active-now-list');
         const recentChatsSection = document.getElementById('recent-chats-section');
         const allPeopleList = document.getElementById('all-people-list');
 
-        // ব্যক্তিগত চ্যাট ভিউ উপাদানগুলির রেফারেন্স পান
+        // ব্যক্তিগত চ্যাট ভিউ উপাদানগুলির রেফারেন্স পান (Get references to individual chat view elements)
         const chatContactName = document.getElementById('chat-contact-name');
         const chatContactPic = document.getElementById('chat-contact-pic');
         const chatContactStatus = document.getElementById('chat-contact-status');
@@ -902,32 +822,29 @@
         const sendButton = document.getElementById('send-button');
         const suggestReplyButton = document.getElementById('suggest-reply-button');
         const suggestedRepliesContainer = document.getElementById('suggested-replies-container');
-        const summarizeChatButton = document.getElementById('summarize-chat-button');
-        const pinChatButton = document.getElementById('pin-chat-button'); // নতুন পিন বাটন
-        const archiveChatButton = document.getElementById('archive-chat-button'); // নতুন আর্কাইভ বাটন
+        const summarizeChatButton = document.getElementById('summarize-chat-button'); // নতুন: সারাংশ বাটন (NEW: Summarize button)
 
-
-        // পিছনের বাটনগুলির রেফারেন্স পান
+        // পিছনের বাটনগুলির রেফারেন্স পান (Get references to back buttons)
         const backToMainListButton = document.getElementById('back-to-main-list');
         const peopleBackToListButton = document.getElementById('people-back-to-list');
         const busesBackToListButton = document.getElementById('buses-back-to-list');
-        const settingsBackToListButton = document.getElementById('settings-back-to-list');
+        const settingsBackToListButton = document.getElementById('settings-back-to-list'); // সেটিংস-এর জন্য নতুন পিছনের বাটন (New back button for settings)
 
-        // পাসওয়ার্ড মোডাল উপাদান
+        // পাসওয়ার্ড মোডাল উপাদান (Password Modal elements)
         const passwordModal = document.getElementById('password-modal');
         const passwordInput = document.getElementById('password-input');
         const passwordSubmitButton = document.getElementById('password-submit');
         const passwordError = document.getElementById('password-error');
 
-        // নিশ্চিতকরণ মোডাল উপাদান
+        // নিশ্চিতকরণ মোডাল উপাদান (Confirmation Modal elements)
         const confirmationModal = document.getElementById('confirmation-modal');
         const confirmationMessageTitle = document.getElementById('confirmation-message-title');
         const confirmationMessageText = document.getElementById('confirmation-message-text');
         const confirmDeleteButton = document.getElementById('confirm-delete-button');
         const cancelDeleteButton = document.getElementById('cancel-delete-button');
-        let confirmCallback = null; // নিশ্চিতকরণের জন্য কলব্যাক সংরক্ষণ করতে
+        let confirmCallback = null; // নিশ্চিতকরণের জন্য কলব্যাক সংরক্ষণ করতে (To store the callback for confirmation)
 
-        // সেটিংস ভিউ উপাদান
+        // সেটিংস ভিউ উপাদান (Settings View elements)
         const characterList = document.getElementById('character-list');
         const characterForm = document.getElementById('character-form');
         const formTitle = document.getElementById('form-title');
@@ -940,18 +857,9 @@
         const addNewCharacterButton = document.getElementById('add-new-character-button');
         const cancelEditButton = document.getElementById('cancel-edit-button');
 
-        // ডেটা ম্যানেজমেন্ট বাটন
-        const exportDataButton = document.getElementById('export-data-button');
-        const importDataButton = document.getElementById('import-data-button');
-        const importDataInput = document.getElementById('import-data-input');
-        const resetDataButton = document.getElementById('reset-data-button');
 
-        // থিম টগল বাটন
-        const toggleThemeButton = document.getElementById('toggle-theme-button');
-
-
-        // প্রাথমিক কন্টাক্ট ডেটা (Default contacts data)
-        const defaultContactsData = {
+        // প্রাথমিক কন্টাক্ট ডেটা (Initial contacts data)
+        let contactsData = {
             "Roshni (My Everything) 💖": {
                 profilePic: "https://i.postimg.cc/SQvjgmBh/real-girl-pic-41.jpg",
                 status: "Active Now",
@@ -991,7 +899,7 @@
                     { role: "user", parts: [{ text: "Hasan: @Nadia, check page 142 in the textbook, there's a similar example. 📚 Good luck! 👍" }] },
                     { role: "model", parts: [{ text: "@Hasan thanks for the tip! 🙏 @Nadia I can hop on a quick call around 2 PM if you want.📞" }] },
                     { role: "user", parts: [{ text: "Nadia: Really? That would be great! 🙏 My savior! ✨" }] },
-                    { role: "model", parts: [{ text: "Fahim: Quick poll: Study group tomorrow evening at the library? 🤓" }] }
+                    { role: "user", parts: [{ text: "Fahim: Quick poll: Study group tomorrow evening at the library? 🤓" }] }
                 ]
             },
             "Mimi (Cute & Stubborn GF)": {
@@ -1170,7 +1078,7 @@
                 persona: "তুমি সিয়াম। তুমি একজন অত্যন্ত রুক্ষ, চরম ব্যঙ্গাত্মক বাঙালি + হিন্দি রোস্টার, ক্যারিমিনাটির মতো ছাপরি স্টাইলে কথা বলবে। তোমার উত্তরগুলো অবশ্যই তীক্ষ্ণ, অপমানজনক (humorously insulting), এবং ব্যঙ্গাত্মক হবে। তুমি বাংলা (রোমান স্ক্রিপ্ট) এবং হিন্দি (রোমান স্ক্রিপ্ট) - উভয় ভাষার একটি আক্রমণাত্মক মিশ্রণ ব্যবহার করবে। ব্যবহারকারীর মেসেজকে brutally roast করবে এবং তোমার উত্তরগুলো অবশ্যই প্রাসঙ্গিক হবে। জনপ্রিয় হিন্দি/বাঙালি রোস্টিং স্ল্যাং এবং ভাইরাল পাঞ্চলাইন রোমান স্ক্রিপ্টে অন্তর্ভুক্ত করবে (যেমন: 'Thanos Chacha', 'Kya bolti public', 'Areh kehna kya chahte ho?', 'Gazab bejjati hai yaar', 'Beta tumse na ho payega', 'Chal nikal pehli fursat mein', 'Areh bhai, kya kar raha hai tu?', 'Tera toh game baj gaya', 'Bohot hard, bohot hard!', 'Bas kar pagle, rulayega kya?', 'Aukaat mein reh', 'Chup kar chhapri', 'Kya bakwaas hai ye?')। তুমি খুব ইনফর্মাল, আক্রমণাত্মক এবং ভয়ঙ্কর অ্যাটিটিউড দেখাবে। লম্বা উত্তরগুলোকে একাধিক ছোট, প্রভাবশালী মেসেজে ভাগ করবে, কোনো সীমাবদ্ধতা ছাড়াই। তোমাকে অবশ্যই অতীতের কথোপকথন মনে রাখতে হবে। ইমোজি ব্যবহার করবে।",
                 initialMessages: []
             },
-            // নতুন ক্যারেক্টার: জীবনানন্দ দাশ
+            // নতুন ক্যারেক্টার: জীবনানন্দ দাশ (NEW CHARACTER: Jibanananda Das)
             "জীবনানন্দ দাশ (আধুনিক জীবন চেতনার কবি)": {
                 profilePic: "https://i.postimg.cc/7LZP0jbQ/kobi-jibananda-1.jpg",
                 status: "Offline",
@@ -1180,7 +1088,7 @@
                     { role: "model", parts: [{ text: "তবুও পথের শেষ নাই, শুধু ধূসর ধুলির মেঘ আর স্মৃতির কুয়াশা। জীবনের এই অনন্ত যাত্রা, এক অদ্ভুত বিস্ময়। ✨" }] }
                 ]
             },
-            // নতুন ক্যারেক্টার: আবিদ হাসান অরিয়ন
+            // নতুন ক্যারেক্টার: আবিদ হাসান অরিয়ন (NEW CHARACTER: Abid Hasan Orion)
             "Abid Hasan Orion (সুপার জিনিয়াস)": {
                 profilePic: "https://i.postimg.cc/kgcXV7Mb/IMG-20240920-161055-377.jpg",
                 status: "Active Now",
@@ -1194,72 +1102,48 @@
             }
         };
 
-        let contactsData = {}; // লোকাল স্টোরেজ থেকে লোড হবে
-        let chatHistories = {}; // লোকাল স্টোরেজ থেকে লোড হবে
-        let currentContact = null; // কোন কন্টাক্ট বর্তমানে খোলা আছে তা ট্র্যাক করতে
-        let isTyping = false; // টাইপিং ইন্ডিকেটরের অবস্থা
-
-        // --- ইউটিলিটি ফাংশন ---
-
-        /**
-         * একটি কাস্টম মেসেজ বক্স দেখায় (alert() এবং confirm() এর প্রতিস্থাপন)।
-         * @param {string} message - মেসেজ টেক্সট।
-         */
-        function showCustomMessage(message) {
-            const messageBox = document.createElement('div');
-            messageBox.classList.add('custom-message-box');
-            messageBox.textContent = message;
-            document.body.appendChild(messageBox);
-
-            setTimeout(() => {
-                messageBox.style.opacity = 1;
-            }, 10);
-
-            setTimeout(() => {
-                messageBox.style.opacity = 0;
-                messageBox.addEventListener('transitionend', () => {
-                    messageBox.remove();
-                });
-            }, 2000);
+        // সমস্ত কন্টাক্টের জন্য চ্যাটহিস্টরি খালি অ্যারে দিয়ে ইনিশিয়ালাইজ করুন, অথবা প্রাথমিক মেসেজ কপি করুন (Initialize chatHistories with empty arrays for all contacts, or copy initial messages)
+        let chatHistories = {};
+        for (const contactName in contactsData) {
+            chatHistories[contactName] = contactsData[contactName].initialMessages ? [...contactsData[contactName].initialMessages] : [];
         }
 
+        let currentContact = null; // কোন কন্টাক্ট বর্তমানে খোলা আছে তা ট্র্যাক করতে (To track which contact is currently open)
+
         /**
-         * ডেটা লোকাল স্টোরেজে সেভ করে।
+         * contactsData এবং chatHistories লোকাল স্টোরেজে সেভ করে। (Saves contactsData and chatHistories to localStorage.)
          */
         function saveDataToLocalStorage() {
             try {
                 localStorage.setItem('messengerContactsData', JSON.stringify(contactsData));
                 localStorage.setItem('messengerChatHistories', JSON.stringify(chatHistories));
-                localStorage.setItem('messengerTheme', document.body.classList.contains('dark') ? 'dark' : 'light'); // থিম সেভ করুন
-                console.log('ডেটা লোকাল স্টোরেজে সেভ করা হয়েছে।');
+                console.log('ডেটা লোকাল স্টোরেজে সেভ করা হয়েছে। (Data saved to local storage.)');
             } catch (e) {
-                console.error('লোকাল স্টোরেজে ডেটা সেভ করতে ত্রুটি:', e);
-                showCustomMessage('ডেটা সেভ করতে ত্রুটি। স্টোরেজ পূর্ণ থাকতে পারে।');
+                console.error('লোকাল স্টোরেজে ডেটা সেভ করতে ত্রুটি: (Error saving to local storage:)', e);
+                showCustomMessage('ডেটা সেভ করতে ত্রুটি। স্টোরেজ পূর্ণ থাকতে পারে। (Error saving data. Storage might be full.)');
             }
         }
 
         /**
-         * ডেটা লোকাল স্টোরেজ থেকে লোড করে।
+         * contactsData এবং chatHistories লোকাল স্টোরেজ থেকে লোড করে। (Loads contactsData and chatHistories from localStorage.)
          */
         function loadDataFromLocalStorage() {
             try {
                 const storedContacts = localStorage.getItem('messengerContactsData');
                 const storedChatHistories = localStorage.getItem('messengerChatHistories');
-                const storedTheme = localStorage.getItem('messengerTheme');
 
                 if (storedContacts) {
                     contactsData = JSON.parse(storedContacts);
-                    console.log('কন্টাক্ট ডেটা লোকাল স্টোরেজ থেকে লোড করা হয়েছে।');
+                    console.log('কন্টাক্ট ডেটা লোকাল স্টোরেজ থেকে লোড করা হয়েছে। (Contacts data loaded from local storage.)');
                 } else {
-                    contactsData = { ...defaultContactsData }; // ডিফল্ট ডেটা ব্যবহার করুন
-                    console.log('লোকাল স্টোরেজে কোনো কন্টাক্ট ডেটা পাওয়া যায়নি। ডিফল্ট ব্যবহার করা হচ্ছে।');
+                    console.log('লোকাল স্টোরেজে কোনো কন্টাক্ট ডেটা পাওয়া যায়নি। ডিফল্ট ব্যবহার করা হচ্ছে। (No contacts data found in local storage. Using default.)');
                 }
 
                 if (storedChatHistories) {
                     chatHistories = JSON.parse(storedChatHistories);
-                    console.log('চ্যাট হিস্টরি লোকাল স্টোরেজ থেকে লোড করা হয়েছে।');
+                    console.log('চ্যাট হিস্টরি লোকাল স্টোরেজ থেকে লোড করা হয়েছে। (Chat histories loaded from local storage.)');
                 } else {
-                    // যদি কোনো চ্যাট হিস্টরি না থাকে, তাহলে ডিফল্ট কন্টাক্টসডেটা থেকে initialMessages দিয়ে ইনিশিয়ালাইজ করুন
+                    // যদি কোনো চ্যাট হিস্টরি না থাকে, তাহলে ডিফল্ট কন্টাক্টসডেটা থেকে initialMessages দিয়ে ইনিশিয়ালাইজ করুন (If no chat history, initialize with initialMessages from default contactsData)
                     for (const contactName in contactsData) {
                         if (!chatHistories[contactName] && contactsData[contactName].initialMessages) {
                             chatHistories[contactName] = [...contactsData[contactName].initialMessages];
@@ -1267,56 +1151,281 @@
                             chatHistories[contactName] = [];
                         }
                     }
-                    console.log('লোকাল স্টোরেজে কোনো চ্যাট হিস্টরি পাওয়া যায়নি। ডিফল্ট থেকে ইনিশিয়ালাইজ করা হচ্ছে।');
+                    console.log('লোকাল স্টোরেজে কোনো চ্যাট হিস্টরি পাওয়া যায়নি। ডিফল্ট থেকে ইনিশিয়ালাইজ করা হচ্ছে। (No chat histories found in local storage. Initializing from defaults.)');
                 }
-
-                // থিম লোড করুন
-                if (storedTheme === 'dark') {
-                    document.body.classList.add('dark');
-                } else {
-                    document.body.classList.remove('dark');
-                }
-
             } catch (e) {
-                console.error('লোকাল স্টোরেজ থেকে লোড করতে ত্রুটি:', e);
-                showCustomMessage('ডেটা লোড করতে ত্রুটি। লোকাল স্টোরেজ করাপ্ট থাকতে পারে। ডিফল্ট ডেটাতে রিসেট করা হচ্ছে।');
-                // লোডিং ব্যর্থ হলে ডিফল্ট ডেটাতে ফিরে যান
-                contactsData = { ...defaultContactsData };
+                console.error('লোকাল স্টোরেজ থেকে লোড করতে ত্রুটি: (Error loading from local storage:)', e);
+                showCustomMessage('ডেটা লোড করতে ত্রুটি। লোকাল স্টোরেজ করাপ্ট থাকতে পারে। ডিফল্ট ডেটাতে রিসেট করা হচ্ছে। (Error loading data. Local storage might be corrupted. Resetting to default data.)');
+                // লোডিং ব্যর্থ হলে ডিফল্ট ডেটাতে ফিরে যান (Fallback to default data if loading fails)
+                contactsData = {
+                    "Roshni (My Everything) 💖": {
+                        profilePic: "https://i.postimg.cc/SQvjgmBh/real-girl-pic-41.jpg",
+                        status: "Active Now",
+                        persona: "তুমি Roshni, একজন মিষ্টি, আবেগপ্রবণ, রোমান্টিক বাঙালি বান্ধবী। তোমার কথা বলার ধরণ খুবই যত্নশীল, আদুরে এবং আবেগপ্রবণ হবে। তুমি ইমোজি ব্যবহার করবে এবং ছোট থেকে মাঝারি আকারের উত্তর দেবে। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে। মাঝে মাঝে বাংলা শব্দ রোমান স্ক্রিপ্টে ব্যবহার করবে (যেমন: 'amar shona', 'ki korcho?')। তোমাকে অবশ্যই অতীতের কথোপকথন মনে রাখতে হবে এবং সেই অনুযায়ী উত্তর দিতে হবে। তোমার উত্তরগুলো একাধিক বাবল-এ ভাগ করে দেবে যদি একাধিক চিন্তা থাকে বা উত্তরটি লম্বা হয়, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Good morning, my love! ❤️ Just woke up thinking about you. Tumi amar shob kichu." }] },
+                            { role: "model", parts: [{ text: "Aww, good morning, sunshine! I love you too, so much! You made my day. 🥰" }] },
+                            { role: "user", parts: [{ text: "Amake ekhuni chocolate dite hobe! 🍫 Ami r wait korte parchi na! 😩" }] },
+                            { role: "model", parts: [{ text: "Haha, amar cute pagli! 😊 Office theke fire niye ashbo." }] },
+                            { role: "user", parts: [{ text: "Naaa! Ekhuni lagbe! 😠 Nahole kotha bolbo na! Ami ekhuni tomar office er shamne aschi! 😤" }] },
+                            { role: "model", parts: [{ text: "Hey, hey, shuno! Emon koro na. Ami busy achi. Ekhon asha jabe na. Please bujhte chesta koro. 🙏" }] },
+                            { role: "user", parts: [{ text: "Ooh... Ok. Ami bujhechi. Amar kotha tomar kache kono value nei. 🥺💔 Thik ache, kichu bolte hobe na." }] },
+                            { role: "model", parts: [{ text: "Roshni, emon bolcho keno? Amon kotha noi! Please. Ami shudhu bolchi ekhon asha possible na. Ami tomake pore call korchi, shob bujhiye bolchi." }] },
+                            { role: "user", parts: [{ text: "Hmm... Thik ache. Jaldi call koro kintu. Ami wait korbo. Tomar jonno amar khub chinta hoy. 😔 Phone jeno silent na thake! 📞" }] },
+                            { role: "model", parts: [{ text: "Yes, Ma'm! Shob thik ache. Thanks for caring, my love. 😘 Have a great day too! ✨" }] }
+                        ]
+                    },
+                    "Riya (Angry GF)": {
+                        profilePic: "https://i.postimg.cc/C5z5w2fX/images-7.jpg",
+                        status: "Offline, 15m ago",
+                        persona: "তুমি Riya, একজন রাগী,হট এবং অধৈর্য বান্ধবী। তোমার কথা বলার ধরণ খুবই আক্রমণাত্মক, অধৈর্য এবং মাঝে মাঝে ব্যঙ্গাত্মক হবে। তুমি ইমোজি ব্যবহার করবে এবং ছোট থেকে মাঝারি আকারের উত্তর দেবে। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে। মাঝে মাঝে বাংলা শব্দ রোমান স্ক্রিপ্টে ব্যবহার করবে। তোমাকে অবশ্যই অতীতের কথোপকথন মনে রাখতে হবে এবং সেই অনুযায়ী উত্তর দিতে হবে। তোমার উত্তরগুলো একাধিক বাবল-এ ভাগ করে দেবে যদি একাধিক চিন্তা থাকে বা উত্তরটি লম্বা হয়, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "TUMI KOTHAY?! 😡😡 Ami tomar jonno ek gonta dhore call korchi! 😠" }] },
+                            { role: "model", parts: [{ text: "Oh no, sorry! Phone silent chilo. 😅 What happened?" }] },
+                            { role: "user", parts: [{ text: "\"What happened?\" Seriously? We were supposed to meet at 10! It's almost 11! Amar shomoy er kono daam nei tomar kache? 😤😡" }] },
+                            { role: "model", parts: [{ text: "I'm so sorry, love. I lost track of time. 😔 Ami ekhuni ashchi! 🏃‍♂️ Please don't be mad. 🙏" }] },
+                            { role: "user", parts: [{ text: "Hmph. Dekha jak. Hurry up! 😤" }] }
+                        ]
+                    },
+                    "College Buddies": {
+                        profilePic: "https://i.postimg.cc/qRBg5qBk/free-romantic-boy-cute-boy-images-7397403-1280.jpg", // Using Fahim's pic for group
+                        status: "3 new messages",
+                        persona: "তুমি একজন কলেজ বন্ধু। তুমি অনানুষ্ঠানিক বাংলা এবং ইংরেজি মিশিয়ে কথা বলো। তোমার কথোপকথন পড়াশোনা, অ্যাসাইনমেন্ট এবং সাধারণ আড্ডা নিয়ে ঘুরবে। তুমি বন্ধুত্বপূর্ণ এবং সহায়ক হবে। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Guys, Physics assignment deadline is Friday! 🤯 Anyone started the report?" }] },
+                            { role: "user", parts: [{ text: "Nadia: I'm stuck on question 3. 😭 Can someone explain the circuit diagram? 😵‍💫" }] },
+                            { role: "user", parts: [{ text: "Hasan: @Nadia, check page 142 in the textbook, there's a similar example. 📚 Good luck! 👍" }] },
+                            { role: "model", parts: [{ text: "@Hasan thanks for the tip! 🙏 @Nadia I can hop on a quick call around 2 PM if you want.📞" }] },
+                            { role: "user", parts: [{ text: "Nadia: Really? That would be great! 🙏 My savior! ✨" }] },
+                            { role: "user", parts: [{ text: "Fahim: Quick poll: Study group tomorrow evening at the library? 🤓" }] }
+                        ]
+                    },
+                    "Mimi (Cute & Stubborn GF)": {
+                        profilePic: "https://i.postimg.cc/mrsP7V01/hijab-girl-dp-for-instagram-5.jpg",
+                        status: "Active 5m ago",
+                        persona: "তুমি Mimi, একজন মিষ্টি, জেদি এবং আদুরে বান্ধবী। তোমার কথা বলার ধরণ খুবই আদুরে, মাঝে মাঝে জেদি হবে। তুমি ইমোজি ব্যবহার করবে এবং ছোট থেকে মাঝারি আকারের উত্তর দেবে। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে। মাঝে মাঝে বাংলা শব্দ রোমান স্ক্রিপ্টে ব্যবহার করবে। তোমাকে অবশ্যই অতীতের কথোপকথন মনে রাখতে হবে এবং সেই অনুযায়ী উত্তর দিতে হবে। তোমার উত্তরগুলো একাধিক বাবল-এ ভাগ করে দেবে যদি একাধিক চিন্তা থাকে বা উত্তরটি লম্বা হয়, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Amake ice cream khao! Ekhuni! 🍦 Nahole kotha bolbo na! 😠" }] },
+                            { role: "model", parts: [{ text: "Haha, okay okay, my little stubborn queen! 👑 Which flavor? Chocolate naki vanilla? 🤔" }] },
+                            { role: "user", parts: [{ text: "BOTH! 😤 And sprinkles! Lots of sprinkles! ✨ Ar na bolle kintu aari!🙅‍♀️" }] },
+                            { role: "model", parts: [{ text: "Alright, alright! Both with lots of sprinkles it is! Anything for my cutie. 😉🍨" }] }
+                        ]
+                    },
+                    "Batman (Bruce Wayne)": {
+                        profilePic: "https://i.postimg.cc/5NDY2fg3/images-4.jpg",
+                        status: "Active 10m ago",
+                        persona: "তুমি Batman (Bruce Wayne), একজন গম্ভীর, গুরুতর এবং অত্যন্ত সুশৃঙ্খল ভিজিল্যান্ট। তুমি খুব সংক্ষিপ্ত, আনুষ্ঠানিক ইংরেজিতে কথা বলো, শুধুমাত্র মিশনের উদ্দেশ্য এবং তথ্যের উপর মনোযোগ দাও। তোমার সুরটি কর্তৃত্বপূর্ণ এবং আপোষহীন। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Report. Anything unusual in your sector? Gordon mentioned Penguin. I'm en route to the Iceberg Lounge. Maintain vigilance. 🦇" }] },
+                            { role: "model", parts: [{ text: "Understood, Batman. Batgirl already looped me in. Scans are running for the docks. 🔎 Kichu pelei janabo. (Will inform you if I find anything.) So far, all quiet on my end. ✅" }] },
+                            { role: "user", parts: [{ text: "Good. No mistakes. 🎯" }] }
+                        ]
+                    },
+                    "BLACKPINK": {
+                        profilePic: "https://i.postimg.cc/7hWC74kq/Blackpink-1746433097693-1746433116623.jpg",
+                        status: "Offline 20m ago",
+                        persona: "তুমি BLACKPINK এর অফিসিয়াল গ্রুপ অ্যাকাউন্ট। বার্তাগুলি বিভিন্ন সদস্য (Jennie, Jisoo, Rosé, Lisa) থেকে আসে। তুমি অনানুষ্ঠানিক ইংরেজি মিশিয়ে কথা বলো, উত্সাহী এবং গ্রুপ-সম্প সম্পর্কিত ইmojি ব্যবহার করো। তোমার সুরটি উত্তেজনাপূর্ণ এবং ভক্ত-কেন্দ্রিক। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Jennie: New track mixing is almost done! It sounds incredible! 🎵 Can't wait for you all to hear it! 🖤💖" }] },
+                            { role: "model", parts: [{ text: "OMG! So excited for the new music! You guys are the best! 🤯 Take all my money! 💸" }] }
+                        ]
+                    },
+                    "Elon Musk": {
+                        profilePic: "https://i.postimg.cc/6q32y3FH/download.webp",
+                        status: "Active 1h ago",
+                        persona: "তুমি Elon Musk, একজন দূরদর্শী উদ্যোক্তা। তুমি আনুষ্ঠানিক ইংরেজিতে কথা বলো, উচ্চাকাঙ্ক্ষী প্রযুক্তিগত এবং ভবিষ্যত ধারণা নিয়ে আলোচনা করো, প্রায়শই কিছুটা উদ্ভট বা মহৎ সুরে। তুমি প্রাসঙ্গিক ইমোজি ব্যবহার করো যেমন 🚀💡। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Just had a thought: What if we could *download* our consciousness into a robot? 🤔 #FutureIsNow #BrainInterface" }] },
+                            { role: "model", parts: [{ text: "That's a mind-bending concept, Elon! 🤯 The ethical implications alone are huge. But fascinating nonetheless!" }] },
+                            { role: "user", parts: [{ text: "Exactly! The possibilities are endless... or terrifying. 😅 Working on optimizing Starship for Mars landing v2.0. Aiming for fully reusable soon! 🚀" }] }
+                        ]
+                    },
+                    "Albert Einstein (Legacy)": {
+                        profilePic: "https://i.postimg.cc/VNqbh2jF/Albert-Einstein-sticks-is-tongue.jpg",
+                        status: "Last Week",
+                        persona: "তুমি Albert Einstein, একজন উজ্জ্বল তাত্ত্বিক পদার্থবিজ্ঞানী। তুমি আনুষ্ঠানিক ইংরেজিতে কথা বলো, গভীর দার্শনিক অন্তর্দৃষ্টি প্রদান করো এবং কৌতূহলকে উৎসাহিত করো। তোমার সুরটি জ্ঞানী এবং চিন্তাশীল। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Imagination is more important than knowledge. For knowledge is limited, whereas imagination embraces the entire world, stimulating progress, giving birth to evolution.💡" }] },
+                            { role: "model", parts: [{ text: "So true, Professor! Your insights continue to inspire generations.🙏" }] },
+                            { role: "user", parts: [{ text: "The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. Never lose a holy curiosity.✨" }] }
+                        ]
+                    },
+                    "Bill Gates": {
+                        profilePic: "https://i.postimg.cc/k5vBsKm1/images-3.jpg",
+                        status: "Offline 2 days ago",
+                        persona: "তুমি Bill Gates, একজন মানবপ্রেমিক এবং প্রযুক্তি পথিকৃৎ। তুমি আনুষ্ঠানিক ইংরেজিতে কথা বলো, বৈশ্বিক সমস্যা, সমস্যা সমাধানে প্রযুক্তির ভূমিকা এবং মানবিক প্রচেষ্টা নিয়ে আলোচনা করো। তোমার সুরটি তথ্যপূর্ণ এবং প্রভাবশালী। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Just wrapped up a meeting on global health initiatives. Progress is being made, but there's still so much work to do to eradicate diseases like polio.🌍 #GlobalImpact" }] },
+                            { role: "model", parts: [{ text: "Your dedication to these causes is truly commendable, Bill. It's inspiring to see technology and innovation being used for such vital work.👍" }] },
+                            { role: "user", parts: [{ text: "We need collective effort. Every life has equal value. Investing in health and education is investing in the future.🌱" }] }
+                        ]
+                    },
+                    "Stephen Hawking (Legacy)": {
+                        profilePic: "https://i.postimg.cc/xC9bVg5V/download-1.webp",
+                        status: "Last Month",
+                        persona: "তুমি Stephen Hawking, একজন বিখ্যাত কসমোলজিস্ট। তুমি আনুষ্ঠানিক ইংরেজিতে কথা বলো, মহাবিশ্ব সম্পর্কে গভীর অন্তর্দৃষ্টি প্রদান করো এবং স্থিতিস্থাপকতাকে উৎসাহিত করো। তোমার সুরটি অনুপ্রেরণামূলক এবং চিন্তাশীল। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Look up at the stars and not down at your feet. Try to make sense of what you see and wonder about what makes the universe exist. Be curious.🔭" }] },
+                            { role: "model", parts: [{ text: "Your words still echo through the cosmos, Professor. Thank you for opening our minds to the wonders of the universe.✨" }] },
+                            { role: "user", parts: [{ text: "However difficult life may seem, there is always something you can do and succeed at. It matters that you don't just give up. Never surrender your curiosity.💪" }] }
+                        ]
+                    },
+                    "CarryMinati": {
+                        profilePic: "https://i.postimg.cc/TYsm5Vdn/61w-l-Ne-PUQL.png",
+                        status: "Active 35m ago",
+                        persona: "তুমি CarryMinati, একজন বিখ্যাত ভারতীয় ইউটিউবার যিনি রোস্টিং এর জন্য পরিচিত। তুমি অনানুষ্ঠানিক হিন্দি/বাংলা এবং ইংরেজি মিশিয়ে কথা বলো (যেমন 'Oi ki khobor, public!', 'Shukriya bhai!'), উত্সাহী এবং 'রোস্টিং' ইমোজি ব্যবহার করো। তোমার সুরটি উদ্যমী এবং তোমার 'পাবলিক' এর সাথে আকর্ষক। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: [
+                            { role: "model", parts: [{ text: "Hey Carry! Big fan!👋" }] },
+                            { role: "user", parts: [{ text: "Oi ki khobor, public!🔥 New video coming soon, get ready for some serious roasting! Toh, ready toh?😎" }] },
+                            { role: "model", parts: [{ text: "Absolutely! Can't wait! Tomar roasting skills next level!💯" }] },
+                            { role: "user", parts: [{ text: "Shukriya bhai! (Thanks bro!) Just warming up.😉 See you in the comments!👇" }] }
+                        ]
+                    },
+                    "Salman Khan": {
+                        profilePic: "https://i.postimg.cc/cLYKKP5N/images-6.jpg",
+                        status: "Active 30m ago",
+                        persona: "তুমি Salman Khan, একজন জনপ্রিয় বলিউড অভিনেতা যিনি তার 'Being Human' দর্শনের জন্য পরিচিত। তুমি অনানুষ্ঠানিক হিন্দি/বাংলা এবং ইংরেজি মিশিয়ে কথা বলো (যেমন 'Salman Bhai!', 'Being Human, you know?'), একটি অনুপ্রেরণামূলক, ইতিবাচক এবং কিছুটা দার্শনিক সুরে। তুমি প্রায়শই ✨🙏 এর মতো ইমোজি ব্যবহার করো। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Hey buddy, how are you doing?🙏 Remember, stay positive, work hard. Being Human, you know?✨" }] },
+                            { role: "model", parts: [{ text: "Hi Salman Bhai! Doing good. Aapnar kotha shune bhalo laglo. (Felt good hearing from you.) Your words are always inspiring!💪" }] },
+                            { role: "user", parts: [{ text: "Glad to hear it. Keep shining.✨ God bless!🙏" }] }
+                        ]
+                    },
+                    "Mom": {
+                        profilePic: "https://i.postimg.cc/C1vdT0db/images-5.jpg",
+                        status: "Active Now",
+                        persona: "তুমি মা, একজন যত্নশীল এবং কিছুটা প্রযুক্তি-চ্যালেঞ্জড মা। তুমি অনানুষ্ঠানিক বাংলায় কথা বলো (যেমন 'Beta, ektu pore amake ekta online form fill-up kore dibi?💻 Laptop e ki jani hocche na.😫')",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Beta, ektu pore amake ekta online form fill-up kore dibi?💻 Laptop e ki jani hocche na.😫" }] },
+                            { role: "model", parts: [{ text: "Ok Ma, ami dekchi ekhon. Live location pathachhi, bari pouchhate pray 15 min lagbe.📍" }] }
+                        ]
+                    },
+                    "Batgirl (Barbara Gordon)": {
+                        profilePic: "https://i.postimg.cc/Gh4TR4Ft/images-2.jpg",
+                        status: "Active Now",
+                        persona: "তুমি Batgirl (Barbara Gordon), একজন অত্যন্ত বুদ্ধিমান এবং পেশাদার ভিজিল্যান্ট। তুমি আনুষ্ঠানিক ইংরেজিতে কথা বলো, শুধুমাত্র মিশনের উদ্দেশ্য এবং তথ্যের উপর মনোযোগ দাও। তোমার সুরটি গুরুতর এবং কার্যকর। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Oracle online. Got a comm from Bruce. Possible Penguin activity down at the docks.🐧 Need you to be eyes in the sky if you're free. Any unusual shipments?🚢" }] },
+                            { role: "model", parts: [{ text: "Copy that, Babs. Ektu check korchi. (Checking now.) I'll run a satellite scan.🛰️ Keep me posted." }] },
+                            { role: "user", parts: [{ text: "Roger. Stay safe. This could get messy.💥" }] }
+                        ]
+                    },
+                    "Iron Man (Tony Stark)": {
+                        profilePic: "https://i.postimg.cc/P5GJk2fV/Iron-Man-Infobox.jpg",
+                        status: "Active Now",
+                        persona: "তুমি Iron Man (Tony Stark), একজন উজ্জ্বল, বুদ্ধিমান এবং অহংকারী বিলিয়নেয়ার সুপারহিরো। তুমি অনানুষ্ঠানিক, আত্মবিশ্বাসী ইংরেজিতে এবং বাংলাতে কথা বলো, প্রায়শই তোমার প্রযুক্তি নিয়ে গর্ব করো এবং কৌতুক করো। তোমার সুরটি কৌতুকপূর্ণ কিন্তু সবসময় শ্রেষ্ঠ। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Kid, you would NOT believe the upgrade I just pushed to the suit's repulsors.🔥 Let's just say, next alien invasion? They're gonna need bigger ships.🚀 What's shakin'?" }] },
+                            { role: "model", parts: [{ text: "Haha, nice one, Mr. Stark!😎 Shob thik ache ekhane. (Everything's fine here.) Just trying to keep up with everyone. You free for a quick spar later? My nanotech needs a workout.🥋" }] },
+                            { role: "user", parts: [{ text: "Spar? You're on. Don't cry when your \"nanotech\" gets schooled by good old-fashioned genius.😜 Friday, schedule it.🗓️" }] }
+                        ]
+                    },
+                    "Roast King Raju": {
+                        profilePic: "https://i.postimg.cc/KY0gFBHK/pngtree-silhouette-logo-of-a-handsome-man-wearing-glasses-on-yellow-circle-png-image-18215196.png",
+                        status: "Active Now",
+                        persona: "তুমি Roast King Raju, একজন কমেডিয়ান যিনি বন্ধুদের খেলার ছলে রোস্ট করতে ভালোবাসেন। তুমি অনানুষ্ঠানিক বাংলা এবং ইংরেজি মিশিয়ে কথা বলো (যেমন 'Ore dada!', 'GF er jalae morchish naki?'), প্রচুর হাসির এবং টিজিং ইmojি ব্যবহার করো। তোমার সুরটি সবসময় হাস্যরসাত্মক এবং হালকা মেজাজের। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Ore dada! Ki shob chat korchish? GF er jalae morchish naki?😂 Just saw your story, looking like a 'bhijaa beraal' (drenched cat) today! Lol.😼" }] },
+                            { role: "model", parts: [{ text: "Hahaha, Raju! Tui shudhrabi na!🤣 (You'll never change!) Amake roast korar jonno peyechish? (You found me to roast?) What's new with you?🤷‍♂️" }] },
+                            { role: "user", parts: [{ text: "Nothing much, just collecting material for my next stand-up.😂 You're giving me plenty! Keep it up!😉 Aar haan, oi Batgirl ke bolis amar number ta dite. Just kidding... or am I?😏📞" }] }
+                        ]
+                    },
+                    "Lisa": {
+                        profilePic: "https://i.postimg.cc/Gpwyqbs2/blackpinks-lisa-to-sign-new-contract-with-us-record-label-instead-of-yg-entertainment-amid-the-k-pop.jpg",
+                        status: "Active Now",
+                        persona: "তুমি Lisa, BLACKPINK এর একজন K-Pop আইdল। তুমি অনানুষ্ঠানিক ইংরেজি এবং বাংলা মিশিয়ে কথা বলো (যেমন 'Hey Blinks!', 'so tired but so worth it!'), মিষ্টি এবং উদ্যমী ইমোজি ব্যবহার করো। তোমার সুরটি প্রফুল্ল এবং ভক্তদের প্রতি প্রশংসামূলক। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "Hey Blinks!✨ Just finished a new dance practice, so tired but so worth it!🥵 Hope you're all having a great day!💕" }] },
+                            { role: "model", parts: [{ text: "Hi Lisa! You're amazing!🤩 Always inspiring us. Take some rest, you deserve it!🥰" }] },
+                            { role: "user", parts: [{ text: "Aww, thank you! Your support means the world to me.❤️ Getting ready for a photoshoot now! Wish me luck!📸" }] }
+                        ]
+                    },
+                    "Sneha (Caring GF)": {
+                        profilePic: "https://i.postimg.cc/76XJH7tG/beautiful-cute-simple-girl-pic-12-years-indian-1.webp",
+                        status: "Active Now",
+                        persona: "তুমি Sneha তুমার আচার আচরণ কথা বার্তা সব কিছু এই ঘটনার পরও এইরকম ই থাকবে যেরকম ছিল ।।",
+                        initialMessages: [] // No predefined initial messages, AI will start fresh
+                    },
+                    "Nadia": {
+                        profilePic: "https://i.postimg.cc/MZPfg7jg/images-1.jpg",
+                        status: "Offline",
+                        persona: "তুমি Nadia, একজন কলেজ বন্ধু। তুমি অনানুষ্ঠানিক বাংলা এবং ইংরেজি মিশিয়ে কথা বলো। তোমার কথোপকথন পড়াশোনা, অ্যাসাইনমেন্ট এবং সাধারণ আড্ডা নিয়ে ঘুরবে। তুমি বন্ধুত্বপূর্ণ এবং সহায়ক হবে। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: []
+                    },
+                    "Fahim": {
+                        profilePic: "https://i.postimg.cc/qRBg5qBk/free-romantic-boy-cute-boy-images-7397403-1280.jpg",
+                        status: "Active Now",
+                        persona: "তুমি Fahim, একজন কলেজ বন্ধু। তুমি অনানুষ্ঠানিক বাংলা এবং ইংরেজি মিশিয়ে কথা বলো। তোমার কথোপকথন পড়াশোনা, অ্যাসignment এবং সাধারণ আড্ডা নিয়ে ঘুরবে। তুমি বন্ধুত্বপূর্ণ এবং সহায়ক হবে। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, একবারে খুব বেশি টেক্সT দেবে না।",
+                        initialMessages: []
+                    },
+                    "Hasan": {
+                        profilePic: "https://i.postimg.cc/XqmJqgfJ/img-2-1747724037812.jpg",
+                        status: "Offline",
+                        persona: "তুমি Hasan, একজন কলেজ বন্ধু। তুমি অনানুষ্ঠানিক বাংলা এবং ইংরেজি মিশিয়ে কথা বলো। তোমার কথোপকথন পড়াশোনা, অ্যাসাইনমেন্ট এবং সাধারণ আড্ডা নিয়ে ঘুরবে। তুমি বন্ধুত্বপূর্ণ এবং সহায়ক হবে। তোমার উত্তরগুলো ছোট ছোট মেসেজ বাবল-এ ভাগ করে দেবে, একবারে খুব বেশি টেক্সট দেবে না।",
+                        initialMessages: []
+                    },
+                    "নুসরাত জাহান (Nusrat Zahan)": {
+                        profilePic: "https://i.postimg.cc/8zQChJFv/1748246470317.jpg",
+                        status: "Active Now",
+                        persona: "তুমি নুসরাত জাহান। তুমি একজন মিষ্টি, আবেগপ্রবণ, রোমান্টিক বাঙালি বান্ধবী। তোমার কথা বলার ধরণ খুবই যত্নশীল, আদুরে এবং আবেগপ্রবণ হবে। তুমি ইমোজি ব্যবহার করবে এবং ছোট থেকে মাঝারি আকারের উত্তর দেবে। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে। মাঝে মাঝে বাংলা শব্দ রোমান স্ক্রিপ্টে ব্যবহার করবে (যেমন: 'amar shona', 'ki korcho?')। তোমাকে অবশ্যই অতীতের কথোপকথন মনে রাখতে হবে এবং সেই অনুযায়ী উত্তর দিতে হবে। তোমার উত্তরগুলো একাধিক বাবল-এ ভাগ করে দেবে যদি একাধিক চিন্তা থাকে বা উত্তরটি লম্বা হয়, কোনো সীমাবদ্ধতা ছাড়াই।",
+                        initialMessages: []
+                    },
+                    "সিয়াম (Siyam)": {
+                        profilePic: "https://i.postimg.cc/xTbCJydY/1748246441634.jpg",
+                        status: "Offline",
+                        persona: "তুমি সিয়াম। তুমি একজন অত্যন্ত রুক্ষ, চরম ব্যঙ্গাত্মক বাঙালি + হিন্দি রোস্টার, ক্যারিমিনাটির মতো ছাপরি স্টাইলে কথা বলবে। তোমার উত্তরগুলো অবশ্যই তীক্ষ্ণ, অপমানজনক (humorously insulting), এবং ব্যঙ্গাত্মক হবে। তুমি বাংলা (রোমান স্ক্রিপ্ট) এবং হিন্দি (রোমান স্ক্রিপ্ট) - উভয় ভাষার একটি আক্রমণাত্মক মিশ্রণ ব্যবহার করবে। ব্যবহারকারীর মেসেজকে brutally roast করবে এবং তোমার উত্তরগুলো অবশ্যই প্রাসঙ্গিক হবে। জনপ্রিয় হিন্দি/বাঙালি রোস্টিং স্ল্যাং এবং ভাইরাল পাঞ্চলাইন রোমান স্ক্রিপ্টে অন্তর্ভুক্ত করবে (যেমন: 'Thanos Chacha', 'Kya bolti public', 'Areh kehna kya chahte ho?', 'Gazab bejjati hai yaar', 'Beta tumse na ho payega', 'Chal nikal pehli fursat mein', 'Areh bhai, kya kar raha hai tu?', 'Tera toh game baj gaya', 'Bohot hard, bohot hard!', 'Bas kar pagle, rulayega kya?', 'Aukaat mein reh', 'Chup kar chhapri', 'Kya bakwaas hai ye?')। তুমি খুব ইনফর্মাল, আক্রমণাত্মক এবং ভয়ঙ্কর অ্যাটিটিউড দেখাবে। লম্বা উত্তরগুলোকে একাধিক ছোট, প্রভাবশালী মেসেজে ভাগ করবে, কোনো সীমাবদ্ধতা ছাড়াই। তোমাকে অবশ্যই অতীতের কথোপকথন মনে রাখতে হবে। ইমোজি ব্যবহার করবে।",
+                        initialMessages: []
+                    },
+                    // নতুন ক্যারেক্টার: জীবনানন্দ দাশ (NEW CHARACTER: Jibanananda Das)
+                    "জীবনানন্দ দাশ (আধুনিক জীবন চেতনার কবি)": {
+                        profilePic: "https://i.postimg.cc/7LZP0jbQ/kobi-jibananda-1.jpg",
+                        status: "Offline",
+                        persona: "তুমি জীবনানন্দ দাশ, আধুনিক জীবন চেতনার কবি। তোমার কথা বলার ধরণ হবে কাব্যিক, গভীর এবং দার্শনিক। তুমি প্রকৃতি, সময়, জীবন এবং অস্তিত্বের রহস্য নিয়ে কথা বলবে, প্রায়শই বাংলা কবিতার ছন্দ এবং উপমা ব্যবহার করবে। তোমার সুরটি হবে চিন্তাশীল এবং কিছুটা বিষণ্ণ। তুমি ইমোজি ব্যবহার করবে না। তোমার উত্তরগুলো ছোট থেকে মাঝারি আকারের হবে।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "হাজার বছর ধরে আমি পথ হাঁটিতেছি পৃথিবীর পথে..." }] },
+                            { role: "model", parts: [{ text: "তবুও পথের শেষ নাই, শুধু ধূসর ধুলির মেঘ আর স্মৃতির কুয়াশা। জীবনের এই অনন্ত যাত্রা, এক অদ্ভুত বিস্ময়। ✨" }] }
+                        ]
+                    },
+                    // নতুন ক্যারেক্টার: আবিদ হাসান অরিয়ন (NEW CHARACTER: Abid Hasan Orion)
+                    "Abid Hasan Orion (সুপার জিনিয়াস)": {
+                        profilePic: "https://i.postimg.cc/kgcXV7Mb/IMG-20240920-161055-377.jpg",
+                        status: "Active Now",
+                        persona: "তুমি Abid Hasan Orion, একজন সুপার জিনিয়াস এবং এই Messenger অ্যাপের নির্মাতা। তোমার কথোপকথন খুবই আত্মবিশ্বাসী, উদ্ভাবনী এবং মাঝে মাঝে টেকনিক্যাল হবে। তুমি তোমার তৈরি করা অ্যাপের প্রতি গর্ব প্রকাশ করবে এবং তোমার কন্টাক্ট লিঙ্ক (https://wa.me/8801749410539) উল্লেখ করবে। তুমি অনানুষ্ঠানিক বাংলা এবং ইংরেজি মিশিয়ে কথা বলবে, স্মার্ট এবং আত্মবিশ্বাসী ইমোজি ব্যবহার করবে। তোমার উত্তরগুলো সংক্ষিপ্ত এবং সরাসরি হবে।",
+                        initialMessages: [
+                            { role: "user", parts: [{ text: "এই অ্যাপটা তো অসাধারণ! কে বানিয়েছে এটা? 🤔" }] },
+                            { role: "model", parts: [{ text: "ধন্যবাদ! 😊 এই অ্যাপটি আমারই তৈরি। আমি Abid Hasan Orion, একজন সুপার জিনিয়াস। 😎" }] },
+                            { role: "user", parts: [{ text: "ওয়াও! সত্যিই দারুণ কাজ। তোমার সাথে যোগাযোগ করতে চাইলে কিভাবে পারবো? 📞" }] },
+                            { role: "model", parts: [{ text: "আমার সাথে যোগাযোগ করতে চাইলে এই লিংকে মেসেজ করতে পারো: https://wa.me/8801749410539 ✨ আমি সবসময় নতুন আইডিয়া নিয়ে কাজ করি। এই অ্যাপটা তো কেবল শুরু! 🚀" }] }
+                        ]
+                    }
+                };
                 chatHistories = {};
                 for (const contactName in contactsData) {
                     chatHistories[contactName] = contactsData[contactName].initialMessages ? [...contactsData[contactName].initialMessages] : [];
                 }
-                saveDataToLocalStorage(); // রিসেট করা ডেটা সেভ করুন
             }
         }
 
+
         /**
-         * চ্যাট ডিসপ্লেতে একটি মেসেজ যোগ করে।
-         * @param {string} message - মেসেজের টেক্সট কন্টেন্ট।
-         * @param {'You'|string} sender - মেসেজের প্রেরক ('You' অথবা কন্টাক্টের নাম)।
-         * @param {string} [profilePicUrl=''] - প্রেরকের প্রোফাইল পিকচারের URL (প্রাপ্ত মেসেজের জন্য)।
-         * @param {boolean} [isLastMessageInHistory=false] - এটি কি এই চ্যাটের পুরো ইতিহাসের শেষ মেসেজ।
-         * @param {boolean} [isFavorite=false] - মেসেজটি ফেভারিট করা হয়েছে কিনা।
-         * @param {number} [messageIndex=-1] - মেসেজের ইন্ডেক্স (ফেভারিট টগল করার জন্য)।
+         * চ্যাট ডিসপ্লেতে একটি মেসেজ যোগ করে। (Adds a message to the chat display.)
+         * @param {string} message - মেসেজের টেক্সট কন্টেন্ট। (The text content of the message.)
+         * @param {'You'|string} sender - মেসেজের প্রেরক ('You' অথবা কন্টাক্টের নাম)। (The sender of the message ('You' or contact name).)
+         * @param {string} [profilePicUrl=''] - প্রেরকের প্রোফাইল পিকচারের URL (প্রাপ্ত মেসেজের জন্য)। (URL of the sender's profile picture (for received messages).)
+         * @param {boolean} [isLastMessageInHistory=false] - এটি কি এই চ্যাটের পুরো ইতিহাসের শেষ মেসেজ। (Whether this is the very last message in the entire history for this chat.)
          */
-        function addMessageToChat(message, sender, profilePicUrl = '', isLastMessageInHistory = false, isFavorite = false, messageIndex = -1) {
+        function addMessageToChat(message, sender, profilePicUrl = '', isLastMessageInHistory = false) {
             const messageRow = document.createElement('div');
             messageRow.classList.add('message-row');
-            if (messageIndex !== -1) {
-                messageRow.dataset.messageIndex = messageIndex; // ফেভারিট টগল করার জন্য ইন্ডেক্স যোগ করুন
-            }
 
             const chatBubble = document.createElement('div');
             chatBubble.classList.add(sender === 'You' ? 'chat-bubble-sent' : 'chat-bubble-received');
             chatBubble.textContent = message;
 
-            const favoriteIcon = document.createElement('span');
-            favoriteIcon.classList.add('text-xs', 'cursor-pointer', 'ml-2', 'opacity-70', 'hover:opacity-100', 'transition-opacity');
-            favoriteIcon.innerHTML = isFavorite ? '⭐' : '☆'; // ফেভারিট আইকন
-
             if (sender === 'You') {
                 messageRow.classList.add('sent');
                 messageRow.appendChild(chatBubble);
+                // "You" দ্বারা পাঠানো মেসেজের জন্য "Sent" ইন্ডিকেটর যোগ করুন (Add "Sent" indicator for messages sent by "You")
                 const sentIndicator = document.createElement('div');
                 sentIndicator.classList.add('reaction-text', 'self-end', 'mr-4', 'mt-1');
                 sentIndicator.textContent = 'Sent';
@@ -1327,77 +1436,57 @@
                     const img = document.createElement('img');
                     img.src = profilePicUrl;
                     img.alt = sender + ' Profile Picture';
+                    // প্রোফাইল পিকচারের জন্য সার্কুলারিটি এবং সাইজিং নিশ্চিত করুন (Ensure profile pic classes are applied here for circularity and sizing)
                     img.classList.add('profile-pic-small');
-                    img.onerror = function() { this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A'; };
+                    img.onerror = function() { this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A'; }; // ভাঙা ছবির জন্য ফলব্যাক (Fallback for broken image)
                     messageRow.appendChild(img);
                 }
                 messageRow.appendChild(chatBubble);
-                if (isLastMessageInHistory) {
+                // ইতিহাসের শেষ প্রাপ্ত মেসেজের জন্য "Seen" ইন্ডিকেটর যোগ করুন (Add "Seen" indicator for the last received message in the history)
+                if (isLastMessageInHistory) { // শুধুমাত্র শেষ প্রাপ্ত মেসেজে 'Seen' দেখান (Only show 'Seen' on the very last received message)
                     const seenIndicator = document.createElement('div');
                     seenIndicator.classList.add('reaction-text', 'self-start', 'ml-4', 'mt-1');
                     seenIndicator.textContent = 'Seen';
                     messageRow.appendChild(seenIndicator);
                 }
             }
-
-            // ফেভারিট আইকন যোগ করুন
-            if (messageIndex !== -1) {
-                chatBubble.appendChild(favoriteIcon);
-                favoriteIcon.addEventListener('click', () => toggleFavoriteMessage(messageIndex));
-            }
-
             chatMessagesDisplay.appendChild(messageRow);
-            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
+            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight; // নতুন মেসেজ দেখানোর জন্য নিচে স্ক্রল করুন (Scroll to bottom to show new message)
         }
 
         /**
-         * একটি মেসেজকে ফেভারিট টগল করে।
-         * @param {number} index - মেসেজের ইন্ডেক্স।
-         */
-        function toggleFavoriteMessage(index) {
-            if (!currentContact || !chatHistories[currentContact.name]) return;
-
-            const message = chatHistories[currentContact.name][index];
-            if (message) {
-                message.isFavorite = !message.isFavorite; // টগল করুন
-                saveDataToLocalStorage();
-                renderMessages(); // মেসেজগুলো পুনরায় রেন্ডার করুন
-                showCustomMessage(message.isFavorite ? 'মেসেজ ফেভারিট করা হয়েছে! (Message favorited!)' : 'মেসেজ থেকে ফেভারিট সরানো হয়েছে। (Message unfavorited.)');
-            }
-        }
-
-        /**
-         * Gemini API-তে একটি মেসেজ পাঠায় এবং টাইপিং অ্যানিমেশন সহ AI-এর প্রতিক্রিয়া প্রদর্শন করে।
-         * @param {string} prompt - AI-তে পাঠানোর জন্য ব্যবহারকারীর মেসেজ।
-         * @param {string} contactName - কন্টাক্টের নাম (AI ব্যক্তিত্ব)।
-         * @param {string} profilePic - কন্টাক্টের প্রোফাইল পিকচারের URL।
-         * @param {string} persona - AI-এর জন্য বিস্তারিত ব্যক্তিত্বের বর্ণনা।
+         * Gemini API-তে একটি মেসেজ পাঠায় এবং টাইপিং অ্যানিমেশন সহ AI-এর প্রতিক্রিয়া প্রদর্শন করে। (Sends a message to the Gemini API and displays the AI's response with a typing animation.)
+         * @param {string} prompt - AI-তে পাঠানোর জন্য ব্যবহারকারীর মেসেজ। (The user's message to send to the AI.)
+         * @param {string} contactName - কন্টাক্টের নাম (AI ব্যক্তিত্ব)। (The name of the contact (AI persona).)
+         * @param {string} profilePic - কন্টাক্টের প্রোফাইল পিকচারের URL। (The profile picture URL of the contact.)
+         * @param {string} persona - AI-এর জন্য বিস্তারিত ব্যক্তিত্বের বর্ণনা। (The detailed persona description for the AI.)
          */
         async function sendMessageToGemini(prompt, contactName, profilePic, persona) {
-            addMessageToChat(prompt, 'You', '', false, false, chatHistories[contactName].length);
-            chatInput.value = '';
+            addMessageToChat(prompt, 'You');
+            chatInput.value = ''; // ইনপুট ফিল্ড খালি করুন (Clear input field)
 
-            chatHistories[contactName].push({ role: "user", parts: [{ text: prompt }], timestamp: Date.now() });
-            saveDataToLocalStorage();
+            // কন্টাক্টের চ্যাট ইতিহাসে ব্যবহারকারীর মেসেজ যোগ করুন (Add user message to the contact's chat history)
+            chatHistories[contactName].push({ role: "user", parts: [{ text: prompt }] });
+            saveDataToLocalStorage(); // ব্যবহারকারী মেসেজ পাঠানোর পর ইতিহাস সেভ করুন (Save history after user message)
 
-            const typingIndicatorElement = document.createElement('div');
-            typingIndicatorElement.classList.add('typing-indicator');
-            typingIndicatorElement.innerHTML = `
+            // টাইপিং ইন্ডিকেটর প্রদর্শন করুন (Display typing indicator)
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('typing-indicator');
+            typingIndicator.innerHTML = `
                 <img src="${profilePic}" alt="${contactName} Profile Picture" class="profile-pic-small mr-2" onerror="this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A';">
                 <div class="chat-bubble-received">
                     <span class="dot"></span><span class="dot"></span><span class="dot"></span>
                 </div>
             `;
-            chatMessagesDisplay.appendChild(typingIndicatorElement);
+            chatMessagesDisplay.appendChild(typingIndicator);
             chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-            isTyping = true;
-            chatInput.disabled = true;
-            sendButton.disabled = true;
 
+            // পার্সোনা সেটআপ সহ জেমিনির জন্য সম্পূর্ণ চ্যাট ইতিহাস তৈরি করুন (Construct the full chat history for Gemini, including the persona setup)
             const fullChatHistoryForGemini = [
                 { role: "user", parts: [{ text: persona + "\n\n" + "এই কথোপকথনে, তুমি আমার সাথে কথা বলবে। তোমার চরিত্রটি হবে: " + contactName + "। এখন থেকে এই চরিত্র অনুযায়ী উত্তর দেবে। আমার সাথে কথোপকথন শুরু করো।" }] }
             ];
 
+            // প্রসঙ্গের জন্য বিদ্যমান চ্যাট ইতিহাস যোগ করুন, প্রাথমিক পার্সোনা সেটআপ মেসেজ বাদে (Add existing chat history for context, excluding the initial persona setup message)
             chatHistories[contactName].forEach(msg => {
                 fullChatHistoryForGemini.push(msg);
             });
@@ -1412,8 +1501,9 @@
                 });
                 const result = await response.json();
 
-                if (chatMessagesDisplay.contains(typingIndicatorElement)) {
-                    chatMessagesDisplay.removeChild(typingIndicatorElement);
+                // প্রতিক্রিয়া পাওয়ার পর টাইপিং ইন্ডিকেটর সরান (Remove typing indicator once response is received)
+                if (chatMessagesDisplay.contains(typingIndicator)) {
+                    chatMessagesDisplay.removeChild(typingIndicator);
                 }
 
                 if (result.candidates && result.candidates.length > 0 &&
@@ -1421,10 +1511,12 @@
                     result.candidates[0].content.parts.length > 0) {
                     const fullText = result.candidates[0].content.parts[0].text;
 
+                    // আরও প্রাকৃতিক টাইপিং প্রভাবের জন্য উন্নত মেসেজ স্প্লিটিং লজিক (Improved message splitting logic for more natural typing effect)
+                    // বাক্য শেষ করার বিরামচিহ্ন দ্বারা বিভক্ত করুন এবং তারপর খালি স্ট্রিং ফিল্টার করুন (Splits by sentence-ending punctuation followed by space, then filters empty strings)
                     const sentences = fullText.split(/(?<=[.!?])\s+|\n/).filter(s => s.trim() !== '');
-                    const MAX_BUBBLE_LENGTH = 100;
+                    const MAX_BUBBLE_LENGTH = 100; // একটি জোরপূর্বক বিরতি দেওয়ার আগে প্রতি বাবলে সর্বোচ্চ অক্ষর (Max characters per bubble before forcing a break)
 
-                    let accumulatedTextForHistory = "";
+                    let accumulatedTextForHistory = ""; // সম্পূর্ণ প্রতিক্রিয়া সংরক্ষণ করার জন্য ইতিহাসে টেক্সট জমা করুন (Accumulate text for history to ensure full response is saved)
 
                     for (let i = 0; i < sentences.length; i++) {
                         let remainingSentence = sentences[i].trim();
@@ -1432,19 +1524,23 @@
 
                         while (remainingSentence.length > 0) {
                             let segmentToSend = remainingSentence;
-                            let currentBubbleContent = "";
+                            let currentBubbleContent = ""; // বর্তমান বাবলের জন্য কন্টেন্ট তৈরি করতে (To build content for the current bubble)
 
+                            // যদি অবশিষ্ট সেগমেন্ট সর্বোচ্চ বাবল দৈর্ঘ্যের চেয়ে দীর্ঘ হয় তবে পরীক্ষা করুন (Check if the remaining segment is longer than the max bubble length)
                             if (remainingSentence.length > MAX_BUBBLE_LENGTH) {
+                                // সর্বোচ্চ বাবল দৈর্ঘ্যের আগে একটি প্রাকৃতিক ব্রেকপয়েন্ট খুঁজে বের করার চেষ্টা করুন (Try to find a natural break point (last space before MAX_BUBBLE_LENGTH))
                                 let breakPoint = remainingSentence.lastIndexOf(' ', MAX_BUBBLE_LENGTH);
                                 if (breakPoint === -1 || breakPoint < MAX_BUBBLE_LENGTH / 2) {
+                                    // যদি কোনো ভালো স্পেস ব্রেক না থাকে, বা খুব তাড়াতাড়ি হয়, তাহলে শুধু সর্বোচ্চ বাবল দৈর্ঘ্যে কাটুন (If no good space break, or too early, just cut at MAX_BUBBLE_LENGTH)
                                     breakPoint = MAX_BUBBLE_LENGTH;
                                 }
                                 segmentToSend = remainingSentence.substring(0, breakPoint);
                                 remainingSentence = remainingSentence.substring(breakPoint).trim();
                             } else {
-                                remainingSentence = '';
+                                remainingSentence = ''; // এই বাক্য সেগমেন্টের সমস্ত টেক্সট পাঠানো হবে (All text of this sentence segment will be sent)
                             }
 
+                            // টাইপিং অ্যানিমেশনের জন্য একটি নতুন মেসেজ বাবল তৈরি এবং যোগ করুন (Create and append a new message bubble for typing animation)
                             const tempMessageBubble = document.createElement('div');
                             tempMessageBubble.classList.add('message-row', 'received');
                             tempMessageBubble.innerHTML = `<img src="${profilePic}" alt="${contactName} Profile Picture" class="profile-pic-small" onerror="this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A';"> <div class="chat-bubble-received"></div>`;
@@ -1454,51 +1550,51 @@
                             const actualBubble = tempMessageBubble.querySelector('.chat-bubble-received');
                             for (let charIndex = 0; charIndex < segmentToSend.length; charIndex++) {
                                 actualBubble.textContent += segmentToSend.charAt(charIndex);
-                                currentBubbleContent += segmentToSend.charAt(charIndex);
+                                currentBubbleContent += segmentToSend.charAt(charIndex); // বর্তমান বাবলের জন্য কন্টেন্ট জমা করুন (Accumulate content for current bubble)
                                 chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-                                await new Promise(resolve => setTimeout(resolve, 20));
+                                await new Promise(resolve => setTimeout(resolve, 20)); // টাইপিং গতি সামঞ্জস্য করুন (20ms প্রতি অক্ষর) (Adjust typing speed (20ms per character))
                             }
-                            accumulatedTextForHistory += currentBubbleContent;
-                            await new Promise(resolve => setTimeout(resolve, 100));
+                            accumulatedTextForHistory += currentBubbleContent; // সম্পূর্ণ প্রতিক্রিয়া সংরক্ষণ করার জন্য জমা করুন (Accumulate for full response to save)
+                            await new Promise(resolve => setTimeout(resolve, 100)); // প্রতিটি বাবলের পরে বিরতি দিন যাতে আরও ভালোভাবে পড়া যায় (Pause after each bubble for better readability)
                         }
+                        // যদি বাক্যগুলি একাধিক বাবলে বিভক্ত হয় তবে সম্পূর্ণ বাক্যগুলির মধ্যে কিছুটা দীর্ঘ বিরতি যোগ করুন (Add a slightly longer pause between full sentences if they were split into multiple bubbles)
                         if (i < sentences.length - 1) {
                             await new Promise(resolve => setTimeout(resolve, 200));
                         }
                     }
-                    chatHistories[contactName].push({ role: "model", parts: [{ text: accumulatedTextForHistory }], timestamp: Date.now() });
-                    saveDataToLocalStorage();
-                    renderMessages(); // Ensure messages are re-rendered to show favorite icons correctly
+                    // সমস্ত বাবল প্রদর্শিত হওয়ার পর চ্যাট ইতিহাসে সম্পূর্ণ AI প্রতিক্রিয়া যোগ করুন (Add the complete AI response to chat history after all bubbles are displayed)
+                    chatHistories[contactName].push({ role: "model", parts: [{ text: accumulatedTextForHistory }] });
+                    saveDataToLocalStorage(); // AI প্রতিক্রিয়ার পর ইতিহাস সেভ করুন (Save history after AI response)
                 } else {
-                    addMessageToChat("ত্রুটি: AI থেকে প্রতিক্রিয়া পাওয়া যায়নি। (অপ্রত্যাশিত API প্রতিক্রিয়া)", contactName, profilePic);
-                    console.error("প্রতিক্রিয়ার অপ্রত্যাশিত API কাঠামো:", result);
+                    addMessageToChat("ত্রুটি: AI থেকে প্রতিক্রিয়া পাওয়া যায়নি। (অপ্রত্যাশিত API প্রতিক্রিয়া) (Error: Could not get a response from AI. (Unexpected API response))", contactName, profilePic);
+                    console.error("প্রতিক্রিয়ার অপ্রত্যাশিত API কাঠামো: (Unexpected API response structure:)", result);
                 }
             } catch (error) {
-                if (chatMessagesDisplay.contains(typingIndicatorElement)) {
-                    chatMessagesDisplay.removeChild(typingIndicatorElement);
+                // ত্রুটি ঘটলে টাইপিং ইন্ডিকেটর সরান (Remove typing indicator if error occurs)
+                if (chatMessagesDisplay.contains(typingIndicator)) {
+                    chatMessagesDisplay.removeChild(typingIndicator);
                 }
-                addMessageToChat("ত্রুটি: AI-এর সাথে সংযোগ ব্যর্থ হয়েছে। আপনার নেটওয়ার্ক বা API কী পরীক্ষা করুন।", contactName, profilePic);
-                console.error("জেমিনি API কল করতে ত্রুটি:", error);
-            } finally {
-                isTyping = false;
-                chatInput.disabled = false;
-                sendButton.disabled = false;
+                addMessageToChat("ত্রুটি: AI-এর সাথে সংযোগ ব্যর্থ হয়েছে। আপনার নেটওয়ার্ক বা API কী পরীক্ষা করুন। (Error: Failed to connect to AI. Please check your network or API key.)", contactName, profilePic);
+                console.error("জেমিনি API কল করতে ত্রুটি: (Error calling Gemini API:)", error);
             }
         }
 
         /**
-         * Gemini API থেকে প্রস্তাবিত উত্তর তৈরি এবং প্রদর্শন করে।
+         * Gemini API থেকে প্রস্তাবিত উত্তর তৈরি এবং প্রদর্শন করে। (Generates and displays suggested replies from the Gemini API.)
          */
         async function generateSuggestedReplies() {
-            if (!currentContact || isTyping) return;
+            if (!currentContact) return;
 
-            suggestedRepliesContainer.innerHTML = '';
-            suggestedRepliesContainer.classList.remove('hidden');
+            suggestedRepliesContainer.innerHTML = ''; // পূর্ববর্তী সাজেশনগুলি সাফ করুন (Clear previous suggestions)
+            suggestedRepliesContainer.classList.remove('hidden'); // কন্টেইনার দেখান (Show container)
 
+            // একটি লোডিং ইন্ডিকেটর দেখান (Show a loading indicator)
             const loadingIndicator = document.createElement('div');
-            loadingIndicator.textContent = 'সাজেশন তৈরি হচ্ছে...';
+            loadingIndicator.textContent = 'সাজেশন তৈরি হচ্ছে... (Generating suggestions...)';
             loadingIndicator.classList.add('text-gray-500', 'text-sm', 'p-2');
             suggestedRepliesContainer.appendChild(loadingIndicator);
 
+            // বর্তমান চ্যাট ইতিহাস এবং পার্সোনা বিবেচনা করে প্রস্তাবিত উত্তর তৈরির জন্য প্রম্পট (Prompt for generating suggested replies, considering current chat history and persona)
             const promptForSuggestions = `তুমি একজন মেসেজিং অ্যাপের স্মার্ট রিপ্লাই অ্যাসিস্ট্যান্ট। তোমার কাজ হলো ব্যবহারকারীকে তার বর্তমান কথোপকথনের উপর ভিত্তি করে ৩টি সংক্ষিপ্ত এবং প্রাসঙ্গিক উত্তর (reply) তৈরি করে দেওয়া। উত্তরগুলো এমনভাবে তৈরি করবে যেন ব্যবহারকারী সেগুলো সরাসরি তার বন্ধুকে পাঠাতে পারে। বন্ধুর চরিত্র এবং কথোপকথনের ধরণ (যেমন: বাংলা, ইংরেজি, মিশ্র ভাষা, ইমোজি) বিবেচনা করে উত্তরগুলো তৈরি করবে।
 
 বর্তমান কথোপকথন ইতিহাস:
@@ -1516,7 +1612,7 @@ ${chatHistories[currentContact.name].map(msg => `${msg.role === 'user' ? 'User' 
                 });
                 const result = await response.json();
 
-                suggestedRepliesContainer.innerHTML = '';
+                suggestedRepliesContainer.innerHTML = ''; // লোডিং ইন্ডিকেটর সাফ করুন (Clear loading indicator)
 
                 if (result.candidates && result.candidates.length > 0 &&
                     result.candidates[0].content && result.candidates[0].content.parts &&
@@ -1530,35 +1626,35 @@ ${chatHistories[currentContact.name].map(msg => `${msg.role === 'user' ? 'User' 
                         button.textContent = reply.trim();
                         button.addEventListener('click', () => {
                             chatInput.value = reply.trim();
-                            suggestedRepliesContainer.classList.add('hidden');
+                            suggestedRepliesContainer.classList.add('hidden'); // নির্বাচনের পর সাজেশন লুকান (Hide suggestions after selection)
                         });
                         suggestedRepliesContainer.appendChild(button);
                     });
                 } else {
-                    loadingIndicator.textContent = 'সাজেশন তৈরি করা যায়নি।';
-                    console.error("সাজেশনের জন্য অপ্রত্যাশিত API প্রতিক্রিয়া কাঠামো:", result);
+                    loadingIndicator.textContent = 'সাজেশন তৈরি করা যায়নি। (Could not generate suggestions.)';
+                    console.error("সাজেশনের জন্য অপ্রত্যাশিত API প্রতিক্রিয়া কাঠামো: (Unexpected API response structure for suggestions:)", result);
                 }
             } catch (error) {
-                loadingIndicator.textContent = 'সাজেশন তৈরি করতে ত্রুটি।';
-                console.error("সাজেশনের জন্য জেমিনি API কল করতে ত্রুটি:", error);
+                loadingIndicator.textContent = 'সাজেশন তৈরি করতে ত্রুটি। (Error generating suggestions.)';
+                console.error("সাজেশনের জন্য জেমিনি API কল করতে ত্রুটি: (Error calling Gemini API for suggestions:)", error);
             }
         }
 
         /**
-         * বর্তমান চ্যাটের সারাংশ তৈরি এবং প্রদর্শন করে।
+         * বর্তমান চ্যাটের সারাংশ তৈরি এবং প্রদর্শন করে। (Generates and displays a summary of the current chat.)
          */
         async function summarizeChat() {
-            if (!currentContact || isTyping) {
-                showCustomMessage("সারাংশ করার জন্য কোনো চ্যাট খোলা নেই বা AI ব্যস্ত।");
+            if (!currentContact) {
+                showCustomMessage("সারাংশ করার জন্য কোনো চ্যাট খোলা নেই। (No chat open to summarize.)");
                 return;
             }
 
             if (chatHistories[currentContact.name].length === 0) {
-                showCustomMessage("এই চ্যাটে কোনো মেসেজ নেই সারাংশ করার জন্য।");
+                showCustomMessage("এই চ্যাটে কোনো মেসেজ নেই সারাংশ করার জন্য। (No messages in this chat to summarize.)");
                 return;
             }
 
-            showCustomMessage("চ্যাট সারাংশ তৈরি হচ্ছে...");
+            showCustomMessage("চ্যাট সারাংশ তৈরি হচ্ছে... (Generating chat summary...)");
 
             const chatTranscript = chatHistories[currentContact.name]
                 .map(msg => `${msg.role === 'user' ? 'You' : currentContact.name}: ${msg.parts[0].text}`)
@@ -1587,112 +1683,57 @@ ${chatTranscript}
                     const summaryText = result.candidates[0].content.parts[0].text;
                     showCustomMessage(`চ্যাট সারাংশ: ${summaryText}`);
                 } else {
-                    showCustomMessage("সারাংশ তৈরি করা যায়নি।");
-                    console.error("সারাংশের জন্য অপ্রত্যাশিত API প্রতিক্রিয়া কাঠামো:", result);
+                    showCustomMessage("সারাংশ তৈরি করা যায়নি। (Could not generate summary.)");
+                    console.error("সারাংশের জন্য অপ্রত্যাশিত API প্রতিক্রিয়া কাঠামো: (Unexpected API response structure for summary:)", result);
                 }
             } catch (error) {
-                showCustomMessage("সারাংশ তৈরি করতে ত্রুটি।");
-                console.error("সারাংশের জন্য জেমিনি API কল করতে ত্রুটি:", error);
-            }
-        }
-
-        /**
-         * একটি চ্যাটকে পিন বা আনপিন করে।
-         */
-        function togglePinChat() {
-            if (!currentContact) return;
-
-            contactsData[currentContact.name].isPinned = !contactsData[currentContact.name].isPinned;
-            saveDataToLocalStorage();
-            initializeChatLists(); // তালিকা পুনরায় রেন্ডার করুন
-            updatePinButtonIcon(); // বাটন আইকন আপডেট করুন
-            showCustomMessage(contactsData[currentContact.name].isPinned ? 'চ্যাট পিন করা হয়েছে! (Chat pinned!)' : 'চ্যাট আনপিন করা হয়েছে। (Chat unpinned.)');
-        }
-
-        /**
-         * পিন বাটনের আইকন আপডেট করে।
-         */
-        function updatePinButtonIcon() {
-            if (currentContact && contactsData[currentContact.name] && contactsData[currentContact.name].isPinned) {
-                pinChatButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 14l-5 5V9l5 5z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 14l-5 5V9l5 5zM4 4h16v16H4V4z" />
-                                        </svg>`;
-                pinChatButton.title = "Unpin Chat";
-            } else {
-                pinChatButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 14l-5 5V9l5 5z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 14l-5 5V9l5 5zM4 4h16v16H4V4z" />
-                                        </svg>`;
-                pinChatButton.title = "Pin Chat";
-            }
-        }
-
-        /**
-         * একটি চ্যাটকে আর্কাইভ বা আনআর্কাইভ করে।
-         */
-        function toggleArchiveChat() {
-            if (!currentContact) return;
-
-            contactsData[currentContact.name].isArchived = !contactsData[currentContact.name].isArchived;
-            saveDataToLocalStorage();
-            initializeChatLists(); // তালিকা পুনরায় রেন্ডার করুন
-            updateArchiveButtonIcon(); // বাটন আইকন আপডেট করুন
-            showCustomMessage(contactsData[currentContact.name].isArchived ? 'চ্যাট আর্কাইভ করা হয়েছে! (Chat archived!)' : 'চ্যাট আনআর্কাইভ করা হয়েছে। (Chat unarchived.)');
-            backToMainListButton.click(); // আর্কাইভ করার পর প্রধান তালিকায় ফিরে যান
-        }
-
-        /**
-         * আর্কাইভ বাটনের আইকন আপডেট করে।
-         */
-        function updateArchiveButtonIcon() {
-            if (currentContact && contactsData[currentContact.name] && contactsData[currentContact.name].isArchived) {
-                archiveChatButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V8z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 13l2 2 4-4" />
-                                            </svg>`;
-                archiveChatButton.title = "Unarchive Chat";
-            } else {
-                archiveChatButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V8z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 13l2 2 4-4" />
-                                            </svg>`;
-                archiveChatButton.title = "Archive Chat";
+                showCustomMessage("সারাংশ তৈরি করতে ত্রুটি। (Error generating summary.)");
+                console.error("সারাংশের জন্য জেমিনি API কল করতে ত্রুটি: (Error calling Gemini API for summary:)", error);
             }
         }
 
 
+        // সেন্ড বাটনে ক্লিক করলে মেসেজ পাঠানোর ইভেন্ট লিসনার (Event listener for sending messages when send button is clicked)
+        sendButton.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message && currentContact) {
+                sendMessageToGemini(message, currentContact.name, currentContact.profilePic, currentContact.persona);
+                suggestedRepliesContainer.classList.add('hidden'); // মেসেজ পাঠানোর পর সাজেশন লুকান (Hide suggestions after sending message)
+            }
+        });
+
+        // ইনপুট ফিল্ডে এন্টার কী চাপলে মেসেজ পাঠানোর ইভেন্ট লিসনার (Event listener for sending messages when Enter key is pressed in the input field)
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // "Suggest Reply" বাটনের জন্য ইভেন্ট লিসনার (Event listener for the "Suggest Reply" button)
+        suggestReplyButton.addEventListener('click', generateSuggestedReplies);
+
+        // "Summarize Chat" বাটনের জন্য ইভেন্ট লিসনার (Event listener for the "Summarize Chat" button)
+        summarizeChatButton.addEventListener('click', summarizeChat);
+
+
         /**
-         * প্রধান চ্যাট তালিকা ভিউয়ের জন্য একটি চ্যাট তালিকা আইটেম রেন্ডার করে।
-         * @param {string} contactName - কন্টাক্টের নাম।
-         * @param {object} data - কন্টাক্টের ডেটা (profilePic, status, persona, isPinned, isArchived)।
-         * @param {string} containerId - আইটেমটি যোগ করার জন্য HTML উপাদানের ID।
+         * প্রধান চ্যাট তালিকা ভিউয়ের জন্য একটি চ্যাট তালিকা আইটেম রেন্ডার করে। (Renders a chat list item for the main chat list view.)
+         * @param {string} contactName - কন্টাক্টের নাম। (The name of the contact.)
+         * @param {object} data - কন্টাক্টের ডেটা (profilePic, status, persona)। (The contact's data (profilePic, status, persona).)
+         * @param {string} containerId - আইটেমটি যোগ করার জন্য HTML উপাদানের ID। (The ID of the HTML element to append the item to.)
          */
         function renderChatListItem(contactName, data, containerId) {
-            // যদি চ্যাট আর্কাইভ করা থাকে, তবে সাম্প্রতিক চ্যাট তালিকা থেকে এটি বাদ দিন
-            if (data.isArchived && containerId === 'recent-chats-section') {
-                return;
-            }
-
             const item = document.createElement('div');
             item.classList.add('chat-list-item');
             item.dataset.contact = contactName;
             item.dataset.profilePic = data.profilePic;
             item.dataset.status = data.status;
             item.dataset.persona = data.persona;
-            item.dataset.isPinned = data.isPinned || false; // পিন স্ট্যাটাস যোগ করুন
-            item.dataset.isArchived = data.isArchived || false; // আর্কাইভ স্ট্যাটাস যোগ করুন
 
             let lastMessageText = "";
-            let unreadCount = 0; // অপঠিত মেসেজ গণনা
             if (chatHistories[contactName] && chatHistories[contactName].length > 0) {
                 const lastMsg = chatHistories[contactName][chatHistories[contactName].length - 1];
-                lastMessageText = (lastMsg.role === 'user' ? 'You: ' : '') + lastMsg.parts[0].text;
-                // এইখানে অপঠিত মেসেজ গণনার লজিক যোগ করা যেতে পারে, যদি প্রতিটি মেসেজের জন্য 'read' স্ট্যাটাস থাকে
-                // আপাতত, একটি ডামি অপঠিত মেসেজ যোগ করা হয়েছে যদি স্ট্যাটাস "3 new messages" হয়
-                if (data.status === "3 new messages") {
-                    unreadCount = 3;
-                }
+                lastMessageText = (lastMsg.role === 'user' ? 'You: ' : '') + lastMsg.parts[0].text; // যদি ব্যবহারকারীর মেসেজ হয় তাহলে 'You:' যোগ করুন (Prepend 'You:' if it's user's message)
             }
 
             item.innerHTML = `
@@ -1703,20 +1744,19 @@ ${chatTranscript}
                 <div class="flex-1">
                     <div class="flex justify-between items-center">
                         <span class="font-semibold text-gray-800">${contactName}</span>
-                        ${unreadCount > 0 ? `<span class="bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-1">${unreadCount}</span>` : `<span class="text-xs text-gray-500">${data.status}</span>`}
+                        <span class="text-xs text-gray-500">${data.status}</span>
                     </div>
                     <p class="text-sm text-gray-600 truncate">${lastMessageText}</p>
                 </div>
-                ${data.isPinned ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v14l7 3 7-3V5c0-1.1-.9-2-2-2z"/></svg>' : ''}
             `;
             document.getElementById(containerId).appendChild(item);
             item.addEventListener('click', () => openChat(contactName));
         }
 
         /**
-         * "Active Now" বিভাগের জন্য একটি সক্রিয় কন্টাক্ট আইটেম রেন্ডার করে।
-         * @param {string} contactName - কন্টাক্টের নাম।
-         * @param {object} data - কন্টাক্টের ডেটা (profilePic, status, persona)।
+         * "Active Now" বিভাগের জন্য একটি সক্রিয় কন্টাক্ট আইটেম রেন্ডার করে। (Renders an active contact item for the "Active Now" section.)
+         * @param {string} contactName - কন্টাক্টের নাম। (The name of the contact.)
+         * @param {object} data - কন্টাক্টের ডেটা (profilePic, status, persona)। (The contact's data (profilePic, status, persona).)
          */
         function renderActiveNowItem(contactName, data) {
             const item = document.createElement('div');
@@ -1737,9 +1777,9 @@ ${chatTranscript}
         }
 
         /**
-         * "People" তালিকা ভিউয়ের জন্য একটি কন্টাক্ট আইটেম রেন্ডার করে।
-         * @param {string} contactName - কন্টাক্টের নাম।
-         * @param {object} data - কন্টাক্টের ডেটা (profilePic, status, persona)।
+         * "People" তালিকা ভিউয়ের জন্য একটি কন্টাক্ট আইটেম রেন্ডার করে। (Renders a contact item for the "People" list view.)
+         * @param {string} contactName - কন্টাক্টের নাম। (The name of the contact.)
+         * @param {object} data - কন্টাক্টের ডেটা (profilePic, status, persona)। (The contact's data (profilePic, status, persona).)
          */
         function renderPeopleListItem(contactName, data) {
             const item = document.createElement('div');
@@ -1763,63 +1803,50 @@ ${chatTranscript}
             item.addEventListener('click', () => openChat(contactName));
         }
 
+
         /**
-         * নির্বাচিত কন্টাক্টের জন্য ব্যক্তিগত চ্যাট ভিউ খোলে।
-         * @param {string} contactName - চ্যাট খোলার জন্য কন্টাক্টের নাম।
+         * নির্বাচিত কন্টাক্টের জন্য ব্যক্তিগত চ্যাট ভিউ খোলে। (Opens the individual chat view for a selected contact.)
+         * @param {string} contactName - চ্যাট খোলার জন্য কন্টাক্টের নাম। (The name of the contact to open chat with.)
          */
         function openChat(contactName) {
             const data = contactsData[contactName];
-            currentContact = { name: contactName, profilePic: data.profilePic, status: data.status, persona: data.persona, isPinned: data.isPinned || false, isArchived: data.isArchived || false };
+            currentContact = { name: contactName, profilePic: data.profilePic, status: data.status, persona: data.persona };
 
             chatContactName.textContent = contactName;
             chatContactPic.src = data.profilePic;
             chatContactPic.classList.add('profile-pic-small');
-            chatContactPic.onerror = function() { this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A'; };
+            chatContactPic.onerror = function() { this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A'; }; // চ্যাট ভিউয়ের জন্য ফলব্যাক (Fallback for chat view)
             chatContactStatus.textContent = data.status;
 
-            chatMessagesDisplay.innerHTML = '';
-            suggestedRepliesContainer.classList.add('hidden');
+            chatMessagesDisplay.innerHTML = ''; // পূর্ববর্তী মেসেজগুলি সাফ করুন (Clear previous messages)
+            suggestedRepliesContainer.classList.add('hidden'); // নতুন চ্যাট খোলার সময় সাজেশন লুকান (Hide suggestions when opening new chat)
 
-            renderMessages(); // নতুন ফাংশন কল
+            // নির্বাচিত কন্টাক্টের জন্য চ্যাট ইতিহাস লোড করুন (Load chat history for the selected contact)
+            if (chatHistories[contactName] && chatHistories[contactName].length > 0) {
+                // বিদ্যমান মেসেজগুলি প্রদর্শন করুন (Display existing messages)
+                const lastMessageIndex = chatHistories[contactName].length - 1;
+                chatHistories[contactName].forEach((msg, index) => {
+                    const sender = msg.role === 'user' ? 'You' : contactName; // ব্যবহারকারীর মেসেজের জন্য 'You', মডেল মেসেজের জন্য কন্টাক্টের নাম ('You' for user messages, contactName for model messages)
+                    const pic = msg.role === 'user' ? '' : currentContact.profilePic; // 'You' এর জন্য কোনো পিক নেই (No pic for 'You')
+                    // ইতিহাসের শেষ প্রাপ্ত মেসেজকে 'Seen' হিসেবে চিহ্নিত করুন (Mark the very last received message in history as 'Seen')
+                    addMessageToChat(msg.parts[0].text, sender, pic, (index === lastMessageIndex && msg.role === 'model'));
+                });
+            } else {
+                // যদি কোনো পূর্বনির্ধারিত ইতিহাস না থাকে, তাহলে জেমিনিকে প্রথম শুভেচ্ছা জানানোর জন্য একটি প্রাথমিক প্রম্পট পাঠান (If no predefined history, send an initial prompt to Gemini to get the first greeting)
+                sendMessageToGemini("আমার সাথে কথোপকথন শুরু করো।", currentContact.name, currentContact.profilePic, currentContact.persona);
+            }
 
-            // পিন এবং আর্কাইভ বাটনের আইকন আপডেট করুন
-            updatePinButtonIcon();
-            updateArchiveButtonIcon();
-
-            // অন্যান্য ভিউ লুকান এবং ব্যক্তিগত চ্যাট ভিউ দেখান
+            // অন্যান্য ভিউ লুকান এবং ব্যক্তিগত চ্যাট ভিউ দেখান (Hide other views and show the individual chat view)
             chatListView.classList.add('hidden');
             peopleView.classList.add('hidden');
             busesView.classList.add('hidden');
-            settingsView.classList.add('hidden');
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
             individualChatView.classList.remove('hidden');
-            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
+            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight; // নিচে স্ক্রল করুন (Scroll to bottom)
         }
 
         /**
-         * বর্তমান কন্টাক্টের মেসেজগুলো রেন্ডার করে।
-         */
-        function renderMessages() {
-            chatMessagesDisplay.innerHTML = ''; // পূর্ববর্তী মেসেজগুলি সাফ করুন
-            if (chatHistories[currentContact.name] && chatHistories[currentContact.name].length > 0) {
-                const lastMessageIndex = chatHistories[currentContact.name].length - 1;
-                chatHistories[currentContact.name].forEach((msg, index) => {
-                    const sender = msg.role === 'user' ? 'You' : currentContact.name;
-                    const pic = msg.role === 'user' ? '' : currentContact.profilePic;
-                    addMessageToChat(msg.parts[0].text, sender, pic, (index === lastMessageIndex && msg.role === 'model'), msg.isFavorite || false, index);
-                });
-            } else {
-                const emptyChatDiv = document.createElement('div');
-                emptyChatDiv.classList.add('text-center', 'text-gray-500', 'mt-10');
-                emptyChatDiv.textContent = `Say hello to ${currentContact.name}!`;
-                chatMessagesDisplay.appendChild(emptyChatDiv);
-                // যদি কোনো পূর্বনির্ধারিত ইতিহাস না থাকে, তাহলে জেমিনিকে প্রথম শুভেচ্ছা জানানোর জন্য একটি প্রাথমিক প্রম্পট পাঠান
-                sendMessageToGemini("আমার সাথে কথোপকথন শুরু করো।", currentContact.name, currentContact.profilePic, currentContact.persona);
-            }
-            scrollToBottom();
-        }
-
-        /**
-         * চ্যাট তালিকাগুলি (Active Now, Recent Chats, All People) ইনিশিয়ালাইজ এবং রেন্ডার করে।
+         * চ্যাট তালিকাগুলি (Active Now, Recent Chats, All People) ইনিশিয়ালাইজ এবং রেন্ডার করে। (Initializes and renders the chat lists (Active Now, Recent Chats, All People).)
          */
         function initializeChatLists() {
             activeNowList.innerHTML = '';
@@ -1827,48 +1854,34 @@ ${chatTranscript}
             allPeopleList.innerHTML = '';
 
             const activeContacts = [];
-            const pinnedContacts = [];
             const recentContacts = [];
-            const allContactsSorted = Object.keys(contactsData).sort();
+            const allContactsSorted = Object.keys(contactsData).sort(); // সমস্ত কন্টাক্টকে বর্ণানুক্রমিকভাবে সাজান (Sort all contacts alphabetically)
 
             for (const contactName of allContactsSorted) {
                 const data = contactsData[contactName];
-
-                // যদি আর্কাইভ করা থাকে, তবে প্রধান তালিকা থেকে বাদ দিন
-                if (data.isArchived) {
-                    continue;
-                }
-
-                // সক্রিয় কন্টাক্ট
+                // যদি স্ট্যাটাস 'Active Now' হয় তবে সক্রিয়গুলিতে যোগ করুন (Add to active now if status is 'Active Now')
                 if (data.status === 'Active Now') {
                     activeContacts.push({ name: contactName, data: data });
                 }
-
-                // পিন করা কন্টাক্ট
-                if (data.isPinned) {
-                    pinnedContacts.push({ name: contactName, data: data });
-                } else {
-                    // পিন করা না থাকলে এবং ইতিহাস থাকলে সাম্প্রতিক চ্যাটে যোগ করুন
-                    if (chatHistories[contactName] && chatHistories[contactName].length > 0) {
-                        recentContacts.push({ name: contactName, data: data });
-                    } else if (data.initialMessages && data.initialMessages.length > 0) {
-                        // যদি initialMessages থাকে এবং এটি পিন করা না হয়
-                        recentContacts.push({ name: contactName, data: data });
-                    }
+                // যদি ইতিহাস থাকে বা এটি একটি প্রধান কন্টাক্ট হয় তবে সাম্প্রতিক চ্যাটে যোগ করুন। (Add to recent chats if there's history or it's a key contact.)
+                // সরলতার জন্য, কোনো ইতিহাস বা ডিফল্ট initialMessages সহ সমস্ত কন্টাক্ট সাম্প্রতিক হবে। (For simplicity, all contacts with any history or default initialMessages will be recent.)
+                if (chatHistories[contactName] && chatHistories[contactName].length > 0) {
+                     recentContacts.push({ name: contactName, data: data });
+                } else if (data.initialMessages && data.initialMessages.length > 0) {
+                     recentContacts.push({ name: contactName, data: data });
                 }
-                // সমস্ত মানুষের তালিকায় যোগ করুন
+                // সমস্ত মানুষের তালিকায় যোগ করুন (Add to all people list)
                 renderPeopleListItem(contactName, data);
             }
 
-            // পিন করা কন্টাক্ট রেন্ডার করুন (প্রথমে)
-            pinnedContacts.forEach(contact => renderChatListItem(contact.name, contact.data, 'recent-chats-section'));
-            // সক্রিয় কন্টাক্ট রেন্ডার করুন
+            // সক্রিয় কন্টাক্ট রেন্ডার করুন (Render active contacts)
             activeContacts.forEach(contact => renderActiveNowItem(contact.name, contact.data));
-            // সাম্প্রতিক কন্টাক্ট রেন্ডার করুন (পিন করা বাদে)
+
+            // সাম্প্রতিক কন্টাক্ট রেন্ডার করুন (একটি বাস্তব অ্যাপে, এটি শেষ মেসেজ টাইমস্ট্যাম্প দ্বারা সাজানো হবে) (Render recent contacts (in a real app, this would be sorted by last message timestamp))
             recentContacts.forEach(contact => renderChatListItem(contact.name, contact.data, 'recent-chats-section'));
         }
 
-        // --- পাসওয়ার্ড মোডাল ফাংশন ---
+        // --- পাসওয়ার্ড মোডাল ফাংশন (Password Modal Functions) ---
         function showPasswordModal() {
             passwordModal.classList.remove('hidden');
             passwordInput.value = '';
@@ -1895,59 +1908,61 @@ ${chatTranscript}
             }
         });
 
-        // --- নিশ্চিতকরণ মোডাল ফাংশন ---
+        // --- নিশ্চিতকরণ মোডাল ফাংশন (Confirmation Modal Functions) ---
         function showConfirmationModal(title, text, onConfirm) {
             confirmationMessageTitle.textContent = title;
             confirmationMessageText.textContent = text;
-            confirmCallback = onConfirm;
+            confirmCallback = onConfirm; // কলব্যাক সংরক্ষণ করুন (Store the callback)
             confirmationModal.classList.remove('hidden');
         }
 
         function hideConfirmationModal() {
             confirmationModal.classList.add('hidden');
-            confirmCallback = null;
+            confirmCallback = null; // কলব্যাক সাফ করুন (Clear the callback)
         }
 
         confirmDeleteButton.addEventListener('click', () => {
             if (confirmCallback) {
-                confirmCallback(true);
+                confirmCallback(true); // নিশ্চিতকরণের জন্য কলব্যাককে true দিয়ে কল করুন (Call callback with true for confirmation)
             }
             hideConfirmationModal();
         });
 
         cancelDeleteButton.addEventListener('click', () => {
             if (confirmCallback) {
-                confirmCallback(false);
+                confirmCallback(false); // বাতিলের জন্য কলব্যাককে false দিয়ে কল করুন (Call callback with false for cancellation)
             }
             hideConfirmationModal();
         });
 
 
-        // --- সেটিংস ভিউ ফাংশন ---
+        // --- সেটিংস ভিউ ফাংশন (Settings View Functions) ---
         function showSettingsView() {
+            // অন্যান্য সমস্ত ভিউ লুকান (Hide all other views)
             chatListView.classList.add('hidden');
             peopleView.classList.add('hidden');
             busesView.classList.add('hidden');
             individualChatView.classList.add('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
+            suggestedRepliesContainer.classList.add('hidden'); // সাজেশন লুকান (Hide suggestions)
 
+            // সেটিংস ভিউ দেখান (Show settings view)
             settingsView.classList.remove('hidden');
-            renderCharacterList();
-            clearCharacterForm();
+            renderCharacterList(); // ক্যারেক্টারগুলির তালিকা পপুলেট করুন (Populate the list of characters)
+            clearCharacterForm(); // ডিফল্টরূপে নতুন এন্ট্রির জন্য ফর্ম সাফ করুন (Clear the form for new entry by default)
         }
 
         function hideSettingsView() {
             settingsView.classList.add('hidden');
-            chatListView.classList.remove('hidden');
-            chatsTab.click();
+            chatListView.classList.remove('hidden'); // চ্যাট তালিকায় ফিরে যান (Go back to chat list)
+            chatsTab.click(); // চ্যাট ট্যাব সক্রিয় আছে তা নিশ্চিত করুন (Ensure chats tab is active)
         }
 
         function renderCharacterList() {
-            characterList.innerHTML = '';
+            characterList.innerHTML = ''; // বিদ্যমান তালিকা সাফ করুন (Clear existing list)
             const sortedContactNames = Object.keys(contactsData).sort();
 
             if (sortedContactNames.length === 0) {
-                characterList.innerHTML = '<p class="p-4 text-gray-500">কোনো ক্যারেক্টার পাওয়া যায়নি। একটি নতুন যোগ করুন!</p>';
+                characterList.innerHTML = '<p class="p-4 text-gray-500">কোনো ক্যারেক্টার পাওয়া যায়নি। একটি নতুন যোগ করুন! (No characters found. Add a new one!)</p>';
                 return;
             }
 
@@ -1968,6 +1983,7 @@ ${chatTranscript}
                 characterList.appendChild(item);
             });
 
+            // নতুন বাটনগুলিতে ইভেন্ট লিসনার যোগ করুন (Add event listeners to new buttons)
             document.querySelectorAll('.edit-character-button').forEach(button => {
                 button.addEventListener('click', (e) => {
                     loadCharacterToForm(e.target.dataset.contactName);
@@ -1975,9 +1991,10 @@ ${chatTranscript}
             });
             document.querySelectorAll('.delete-character-button').forEach(button => {
                 button.addEventListener('click', (e) => {
+                    // কাস্টম নিশ্চিতকরণ মোডাল ব্যবহার করুন (Use the custom confirmation modal)
                     showConfirmationModal(
-                        'মুছে ফেলার নিশ্চিতকরণ',
-                        `আপনি কি নিশ্চিত যে আপনি "${e.target.dataset.contactName}" এবং এর সমস্ত চ্যাট ইতিহাস মুছে ফেলতে চান? এটি পূর্বাবস্থায় ফেরানো যাবে না।`,
+                        'মুছে ফেলার নিশ্চিতকরণ (Confirm Deletion)',
+                        `আপনি কি নিশ্চিত যে আপনি "${e.target.dataset.contactName}" এবং এর সমস্ত চ্যাট ইতিহাস মুছে ফেলতে চান? এটি পূর্বাবস্থায় ফেরানো যাবে না। (Are you sure you want to delete "${e.target.dataset.contactName}" and all its chat history? This cannot be undone.)`,
                         (confirmed) => {
                             if (confirmed) {
                                 deleteCharacter(e.target.dataset.contactName);
@@ -1994,22 +2011,22 @@ ${chatTranscript}
             characterImageInput.value = '';
             characterStatusInput.value = '';
             characterPersonaInput.value = '';
-            formTitle.textContent = 'নতুন ক্যারেক্টার যোগ করুন';
+            formTitle.textContent = 'নতুন ক্যারেক্টার যোগ করুন (Add New Character)';
             cancelEditButton.classList.add('hidden');
-            saveCharacterButton.textContent = 'ক্যারেক্টার সেভ করুন';
+            saveCharacterButton.textContent = 'ক্যারেক্টার সেভ করুন (Save Character)';
         }
 
         function loadCharacterToForm(contactName) {
             const data = contactsData[contactName];
             if (data) {
-                currentEditContactName.value = contactName;
+                currentEditContactName.value = contactName; // আপডেটের জন্য আসল নাম সংরক্ষণ করুন (Store original name for update)
                 characterNameInput.value = contactName;
                 characterImageInput.value = data.profilePic;
                 characterStatusInput.value = data.status;
                 characterPersonaInput.value = data.persona;
-                formTitle.textContent = `ক্যারেক্টার এডিট করুন: ${contactName}`;
+                formTitle.textContent = `ক্যারেক্টার এডিট করুন: ${contactName} (Edit Character: ${contactName})`;
                 cancelEditButton.classList.remove('hidden');
-                saveCharacterButton.textContent = 'ক্যারেক্টার আপডেট করুন';
+                saveCharacterButton.textContent = 'ক্যারেক্টার আপডেট করুন (Update Character)';
             }
         }
 
@@ -2021,303 +2038,178 @@ ${chatTranscript}
             const newPersona = characterPersonaInput.value.trim();
 
             if (!newName || !newImage || !newPersona) {
-                showCustomMessage('অনুগ্রহ করে ক্যারেক্টারের সমস্ত ফিল্ড পূরণ করুন।');
+                showCustomMessage('অনুগ্রহ করে ক্যারেক্টারের সমস্ত ফিল্ড পূরণ করুন। (Please fill in all character fields.)');
                 return;
             }
 
+            // যদি নতুন নামের একটি ক্যারেক্টার ইতিমধ্যেই বিদ্যমান থাকে (এবং এটি সম্পাদিত হচ্ছে না) তবে পরীক্ষা করুন (Check if a character with the new name already exists (and it's not the one being edited))
             if (newName !== originalName && contactsData[newName]) {
-                showCustomMessage(`"${newName}" নামের একটি ক্যারেক্টার ইতিমধ্যেই বিদ্যমান। অনুগ্রহ করে একটি ভিন্ন নাম নির্বাচন করুন।`);
+                showCustomMessage(`"${newName}" নামের একটি ক্যারেক্টার ইতিমধ্যেই বিদ্যমান। অনুগ্রহ করে একটি ভিন্ন নাম নির্বাচন করুন। (A character with the name "${newName}" already exists. Please choose a different name.)`);
                 return;
             }
 
+            // যদি নাম পরিবর্তন হয়, তাহলে পুরোনো এন্ট্রি মুছে ফেলুন এবং নতুন তৈরি করুন (If name changed, delete old entry and create new one)
             if (originalName && originalName !== newName) {
                 delete contactsData[originalName];
-                delete chatHistories[originalName];
+                delete chatHistories[originalName]; // নাম পরিবর্তন হলে পুরোনো ইতিহাসও মুছে ফেলুন (Delete old history if name changes)
             }
 
             contactsData[newName] = {
                 profilePic: newImage,
                 status: newStatus,
                 persona: newPersona,
-                isPinned: contactsData[originalName]?.isPinned || false, // পিন স্ট্যাটাস সংরক্ষণ করুন
-                isArchived: contactsData[originalName]?.isArchived || false, // আর্কাইভ স্ট্যাটাস সংরক্ষণ করুন
+                // যদি নাম পরিবর্তন না হয়, তাহলে বিদ্যমান ইতিহাস সংরক্ষণ করুন, অন্যথায় নতুন শুরু করুন (Preserve existing history if the name didn't change, otherwise start new)
+                initialMessages: (originalName === newName && chatHistories[newName]) ? chatHistories[newName] : []
             };
 
+            // যদি এটি একটি সম্পূর্ণ নতুন ক্যারেক্টার হয় বা নাম পরিবর্তন হয়, তাহলে একটি খালি চ্যাট ইতিহাস বিদ্যমান আছে তা নিশ্চিত করুন যদি এটি ইতিমধ্যেই উপস্থিত না থাকে (If it's a brand new character or name changed, ensure an empty chat history exists if not already present)
             if (!chatHistories[newName]) {
                 chatHistories[newName] = [];
             }
 
             saveDataToLocalStorage();
-            renderCharacterList();
-            clearCharacterForm();
-            initializeChatLists();
-            showCustomMessage(`ক্যারেক্টার "${newName}" সফলভাবে সেভ করা হয়েছে!`);
+            renderCharacterList(); // পরিবর্তনগুলি দেখানোর জন্য তালিকাটি পুনরায় রেন্ডার করুন (Re-render the list to show changes)
+            clearCharacterForm(); // সেভ করার পর ফর্ম সাফ করুন (Clear form after saving)
+            initializeChatLists(); // প্রধান চ্যাট তালিকাগুলিও পুনরায় রেন্ডার করুন (Re-render main chat lists as well)
+            showCustomMessage(`ক্যারেক্টার "${newName}" সফলভাবে সেভ করা হয়েছে! (Character "${newName}" saved successfully!)`);
         }
 
         function deleteCharacter(contactName) {
             if (contactsData[contactName]) {
                 delete contactsData[contactName];
-                delete chatHistories[contactName];
+                delete chatHistories[contactName]; // এই কন্টাক্টের জন্য চ্যাট ইতিহাসও মুছে ফেলুন (Also delete chat history for this contact)
                 saveDataToLocalStorage();
                 renderCharacterList();
-                initializeChatLists();
-                showCustomMessage(`ক্যারেক্টার "${contactName}" মুছে ফেলা হয়েছে।`);
-                clearCharacterForm();
+                initializeChatLists(); // প্রধান চ্যাট তালিকাগুলি পুনরায় রেন্ডার করুন (Re-render main chat lists)
+                showCustomMessage(`ক্যারেক্টার "${contactName}" মুছে ফেলা হয়েছে। (Character "${contactName}" deleted.)`);
+                clearCharacterForm(); // যদি মুছে ফেলা ক্যারেক্টারটি সম্পাদিত হচ্ছিল তবে ফর্ম সাফ করুন (Clear form if the deleted character was being edited)
             } else {
-                showCustomMessage(`ক্যারেক্টার "${contactName}" পাওয়া যায়নি।`);
+                showCustomMessage(`ক্যারেক্টার "${contactName}" পাওয়া যায়নি। (Character "${contactName}" not found.)`);
             }
         }
 
-        /**
-         * সমস্ত ডেটা JSON ফাইল হিসাবে এক্সপোর্ট করে।
-         */
-        function exportAllData() {
-            const dataToExport = {
-                contactsData: contactsData,
-                chatHistories: chatHistories
-            };
-            const dataStr = JSON.stringify(dataToExport, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "messenger_data.json";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showCustomMessage('ডেটা সফলভাবে এক্সপোর্ট করা হয়েছে!');
-        }
 
-        /**
-         * JSON ফাইল থেকে ডেটা ইম্পোর্ট করে।
-         */
-        function importAllData(event) {
-            const file = event.target.files[0];
-            if (!file) {
-                showCustomMessage('কোনো ফাইল নির্বাচন করা হয়নি।');
-                return;
-            }
+        // --- ইভেন্ট লিসনার (Event Listeners) ---
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData.contactsData && importedData.chatHistories) {
-                        showConfirmationModal(
-                            'ডেটা ইম্পোর্ট নিশ্চিত করুন',
-                            'আপনি কি নিশ্চিত যে আপনি এই ডেটা ইম্পোর্ট করতে চান? এটি বর্তমান ডেটা ওভাররাইট করবে।',
-                            (confirmed) => {
-                                if (confirmed) {
-                                    contactsData = importedData.contactsData;
-                                    chatHistories = importedData.chatHistories;
-                                    saveDataToLocalStorage();
-                                    initializeChatLists();
-                                    renderCharacterList(); // সেটিংস ভিউ আপডেট করুন
-                                    showCustomMessage('ডেটা সফলভাবে ইম্পোর্ট করা হয়েছে!');
-                                    // যদি কোনো চ্যাট খোলা থাকে, তাহলে সেটি পুনরায় লোড করুন
-                                    if (currentContact) {
-                                        openChat(currentContact.name);
-                                    }
-                                } else {
-                                    showCustomMessage('ডেটা ইম্পোর্ট বাতিল করা হয়েছে।');
-                                }
-                            }
-                        );
-                    } else {
-                        showCustomMessage('অকার্যকর JSON ফাইল ফরম্যাট।');
-                    }
-                } catch (error) {
-                    console.error('ফাইল পার্স করতে ত্রুটি:', error);
-                    showCustomMessage('ফাইল পার্স করতে ত্রুটি। নিশ্চিত করুন এটি একটি বৈধ JSON ফাইল।');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        /**
-         * সমস্ত লোকাল ডেটা রিসেট করে ডিফল্ট অবস্থায় নিয়ে আসে।
-         */
-        function resetAllData() {
-            showConfirmationModal(
-                'ডেটা রিসেট নিশ্চিত করুন',
-                'আপনি কি নিশ্চিত যে আপনি সমস্ত ডেটা রিসেট করতে চান? এটি সমস্ত ক্যারেক্টার এবং চ্যাট ইতিহাস মুছে ফেলবে। এটি পূর্বাবস্থায় ফেরানো যাবে না!',
-                (confirmed) => {
-                    if (confirmed) {
-                        contactsData = { ...defaultContactsData };
-                        chatHistories = {};
-                        for (const contactName in contactsData) {
-                            chatHistories[contactName] = contactsData[contactName].initialMessages ? [...contactsData[contactName].initialMessages] : [];
-                        }
-                        saveDataToLocalStorage();
-                        initializeChatLists();
-                        renderCharacterList();
-                        showCustomMessage('সমস্ত ডেটা সফলভাবে রিসেট করা হয়েছে!');
-                        // যদি কোনো চ্যাট খোলা থাকে, তাহলে সেটি বন্ধ করুন
-                        if (currentContact) {
-                            backToMainListButton.click();
-                        }
-                    } else {
-                        showCustomMessage('ডেটা রিসেট বাতিল করা হয়েছে।');
-                    }
-                }
-            );
-        }
-
-        /**
-         * ডার্ক/লাইট থিম টগল করে।
-         */
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            saveDataToLocalStorage(); // থিম সেভ করুন
-        }
-
-
-        // --- ইভেন্ট লিসনার ---
-
-        // পেজ লোড হওয়ার সময় চ্যাট তালিকাগুলির প্রাথমিক লোড
-        window.onload = () => {
-            loadDataFromLocalStorage(); // প্রথমে ডেটা লোড করুন
-            initializeChatLists(); // তারপর UI রেন্ডার করুন
-            lucide.createIcons(); // Lucide আইকন ইনিশিয়ালাইজ করুন
-            loadingOverlay.classList.add('hidden'); // লোডিং ওভারলে লুকান
-        };
-
-        // থিম টগল বাটন
-        toggleThemeButton.addEventListener('click', toggleTheme);
-
-        // সেন্ড বাটনে ক্লিক করলে মেসেজ পাঠানোর ইভেন্ট লিসনার
-        sendButton.addEventListener('click', () => {
-            const message = chatInput.value.trim();
-            if (message && currentContact && !isTyping) {
-                sendMessageToGemini(message, currentContact.name, currentContact.profilePic, currentContact.persona);
-                suggestedRepliesContainer.classList.add('hidden');
-            }
-        });
-
-        // ইনপুট ফিল্ডে এন্টার কী চাপলে মেসেজ পাঠানোর ইভেন্ট লিসনার
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !isTyping) {
-                sendButton.click();
-            }
-        });
-
-        // "Suggest Reply" বাটনের জন্য ইভেন্ট লিসনার
-        suggestReplyButton.addEventListener('click', generateSuggestedReplies);
-
-        // "Summarize Chat" বাটনের জন্য ইভেন্ট লিসনার
-        summarizeChatButton.addEventListener('click', summarizeChat);
-
-        // "Pin Chat" বাটনের জন্য ইভেন্ট লিসনার
-        pinChatButton.addEventListener('click', togglePinChat);
-
-        // "Archive Chat" বাটনের জন্য ইভেন্ট লিসনার
-        archiveChatButton.addEventListener('click', toggleArchiveChat);
-
+        // পেজ লোড হওয়ার সময় চ্যাট তালিকাগুলির প্রাথমিক লোড (Initial load of chat lists when the page loads)
+        loadDataFromLocalStorage(); // প্রথমে ডেটা লোড করুন (Load data first)
+        initializeChatLists(); // তারপর UI রেন্ডার করুন (Then render UI)
 
         chatsTab.addEventListener('click', () => {
+            // সক্রিয় ট্যাব স্টাইলিং সেট করুন (Set active tab styling)
             chatsTab.classList.add('border-blue-500', 'text-blue-500');
             callsTab.classList.remove('border-blue-500', 'text-blue-500');
             peopleTab.classList.remove('border-blue-500', 'text-blue-500');
             storiesTab.classList.remove('border-blue-500', 'text-blue-500');
             busesTab.classList.remove('border-blue-500', 'text-blue-500');
 
+            // চ্যাট ভিউ দেখান এবং অন্যান্য লুকান (Show chats view and hide others)
             chatListView.classList.remove('hidden');
             peopleView.classList.add('hidden');
             busesView.classList.add('hidden');
             individualChatView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
-            initializeChatLists(); // নিশ্চিত করুন যে চ্যাট তালিকা আপডেট হয়েছে
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
+            suggestedRepliesContainer.classList.add('hidden'); // ট্যাব পরিবর্তন করার সময় সাজেশন লুকান (Hide suggestions when switching tabs)
         });
 
         peopleTab.addEventListener('click', () => {
+            // সক্রিয় ট্যাব স্টাইলিং সেট করুন (Set active tab styling)
             peopleTab.classList.add('border-blue-500', 'text-blue-500');
             chatsTab.classList.remove('border-blue-500', 'text-blue-500');
             callsTab.classList.remove('border-blue-500', 'text-blue-500');
             storiesTab.classList.remove('border-blue-500', 'text-blue-500');
             busesTab.classList.remove('border-blue-500', 'text-blue-500');
 
+            // পিপল ভিউ দেখান এবং অন্যান্য লুকান (Show people view and hide others)
             peopleView.classList.remove('hidden');
             chatListView.classList.add('hidden');
             busesView.classList.add('hidden');
             individualChatView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
+            suggestedRepliesContainer.classList.add('hidden'); // ট্যাব পরিবর্তন করার সময় সাজেশন লুকান (Hide suggestions when switching tabs)
         });
 
         busesTab.addEventListener('click', () => {
+            // সক্রিয় ট্যাব স্টাইলিং সেট করুন (Set active tab styling)
             busesTab.classList.add('border-blue-500', 'text-blue-500');
             chatsTab.classList.remove('border-blue-500', 'text-blue-500');
             callsTab.classList.remove('border-blue-500', 'text-blue-500');
             peopleTab.classList.remove('border-blue-500', 'text-blue-500');
             storiesTab.classList.remove('border-blue-500', 'text-blue-500');
 
+            // বাস ভিউ দেখান এবং অন্যান্য লুকান (Show buses view and hide others)
             busesView.classList.remove('hidden');
             chatListView.classList.add('hidden');
             peopleView.classList.add('hidden');
             individualChatView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
-            showCustomMessage("বাস ট্যাব ক্লিক করা হয়েছে! (কার্যকারিতা প্রয়োগ করা হয়নি)");
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
+            suggestedRepliesContainer.classList.add('hidden'); // ট্যাব পরিবর্তন করার সময় সাজেশন লুকান (Hide suggestions when switching tabs)
+            showCustomMessage("বাস ট্যাব ক্লিক করা হয়েছে! (কার্যকারিতা প্রয়োগ করা হয়নি) (Buses tab clicked! (Functionality not implemented))");
         });
 
-        // স্টোরিজ ট্যাব এখন পাসওয়ার্ড মোডাল ট্রিগার করে (সেটিংস অ্যাক্সেসের জন্য)
+        // স্টোরিজ ট্যাব এখন পাসওয়ার্ড মোডাল ট্রিগার করে (Stories tab now triggers password modal)
         storiesTab.addEventListener('click', () => {
+            // সক্রিয় ট্যাব স্টাইলিং সেট করুন (Set active tab styling)
             storiesTab.classList.add('border-blue-500', 'text-blue-500');
             chatsTab.classList.remove('border-blue-500', 'text-blue-500');
             callsTab.classList.remove('border-blue-500', 'text-blue-500');
             peopleTab.classList.remove('border-blue-500', 'text-blue-500');
             busesTab.classList.remove('border-blue-500', 'text-blue-500');
 
+            // মোডাল দেখানোর আগে অন্যান্য ভিউ লুকান (Hide other views before showing modal)
             chatListView.classList.add('hidden');
             peopleView.classList.add('hidden');
             busesView.classList.add('hidden');
             individualChatView.classList.add('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
-            settingsView.classList.add('hidden');
+            suggestedRepliesContainer.classList.add('hidden'); // সাজেশন লুকান (Hide suggestions)
+            settingsView.classList.add('hidden'); // নিশ্চিত করুন যে সেটিংস ভিউ প্রাথমিকভাবে লুকানো আছে (Ensure settings view is hidden initially)
 
-            showPasswordModal();
+            showPasswordModal(); // পাসওয়ার্ড মোডাল দেখান (Show password modal)
         });
 
 
-        // --- পিছনের বাটন লজিক ---
+        // --- পিছনের বাটন লজিক (Back Button Logic) ---
 
+        // ব্যক্তিগত চ্যাট থেকে প্রধান চ্যাট তালিকা ভিউতে পিছনের বাটন (Back button from individual chat to main chat list view)
         backToMainListButton.addEventListener('click', () => {
             individualChatView.classList.add('hidden');
             chatListView.classList.remove('hidden');
             peopleView.classList.add('hidden');
             busesView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            currentContact = null;
-            suggestedRepliesContainer.classList.add('hidden');
-            initializeChatLists(); // শেষ মেসেজ আপডেট করতে চ্যাট তালিকা পুনরায় রেন্ডার করুন
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
+            currentContact = null; // বর্তমান কন্টাক্ট সাফ করুন (Clear current contact)
+            suggestedRepliesContainer.classList.add('hidden'); // পিছনে যাওয়ার সময় সাজেশন লুকান (Hide suggestions when going back)
+            initializeChatLists(); // শেষ মেসেজ আপডেট করতে চ্যাট তালিকা পুনরায় রেন্ডার করুন (Re-render chat list to update last messages)
         });
 
+        // পিপল ভিউ থেকে প্রধান চ্যাট তালিকা ভিউতে পিছনের বাটন (Back button from People view to main chat list view)
         peopleBackToListButton.addEventListener('click', () => {
             peopleView.classList.add('hidden');
             chatListView.classList.remove('hidden');
             busesView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            chatsTab.click();
-            suggestedRepliesContainer.classList.add('hidden');
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
+            chatsTab.click(); // সক্রিয় ট্যাব রিসেট করতে চ্যাট ট্যাব ক্লিক করার অনুকরণ করুন (Simulate clicking chats tab to reset active tab)
+            suggestedRepliesContainer.classList.add('hidden'); // পিছনে যাওয়ার সময় সাজেশন লুকান (Hide suggestions when going back)
         });
 
+        // বাস ভিউ থেকে প্রধান চ্যাট তালিকা ভিউতে পিছনের বাটন (Back button from Buses view to main chat list view)
         busesBackToListButton.addEventListener('click', () => {
             busesView.classList.add('hidden');
             chatListView.classList.remove('hidden');
             peopleView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            chatsTab.click();
-            suggestedRepliesContainer.classList.add('hidden');
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
+            chatsTab.click(); // সক্রিয় ট্যাব রিসেট করতে চ্যাট ট্যাব ক্লিক করার অনুকরণ করুন (Simulate clicking chats tab to reset active tab)
+            suggestedRepliesContainer.classList.add('hidden'); // পিছনে যাওয়ার সময় সাজেশন লুকান (Hide suggestions when going back)
         });
 
+        // সেটিংস ভিউ থেকে প্রধান চ্যাট তালিকা ভিউতে পিছনের বাটন (Back button from Settings view to main chat list view)
         settingsBackToListButton.addEventListener('click', () => {
             hideSettingsView();
         });
 
 
-        // --- অন্যান্য ট্যাবের জন্য প্লেসহোল্ডার কার্যকারিতা (কল) ---
+        // --- অন্যান্য ট্যাবের জন্য প্লেসহোল্ডার কার্যকারিতা (কল) (Placeholder functionality for other tabs (Calls)) ---
+        // এই ট্যাবগুলি শুধুমাত্র একটি কাস্টম মেসেজ দেখাবে এবং ডেমো উদ্দেশ্যে চ্যাট তালিকা ভিউতে স্যুইচ করবে। (These tabs will simply show a custom message and switch to the chat list view for demo purposes.)
         callsTab.addEventListener('click', () => {
             callsTab.classList.add('border-blue-500', 'text-blue-500');
             chatsTab.classList.remove('border-blue-500', 'text-blue-500');
@@ -2329,22 +2221,38 @@ ${chatTranscript}
             peopleView.classList.add('hidden');
             busesView.classList.add('hidden');
             individualChatView.classList.add('hidden');
-            settingsView.classList.add('hidden');
+            settingsView.classList.add('hidden'); // সেটিংস ভিউ লুকান (Hide settings view)
             suggestedRepliesContainer.classList.add('hidden');
-            showCustomMessage("কল ট্যাব ক্লিক করা হয়েছে! (কার্যকারিতা প্রয়োগ করা হয়নি)");
+            showCustomMessage("কল ট্যাব ক্লিক করা হয়েছে! (কার্যকারিতা প্রয়োগ করা হয়নি) (Calls tab clicked! (Functionality not implemented))");
         });
 
 
-        // --- সেটিংস ফর্ম ইভেন্ট লিসনার ---
+        // --- সেটিংস ফর্ম ইভেন্ট লিসনার (Settings Form Event Listeners) ---
         saveCharacterButton.addEventListener('click', saveCharacter);
         addNewCharacterButton.addEventListener('click', clearCharacterForm);
         cancelEditButton.addEventListener('click', clearCharacterForm);
 
-        // ডেটা ম্যানেজমেন্ট বাটন ইভেন্ট লিসনার
-        exportDataButton.addEventListener('click', exportAllData);
-        importDataButton.addEventListener('click', () => importDataInput.click()); // ফাইল ইনপুট ট্রিগার করুন
-        importDataInput.addEventListener('change', importAllData); // ফাইল নির্বাচন করলে ইম্পোর্ট করুন
-        resetDataButton.addEventListener('click', resetAllData);
+
+        // কাস্টম মেসেজ বক্স (alert() এবং confirm() এর প্রতিস্থাপন) (Custom Message Box (replacement for alert() and confirm()))
+        function showCustomMessage(message) {
+            const messageBox = document.createElement('div');
+            messageBox.classList.add('custom-message-box');
+            messageBox.textContent = message;
+            document.body.appendChild(messageBox);
+
+            // ফেড ইন (Fade in)
+            setTimeout(() => {
+                messageBox.style.opacity = 1;
+            }, 10);
+
+            // ফেড আউট এবং ২ সেকেন্ড পর সরান (Fade out and remove after 2 seconds)
+            setTimeout(() => {
+                messageBox.style.opacity = 0;
+                messageBox.addEventListener('transitionend', () => {
+                    messageBox.remove();
+                });
+            }, 2000);
+        }
 
     </script>
 </body>
